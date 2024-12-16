@@ -64,7 +64,7 @@ export function WhackAMole() {
           <button
             key={index}
             onClick={() => whackMole(index)}
-            className={`w-full h-[100px] rounded-full ${
+            className={`w-full h-[100px] rounded-lg shadow-inner ${
               activeMole === index
                 ? 'bg-green-500 hover:bg-green-600'
                 : 'bg-gray-300 hover:bg-gray-400'
