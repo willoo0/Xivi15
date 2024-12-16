@@ -22,7 +22,6 @@ import { Tetris } from './apps/Tetris';
 const components: Record<string, React.ComponentType> = {
   TextEditor,
   Calculator,
-  DinoGame,
   FileExplorer,
   Settings,
   Browser,
