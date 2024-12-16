@@ -75,7 +75,7 @@ const apps = [
     id: 'pacman',
     title: 'Pacman',
     component: 'Pacman',
-    icon: Grid,
+    icon: Ghost,
     category: 'Games'
   },
   {
