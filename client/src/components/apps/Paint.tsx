@@ -95,6 +95,18 @@ export function Paint() {
         <Button variant="ghost" onClick={downloadCanvas}>
           <Download className="h-4 w-4" />
         </Button>
+        <Button 
+          variant="ghost" 
+          onClick={() => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          }}
+        >
+          Clear
+        </Button>
       </div>
       <canvas
         ref={canvasRef}
