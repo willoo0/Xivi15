@@ -5,12 +5,14 @@ import { TextEditor } from './apps/TextEditor'
 import { Calculator } from './apps/Calculator'
 import { FileExplorer } from './apps/FileExplorer'
 import { Settings } from './apps/Settings'
+import { Browser } from './apps/Browser'
 
 const components = {
   TextEditor,
   Calculator,
   FileExplorer,
-  Settings
+  Settings,
+  Browser
 }
 
 export function Desktop() {
