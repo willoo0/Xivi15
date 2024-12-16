@@ -7,49 +7,50 @@ export function SelectionBox() {
   const [current, setCurrent] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const handleMouseUp = () => {
-      if (isSelecting) {
-        setIsSelecting(false);
-      }
-    };
-
     const handleMouseMove = (e: MouseEvent) => {
       if (isSelecting) {
         setCurrent({ x: e.clientX, y: e.clientY });
       }
     };
 
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mousemove', handleMouseMove);
+    const handleMouseUp = () => {
+      if (isSelecting) {
+        setIsSelecting(false);
+      }
+    };
+
+    if (isSelecting) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
 
     return () => {
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isSelecting, start, current]);
+  }, [isSelecting]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    // Only start selection on desktop background
-    if ((e.target as HTMLElement).className.includes('desktop-background')) {
+  const startSelection = (e: React.MouseEvent) => {
+    if (e.button === 0 && (e.target as HTMLElement).classList.contains('desktop-background')) {
       setIsSelecting(true);
       setStart({ x: e.clientX, y: e.clientY });
       setCurrent({ x: e.clientX, y: e.clientY });
     }
   };
 
-  if (!isSelecting) return null;
+  if (!isSelecting && !start.x && !start.y) return null;
 
-  const style = {
-    position: 'fixed' as const,
+  const style: React.CSSProperties = {
+    position: 'fixed',
     left: Math.min(start.x, current.x),
     top: Math.min(start.y, current.y),
     width: Math.abs(current.x - start.x),
     height: Math.abs(current.y - start.y),
     backgroundColor: 'rgba(0, 120, 215, 0.1)',
     border: '1px solid rgba(0, 120, 215, 0.8)',
-    pointerEvents: 'none' as const,
+    pointerEvents: 'none',
     zIndex: 9999,
   };
 
-  return <div style={style} onMouseDown={handleMouseDown} />;
+  return <div style={style} />;
 }
