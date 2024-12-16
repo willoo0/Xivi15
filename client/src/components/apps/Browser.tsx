@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Globe, Plus, X, ArrowLeft, ArrowRight, RotateCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { StartPage } from './browser/StartPage'
 
 interface Tab {
   id: number
@@ -14,7 +15,7 @@ interface Tab {
 
 export function Browser() {
   const [tabs, setTabs] = useState<Tab[]>([
-    { id: 1, url: 'https://www.google.com', title: 'Google' }
+    { id: 1, url: 'about:blank', title: 'New Tab' }
   ])
   const [activeTab, setActiveTab] = useState(1)
   const [inputUrl, setInputUrl] = useState('https://www.google.com')
@@ -50,18 +51,29 @@ export function Browser() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    navigate(activeTab, inputUrl)
+    let finalUrl = inputUrl.trim()
+    
+    try {
+      new URL(finalUrl)
+      if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+        finalUrl = `https://${finalUrl}`
+      }
+    } catch {
+      finalUrl = `https://www.google.com/search?q=${encodeURIComponent(finalUrl)}`
+    }
+    
+    navigate(activeTab, finalUrl)
   }
 
   const addTab = () => {
     const newId = Math.max(...tabs.map(t => t.id)) + 1
     setTabs([...tabs, { 
       id: newId, 
-      url: 'https://www.google.com', 
+      url: 'about:blank', 
       title: 'New Tab'
     }])
     setActiveTab(newId)
-    setHistory(prev => ({ ...prev, [newId]: ['https://www.google.com'] }))
+    setHistory(prev => ({ ...prev, [newId]: ['about:blank'] }))
     setHistoryIndex(prev => ({ ...prev, [newId]: 0 }))
   }
 
@@ -189,15 +201,19 @@ export function Browser() {
       </div>
       
       <div className="flex-1 relative">
-        {currentTab && (
-          <iframe
-            key={`${currentTab.id}-${currentTab.url}`}
-            src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
-            className="absolute inset-0 w-full h-full"
-            sandbox="allow-same-origin allow-scripts"
-            onLoad={() => setLoading(false)}
-            onLoadStart={() => setLoading(true)}
-          />
+        {currentTab && currentTab.url === 'about:blank' ? (
+          <StartPage onNavigate={(url) => navigate(activeTab, url)} />
+        ) : (
+          currentTab && (
+            <iframe
+              key={`${currentTab.id}-${currentTab.url}`}
+              src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
+              className="absolute inset-0 w-full h-full"
+              sandbox="allow-same-origin allow-scripts"
+              onLoad={() => setLoading(false)}
+              onLoadStart={() => setLoading(true)}
+            />
+          )
         )}
       </div>
     </div>
