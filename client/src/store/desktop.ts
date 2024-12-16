@@ -52,7 +52,7 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
     { title: 'Text Editor', component: 'TextEditor' },
     { title: 'Settings', component: 'Settings' }
   ],
-  theme: 'system',
+  theme: 'dark',
   blurEffects: true,
   animations: true,
   notifications: true,

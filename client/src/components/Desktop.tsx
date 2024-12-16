@@ -20,7 +20,18 @@ const lightThemeBg = '/light-theme.jpg'
 const darkThemeBg = '/dark-theme.jpg'
 
 export function Desktop() {
-  const { windows, theme } = useDesktopStore()
+  const { windows, theme, updateSettings } = useDesktopStore()
+  
+  useEffect(() => {
+    const root = document.documentElement
+    if (theme === 'dark') {
+      root.classList.add('dark')
+      root.style.colorScheme = 'dark'
+    } else if (theme === 'light') {
+      root.classList.remove('dark')
+      root.style.colorScheme = 'light'
+    }
+  }, [theme])
 
   return (
     <div 
