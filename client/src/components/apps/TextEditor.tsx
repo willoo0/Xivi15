@@ -9,7 +9,7 @@ export function TextEditor() {
       value={content}
       onChange={(e) => setContent(e.target.value)}
       placeholder="Start typing..."
-      className="w-full h-full resize-none"
+      className="w-full h-full resize-none p-4"
     />
   )
 }

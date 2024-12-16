@@ -29,25 +29,6 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   const [startSize, setStartSize] = useState({ width: 0, height: 0 })
   const windowRef = useRef<HTMLDivElement>(null)
 
-  // Calculate window bounds and snapping
-  const getSnappedPosition = (x: number, y: number, width: number, height: number) => {
-    // Calculate maximum bounds
-    const maxX = window.innerWidth - width
-    const maxY = window.innerHeight - TASKBAR_HEIGHT - height
-
-    // Basic bounds checking
-    let newX = Math.max(0, Math.min(x, maxX))
-    let newY = Math.max(0, Math.min(y, maxY))
-
-    // Snap to edges
-    if (Math.abs(newX) < SNAP_THRESHOLD) newX = 0 // Left edge
-    if (Math.abs(newX - maxX) < SNAP_THRESHOLD) newX = maxX // Right edge
-    if (Math.abs(newY) < SNAP_THRESHOLD) newY = 0 // Top edge
-    if (Math.abs(newY - maxY) < SNAP_THRESHOLD) newY = maxY // Bottom edge
-
-    return { x: newX, y: newY }
-  }
-
   useEffect(() => {
     if (isMaximized) return
 
@@ -56,9 +37,22 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         e.preventDefault()
         const newX = e.clientX - dragOffset.x
         const newY = e.clientY - dragOffset.y
-        const snapped = getSnappedPosition(newX, newY, position.width, position.height)
         
-        updateWindowPosition(id, snapped)
+        // Calculate window bounds
+        const maxX = window.innerWidth - position.width
+        const maxY = window.innerHeight - TASKBAR_HEIGHT - position.height
+
+        // Enforce bounds and snapping
+        let finalX = Math.max(0, Math.min(newX, maxX))
+        let finalY = Math.max(0, Math.min(newY, maxY))
+
+        // Snap to edges
+        if (Math.abs(finalX) < SNAP_THRESHOLD) finalX = 0
+        if (Math.abs(finalX - maxX) < SNAP_THRESHOLD) finalX = maxX
+        if (Math.abs(finalY) < SNAP_THRESHOLD) finalY = 0
+        if (Math.abs(finalY - maxY) < SNAP_THRESHOLD) finalY = maxY
+
+        updateWindowPosition(id, { x: finalX, y: finalY })
       } else if (isResizing && windowRef.current) {
         e.preventDefault()
         const dx = e.clientX - startPos.x
@@ -68,7 +62,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         const newWidth = Math.max(MIN_WINDOW_WIDTH, startSize.width + dx)
         const newHeight = Math.max(MIN_WINDOW_HEIGHT, startSize.height + dy)
         
-        // Ensure window stays within bounds
+        // Calculate maximum bounds based on window position
         const maxWidth = window.innerWidth - position.x
         const maxHeight = window.innerHeight - TASKBAR_HEIGHT - position.y
         
@@ -79,16 +73,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       }
     }
 
-    const handleMouseUp = (e: MouseEvent) => {
-      if (isDragging || isResizing) {
-        // If moved very little, treat as a click to focus
-        const dx = Math.abs(startPos.x - e.clientX)
-        const dy = Math.abs(startPos.y - e.clientY)
-        if (dx < 5 && dy < 5) {
-          setActiveWindow(id)
-        }
-      }
-      
+    const handleMouseUp = () => {
       setIsDragging(false)
       setIsResizing(false)
     }
@@ -102,7 +87,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [isDragging, isResizing, dragOffset, startPos, startSize, id, position, updateWindowPosition, isMaximized, setActiveWindow])
+  }, [isDragging, isResizing, dragOffset, startPos, startSize, id, position, updateWindowPosition, isMaximized])
 
   const handleResizeStart = (e: React.MouseEvent) => {
     if (isMaximized) return
@@ -114,18 +99,20 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     setIsResizing(true)
     setStartPos({ x: e.clientX, y: e.clientY })
     setStartSize({ width: rect.width, height: rect.height })
+    setActiveWindow(id)
   }
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (windowRef.current && !isMaximized) {
-      const rect = windowRef.current.getBoundingClientRect()
-      setIsDragging(true)
-      setDragOffset({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      })
-      setStartPos({ x: e.clientX, y: e.clientY })
-    }
+    if (!windowRef.current || isMaximized) return
+    
+    e.preventDefault()
+    const rect = windowRef.current.getBoundingClientRect()
+    setIsDragging(true)
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    })
+    setStartPos({ x: e.clientX, y: e.clientY })
     setActiveWindow(id)
   }
 
@@ -186,7 +173,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         </div>
       </div>
       
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto p-4">
         {children}
       </div>
       
