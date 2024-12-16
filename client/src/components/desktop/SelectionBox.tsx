@@ -1,11 +1,15 @@
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
-export function SelectionBox() {
-  const [isSelecting, setIsSelecting] = useState(false);
-  const [start, setStart] = useState({ x: 0, y: 0 });
-  const [current, setCurrent] = useState({ x: 0, y: 0 });
+interface SelectionBoxProps {
+  isSelecting: boolean;
+  setIsSelecting: (isSelecting: boolean) => void;
+  start: { x: number; y: number };
+  current: { x: number; y: number };
+  setCurrent: (current: { x: number; y: number }) => void;
+}
 
+export function SelectionBox({ isSelecting, setIsSelecting, start, current, setCurrent }: SelectionBoxProps) {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isSelecting) {
@@ -28,15 +32,7 @@ export function SelectionBox() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isSelecting]);
-
-  const startSelection = (e: React.MouseEvent) => {
-    if (e.button === 0 && (e.target as HTMLElement).classList.contains('desktop-background')) {
-      setIsSelecting(true);
-      setStart({ x: e.clientX, y: e.clientY });
-      setCurrent({ x: e.clientX, y: e.clientY });
-    }
-  };
+  }, [isSelecting, setCurrent, setIsSelecting]);
 
   if (!isSelecting && !start.x && !start.y) return null;
 

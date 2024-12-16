@@ -23,6 +23,17 @@ const darkThemeBg = '/dark-theme.jpg'
 
 export function Desktop() {
   const { windows, theme, updateSettings } = useDesktopStore()
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [selectionStart, setSelectionStart] = useState({ x: 0, y: 0 });
+  const [selectionCurrent, setSelectionCurrent] = useState({ x: 0, y: 0 });
+
+  const startSelection = (e: React.MouseEvent) => {
+    if (e.button === 0 && (e.target as HTMLElement).classList.contains('desktop-background')) {
+      setIsSelecting(true);
+      setSelectionStart({ x: e.clientX, y: e.clientY });
+      setSelectionCurrent({ x: e.clientX, y: e.clientY });
+    }
+  };
   
   useEffect(() => {
     const root = document.documentElement
@@ -62,7 +73,13 @@ export function Desktop() {
         )
       })}
       <Taskbar />
-      <SelectionBox />
+      <SelectionBox 
+        isSelecting={isSelecting}
+        setIsSelecting={setIsSelecting}
+        start={selectionStart}
+        current={selectionCurrent}
+        setCurrent={setSelectionCurrent}
+      />
     </div>
   )
 }
