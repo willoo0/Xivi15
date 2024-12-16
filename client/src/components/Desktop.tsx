@@ -10,12 +10,15 @@ import { FileExplorer } from './apps/FileExplorer'
 import { Settings } from './apps/Settings'
 import { Browser } from './apps/Browser'
 
+import { Welcome } from './apps/Welcome'
+
 const components: Record<string, React.ComponentType> = {
   TextEditor,
   Calculator,
   FileExplorer,
   Settings,
   Browser,
+  Welcome,
 }
 
 // Use background images from public folder
