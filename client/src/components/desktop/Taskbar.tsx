@@ -5,7 +5,7 @@ import { StartMenu } from './StartMenu'
 import { ContextMenu } from './ContextMenu'
 import { nanoid } from 'nanoid'
 import { AppWindow, Layout } from 'lucide-react'
-import { getAppIcon } from '@/lib/appIcons'
+import { appIcons, getAppIcon } from '@/lib/appIcons'
 
 export function Taskbar() {
   const { windows, activeWindowId, pinnedApps, setActiveWindow, toggleMinimize, addWindow } = useDesktopStore()
