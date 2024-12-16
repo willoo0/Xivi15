@@ -19,7 +19,7 @@ import { Minesweeper } from './apps/Minesweeper';
 import { Tetris } from './apps/Tetris';
 import { Weather } from './apps/Weather';
 import { Snake } from './apps/Snake';
-import { WhackAMole } from './components/apps/WhackAMole'; // Added import for WhackAMole
+import { WhackAMole } from './apps/WhackAMole'; // Added import for WhackAMole
 
 
 const components: Record<string, React.ComponentType> = {
