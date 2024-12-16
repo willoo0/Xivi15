@@ -17,12 +17,12 @@ import {
   Globe,
   Calendar,
   Map,
+  Cloud,
   Clock,
   Folder,
   Timer,
   Monitor,
   Grid,
-  Bird,
 } from 'lucide-react'
 
 interface StartMenuProps {
@@ -31,11 +31,11 @@ interface StartMenuProps {
 
 const apps = [
   {
-    id: 'dino',
-    title: 'Dino Jump',
-    component: 'DinoGame',
-    icon: Bird,
-    category: 'Games'
+    id: 'weather',
+    title: 'Weather',
+    component: 'Weather',
+    icon: Cloud,
+    category: 'Internet'
   },
   {
     id: 'tetris',
