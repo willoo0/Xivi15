@@ -14,6 +14,7 @@ export function TimerClock() {
 
   // Stopwatch state
   const [stopwatchTime, setStopwatchTime] = useState<number>(0);
+  const [stopwatchMs, setStopwatchMs] = useState<number>(0);
   const [isStopwatchActive, setIsStopwatchActive] = useState<boolean>(false);
 
   // Clock state
@@ -42,9 +43,12 @@ export function TimerClock() {
     let interval: NodeJS.Timeout | null = null;
 
     if (isStopwatchActive) {
+      const startTime = Date.now() - (stopwatchTime * 1000 + stopwatchMs);
       interval = setInterval(() => {
-        setStopwatchTime(prev => prev + 1);
-      }, 1000);
+        const elapsed = Date.now() - startTime;
+        setStopwatchTime(Math.floor(elapsed / 1000));
+        setStopwatchMs(elapsed % 1000);
+      }, 10);
     }
 
     return () => {
@@ -152,7 +156,7 @@ export function TimerClock() {
 
         <TabsContent value="stopwatch" className="space-y-4">
           <div className="text-4xl font-bold text-center">
-            {formatTime(stopwatchTime)}
+            {formatTime(stopwatchTime)}.{stopwatchMs.toString().padStart(3, '0')}
           </div>
           <div className="flex gap-2">
             <Button
@@ -167,6 +171,7 @@ export function TimerClock() {
               onClick={() => {
                 setIsStopwatchActive(false);
                 setStopwatchTime(0);
+                setStopwatchMs(0);
               }}
             >
               Reset
