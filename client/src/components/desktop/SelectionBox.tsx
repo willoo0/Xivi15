@@ -26,7 +26,7 @@ export function SelectionBox() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [isSelecting, start, current, onSelection]);
+  }, [isSelecting, start, current]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     // Only start selection on desktop background
@@ -51,5 +51,5 @@ export function SelectionBox() {
     zIndex: 9999,
   };
 
-  return <div style={style} />;
+  return <div style={style} onMouseDown={handleMouseDown} />;
 }
