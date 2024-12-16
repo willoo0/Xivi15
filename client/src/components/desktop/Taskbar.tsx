@@ -28,6 +28,7 @@ const appIcons: Record<string, any> = {
   Weather: Cloud,
   Tetris: Grid,
   Minesweeper: Grid,
+  Snake: Grid,
   Todo: Calendar,
   Paint: Image,
   SystemInfo: Monitor,
