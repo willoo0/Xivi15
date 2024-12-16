@@ -4,9 +4,21 @@ import { Switch } from '@/components/ui/switch'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useDesktopStore } from '@/store/desktop'
 import { useToast } from '@/hooks/use-toast'
+import { useEffect } from 'react'
 
 export function Settings() {
-  const { theme, blurEffects, animations, notifications, updateSettings } = useDesktopStore()
+  const { theme, blurEffects, animations, notifications, updateSettings } = useDesktopStore();
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else if (theme === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', prefersDark);
+    }
+  }, [theme]);
   const { toast } = useToast()
   
   const handleSave = () => {

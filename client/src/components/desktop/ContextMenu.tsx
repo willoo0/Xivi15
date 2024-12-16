@@ -32,7 +32,12 @@ export function ContextMenu({ x, y, appId, appComponent, appTitle, onClose }: Co
     <Card 
       ref={menuRef}
       className="fixed min-w-[160px] z-[1000] bg-background/80 backdrop-blur-md"
-      style={{ left: x, top: y }}
+      style={{ 
+        left: Math.min(x, window.innerWidth - 200),
+        top: Math.min(y, window.innerHeight - 150),
+        maxHeight: 'calc(100vh - 20px)',
+        overflow: 'auto'
+      }}
     >
       <div className="p-1">
         <Button

@@ -141,9 +141,9 @@ export function Browser() {
       <div className="flex-1 relative">
         <iframe
           key={currentTab?.url}
-          src={currentTab?.url}
+          src={`/api/proxy?url=${encodeURIComponent(currentTab?.url || '')}`}
           className="absolute inset-0 w-full h-full"
-          sandbox="allow-same-origin allow-scripts allow-forms"
+          sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
         />
       </div>
     </div>
