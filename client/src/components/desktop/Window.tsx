@@ -108,7 +108,15 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
           </Button>
         </div>
       </div>
-      <div className="flex-1 overflow-hidden p-4" onWheel={(e) => e.stopPropagation()}>
+      <div 
+        className="flex-1 overflow-auto p-4" 
+        onWheel={(e) => {
+          // Stop propagation only for non-game windows
+          if (!['Tetris', 'Minesweeper'].includes(title)) {
+            e.stopPropagation();
+          }
+        }}
+      >
         {children}
       </div>
     </Card>
