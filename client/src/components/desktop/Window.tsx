@@ -80,7 +80,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       ref={windowRef}
       className={cn(
         'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in window-transition',
-        isMaximized && 'w-full !left-0 !top-8 !bottom-12'
+        isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
         left: position.x,
@@ -108,7 +108,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
           </Button>
         </div>
       </div>
-      <div className="flex-1 overflow-auto p-4">
+      <div className="flex-1 overflow-hidden p-4" onWheel={(e) => e.stopPropagation()}>
         {children}
       </div>
     </Card>
