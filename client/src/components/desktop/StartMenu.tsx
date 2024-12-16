@@ -38,6 +38,7 @@ const appIcons: Record<string, any> = {
   SystemInfo: Monitor,
   TimerClock: Timer,
   Browser: Globe,
+  WhackAMole: Grid, // Added icon for Whack-a-Mole
 };
 
 const apps = [
@@ -66,6 +67,13 @@ const apps = [
     id: "snake",
     title: "Snake",
     component: "Snake",
+    icon: Grid,
+    category: "Games",
+  },
+  {
+    id: "whackamole",
+    title: "Whack-a-Mole",
+    component: "WhackAMole",
     icon: Grid,
     category: "Games",
   },
