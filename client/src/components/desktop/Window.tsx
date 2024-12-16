@@ -23,10 +23,14 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging && !isMaximized) {
+      if (isDragging && !isMaximized && windowRef.current) {
+        const rect = windowRef.current.getBoundingClientRect();
+        const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
+        const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
+        
         updateWindowPosition(id, {
-          x: e.clientX - dragOffset.x,
-          y: e.clientY - dragOffset.y
+          x: newX,
+          y: newY
         })
       }
     }
