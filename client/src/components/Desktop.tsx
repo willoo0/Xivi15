@@ -7,7 +7,7 @@ import { FileExplorer } from './apps/FileExplorer'
 import { Settings } from './apps/Settings'
 import { Browser } from './apps/Browser'
 
-const components = {
+const components: Record<string, React.ComponentType> = {
   TextEditor,
   Calculator,
   FileExplorer,
