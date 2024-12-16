@@ -25,13 +25,42 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && !isMaximized && windowRef.current) {
         const rect = windowRef.current.getBoundingClientRect();
-        const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
-        const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const snapThreshold = 20;
+        
+        let newX = Math.max(0, Math.min(e.clientX - dragOffset.x, screenWidth - rect.width));
+        let newY = Math.max(0, Math.min(e.clientY - dragOffset.y, screenHeight - rect.height));
+        let newWidth = position.width;
+        let newHeight = position.height;
+
+        // Left edge snap
+        if (newX < snapThreshold) {
+          newX = 0;
+          newWidth = screenWidth / 2;
+          newHeight = screenHeight;
+          if (newY < snapThreshold) newY = 0;
+        }
+        // Right edge snap
+        else if (newX > screenWidth - rect.width - snapThreshold) {
+          newX = screenWidth / 2;
+          newWidth = screenWidth / 2;
+          newHeight = screenHeight;
+          if (newY < snapThreshold) newY = 0;
+        }
+        // Top edge snap
+        else if (newY < snapThreshold) {
+          newY = 0;
+          newWidth = screenWidth;
+          newHeight = screenHeight;
+        }
         
         updateWindowPosition(id, {
           x: newX,
-          y: newY
-        })
+          y: newY,
+          width: newWidth,
+          height: newHeight
+        });
       }
     }
 
