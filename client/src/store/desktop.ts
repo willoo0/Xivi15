@@ -48,7 +48,8 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
   maxZIndex: 0,
   pinnedApps: [
     { title: 'Files', component: 'FileExplorer' },
-    { title: 'Browser', component: 'Browser' },
+    { title: 'Web Browser', component: 'Browser' },
+    { title: 'Text Editor', component: 'TextEditor' },
     { title: 'Settings', component: 'Settings' }
   ],
   theme: 'system',

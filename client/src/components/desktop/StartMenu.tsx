@@ -33,13 +33,6 @@ const apps = [
     category: 'Internet'
   },
   {
-    id: 'mail',
-    title: 'Mail',
-    component: 'Mail',
-    icon: Mail,
-    category: 'Internet'
-  },
-  {
     id: 'text-editor',
     title: 'Text Editor',
     component: 'TextEditor',
@@ -54,53 +47,11 @@ const apps = [
     category: 'Accessories'
   },
   {
-    id: 'calendar',
-    title: 'Calendar',
-    component: 'Calendar',
-    icon: Calendar,
-    category: 'Productivity'
-  },
-  {
-    id: 'terminal',
-    title: 'Terminal',
-    component: 'Terminal',
-    icon: Terminal,
-    category: 'System'
-  },
-  {
     id: 'file-explorer',
     title: 'Files',
     component: 'FileExplorer',
     icon: Folder,
     category: 'System'
-  },
-  {
-    id: 'image-viewer',
-    title: 'Photos',
-    component: 'ImageViewer',
-    icon: Image,
-    category: 'Media'
-  },
-  {
-    id: 'music-player',
-    title: 'Music',
-    component: 'MusicPlayer',
-    icon: Music,
-    category: 'Media'
-  },
-  {
-    id: 'maps',
-    title: 'Maps',
-    component: 'Maps',
-    icon: Map,
-    category: 'Internet'
-  },
-  {
-    id: 'clock',
-    title: 'Clock',
-    component: 'Clock',
-    icon: Clock,
-    category: 'Accessories'
   },
   {
     id: 'settings',
