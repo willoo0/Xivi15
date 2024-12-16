@@ -145,28 +145,29 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card className="fixed bottom-12 left-2 w-80 p-2 bg-background/80 backdrop-blur-md z-[100000] menu-transition">
-        <div className="grid grid-cols-1 gap-4">
+      <Card className="fixed bottom-12 left-2 w-[420px] p-4 bg-background/80 backdrop-blur-md z-[100000] menu-transition">
+        <div className="grid grid-cols-2 gap-6">
           {categories.map((category) => {
             const categoryApps = apps.filter(app => app.category === category)
             if (categoryApps.length === 0) return null
             
             return (
-              <div key={category}>
-                <h3 className="text-sm font-semibold text-muted-foreground mb-1 px-2">
+              <div key={category} className="space-y-2">
+                <h3 className="text-sm font-semibold text-muted-foreground border-b pb-1">
                   {category}
                 </h3>
-                <div className="grid grid-cols-1 gap-1">
+                <div className="grid grid-cols-1 gap-1.5">
                   {categoryApps.map(app => (
                     <Button
                       key={app.id}
                       variant="ghost"
-                      className="justify-start"
+                      size="sm"
+                      className="justify-start h-8 px-2 hover:bg-accent"
                       onClick={() => handleAppClick(app)}
                       onContextMenu={(e) => handleRightClick(e, app)}
                     >
                       <app.icon className="h-4 w-4 mr-2" />
-                      {app.title}
+                      <span className="text-sm">{app.title}</span>
                     </Button>
                   ))}
                 </div>
