@@ -80,7 +80,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       ref={windowRef}
       className={cn(
         'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in window-transition',
-        isMaximized && 'w-full !left-0 !top-8 h-[calc(100vh-80px)]'
+        isMaximized && 'w-full !left-0 !top-8 !bottom-12'
       )}
       style={{
         left: position.x,
