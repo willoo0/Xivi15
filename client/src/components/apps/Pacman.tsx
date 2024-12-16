@@ -198,7 +198,7 @@ export function Pacman() {
   }, [maze, pacman, ghosts, pellets]);
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center gap-4 p-4" style={{ width: '450px', height: '450px' }}>
+    <div ref={containerRef} className="flex flex-col items-center gap-4 p-4" style={{ minWidth: '450px', minHeight: '450px' }}>
       <div className="flex justify-between w-full">
         <h2 className="text-xl font-bold">Pacman</h2>
         <span className="text-xl">Score: {score}</span>
