@@ -12,11 +12,6 @@ function App() {
   const { addWindow, windows } = useDesktopStore();
 
   useEffect(() => {
-    // Request fullscreen on startup
-    document.documentElement.requestFullscreen().catch(err => {
-      console.warn('Could not enter fullscreen:', err);
-    });
-
     const hideWelcome = localStorage.getItem('hideWelcome');
     const hasWelcomeWindow = windows.some(w => w.component === 'Welcome');
     if (!hideWelcome && !hasWelcomeWindow) {
