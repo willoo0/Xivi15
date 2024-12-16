@@ -24,13 +24,14 @@ export function Desktop() {
 
   return (
     <div 
-      className="h-screen w-screen overflow-hidden bg-cover bg-center transition-all duration-300"
+      className="h-screen w-screen overflow-hidden"
       style={{
-        backgroundImage: `url(${theme === 'dark' ? darkThemeBg : lightThemeBg})`,
+        backgroundColor: theme === 'dark' ? 'hsl(222.2 84% 4.9%)' : 'hsl(0 0% 100%)',
+        backgroundImage: `url(${theme === 'dark' ? '/dark-theme.jpg' : '/light-theme.jpg'})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        transition: 'background-image 0.3s ease-in-out'
+        transition: 'background-color 0.3s ease-in-out, background-image 0.3s ease-in-out'
       }}
     >
       {windows.map(window => {
