@@ -25,54 +25,13 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && !isMaximized && windowRef.current) {
         const rect = windowRef.current.getBoundingClientRect();
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight - 48; // Account for taskbar height
-        const snapThreshold = 20;
-        const originalWidth = position.width;
-        const originalHeight = position.height;
-        
-        let newX = Math.max(0, Math.min(e.clientX - dragOffset.x, screenWidth - rect.width));
-        let newY = Math.max(0, Math.min(e.clientY - dragOffset.y, screenHeight - rect.height));
-        let newWidth = originalWidth;
-        let newHeight = originalHeight;
-        let isSnapped = false;
-
-        // Left edge snap
-        if (newX < snapThreshold) {
-          newX = 0;
-          newWidth = screenWidth / 2;
-          newHeight = screenHeight;
-          if (newY < snapThreshold) newY = 0;
-          isSnapped = true;
-        }
-        // Right edge snap
-        else if (newX > screenWidth - rect.width - snapThreshold) {
-          newX = screenWidth / 2;
-          newWidth = screenWidth / 2;
-          newHeight = screenHeight;
-          if (newY < snapThreshold) newY = 0;
-          isSnapped = true;
-        }
-        // Top edge snap
-        else if (newY < snapThreshold) {
-          newY = 0;
-          newWidth = screenWidth;
-          newHeight = screenHeight;
-          isSnapped = true;
-        }
-
-        // If not snapped, restore original size
-        if (!isSnapped && rect.width === screenWidth || rect.width === screenWidth / 2) {
-          newWidth = originalWidth;
-          newHeight = originalHeight;
-        }
+        const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
+        const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
         
         updateWindowPosition(id, {
           x: newX,
-          y: newY,
-          width: newWidth,
-          height: newHeight
-        });
+          y: newY
+        })
       }
     }
 
