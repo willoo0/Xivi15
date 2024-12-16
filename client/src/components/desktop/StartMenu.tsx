@@ -123,7 +123,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card className="fixed bottom-12 left-2 w-80 p-2 bg-background/80 backdrop-blur-md z-50 menu-transition">
+      <Card className="fixed bottom-12 left-2 w-80 p-2 bg-background/80 backdrop-blur-md z-[100000] menu-transition">
         <div className="grid grid-cols-1 gap-4">
           {categories.map((category) => {
             const categoryApps = apps.filter(app => app.category === category)
