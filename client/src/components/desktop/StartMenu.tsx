@@ -161,7 +161,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card className="fixed bottom-12 left-2 w-[420px] p-4 bg-background/80 backdrop-blur-md z-[100000] menu-transition">
+      <Card className="fixed bottom-12 left-2 w-[420px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition">
         <div className="grid grid-cols-2 gap-6">
           {categories.map((category) => {
             const categoryApps = apps.filter(
