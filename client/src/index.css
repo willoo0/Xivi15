@@ -116,6 +116,10 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
+.window-transition {
+  transition: all 0.15s ease-out;
+}
+
 .glass {
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);

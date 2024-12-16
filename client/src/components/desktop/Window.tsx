@@ -79,7 +79,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     <Card
       ref={windowRef}
       className={cn(
-        'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in',
+        'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in window-transition',
         isMaximized && 'w-full h-full !left-0 !top-0'
       )}
       style={{
