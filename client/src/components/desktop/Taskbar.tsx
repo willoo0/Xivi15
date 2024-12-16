@@ -4,7 +4,7 @@ import { useDesktopStore } from '@/store/desktop'
 import { StartMenu } from './StartMenu'
 import { ContextMenu } from './ContextMenu'
 import { nanoid } from 'nanoid'
-import { AppWindow } from 'lucide-react'
+import { AppWindow, Layout } from 'lucide-react'
 import { getAppIcon } from '@/lib/appIcons'
 
 export function Taskbar() {
