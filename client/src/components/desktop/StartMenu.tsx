@@ -100,7 +100,7 @@ const apps = [
   }
 ]
 
-const categories = ['Internet', 'Productivity', 'Media', 'System', 'Accessories']
+const categories = ['Internet', 'Productivity', 'Media', 'System', 'Accessories', 'Games']
 
 export function StartMenu({ onClose }: StartMenuProps) {
   const { addWindow } = useDesktopStore()
