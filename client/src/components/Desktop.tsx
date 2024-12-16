@@ -30,12 +30,9 @@ export function Desktop() {
   const startSelection = (e: React.MouseEvent) => {
     if (e.button === 0 && (e.target as HTMLElement).classList.contains('desktop-background')) {
       setIsSelecting(true);
-      setSelectionStart({ x: e.clientX, y: e.clientY });
-      setSelectionCurrent({ x: e.clientX, y: e.clientY });
-    } else {
-      setIsSelecting(false);
-      setSelectionStart({ x: 0, y: 0 });
-      setSelectionCurrent({ x: 0, y: 0 });
+      const coords = { x: e.clientX, y: e.clientY };
+      setSelectionStart(coords);
+      setSelectionCurrent(coords);
     }
   };
   

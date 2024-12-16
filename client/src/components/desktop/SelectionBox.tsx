@@ -18,16 +18,11 @@ export function SelectionBox({ isSelecting, setIsSelecting, start, current, setC
     };
 
     const handleMouseUp = () => {
-      if (isSelecting) {
-        setIsSelecting(false);
-        setCurrent({ x: 0, y: 0 });
-      }
+      setIsSelecting(false);
     };
 
-    if (isSelecting) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-    }
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
@@ -35,14 +30,19 @@ export function SelectionBox({ isSelecting, setIsSelecting, start, current, setC
     };
   }, [isSelecting, setCurrent, setIsSelecting]);
 
-  if (!isSelecting && !start.x && !start.y) return null;
+  if (!isSelecting) return null;
+
+  const width = Math.abs(current.x - start.x);
+  const height = Math.abs(current.y - start.y);
+  
+  if (width === 0 || height === 0) return null;
 
   const style: React.CSSProperties = {
     position: 'fixed',
     left: Math.min(start.x, current.x),
     top: Math.min(start.y, current.y),
-    width: Math.abs(current.x - start.x),
-    height: Math.abs(current.y - start.y),
+    width,
+    height,
     backgroundColor: 'rgba(0, 120, 215, 0.1)',
     border: '1px solid rgba(0, 120, 215, 0.8)',
     pointerEvents: 'none',
