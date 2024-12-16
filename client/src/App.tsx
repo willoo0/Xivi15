@@ -12,24 +12,26 @@ function App() {
   const { addWindow, windows } = useDesktopStore();
 
   useEffect(() => {
-    const hideWelcome = localStorage.getItem('hideWelcome');
-    const hasWelcomeWindow = windows.some(w => w.component === 'Welcome');
-    if (!hideWelcome && !hasWelcomeWindow) {
-      addWindow({
-        id: nanoid(),
-        title: 'Welcome',
-        component: 'Welcome',
-        position: {
-          x: window.innerWidth / 2 - 200,
-          y: window.innerHeight / 2 - 200,
-          width: 400,
-          height: 400
-        },
-        isMinimized: false,
-        isMaximized: false
-      });
+    if (!showSplash) {
+      const hideWelcome = localStorage.getItem('hideWelcome');
+      const hasWelcomeWindow = windows.some(w => w.component === 'Welcome');
+      if (!hideWelcome && !hasWelcomeWindow) {
+        addWindow({
+          id: nanoid(),
+          title: 'Welcome',
+          component: 'Welcome',
+          position: {
+            x: window.innerWidth / 2 - 200,
+            y: window.innerHeight / 2 - 200,
+            width: 400,
+            height: 400
+          },
+          isMinimized: false,
+          isMaximized: false
+        });
+      }
     }
-  }, [addWindow]);
+  }, [addWindow, showSplash]);
 
   return (
     <QueryClientProvider client={queryClient}>
