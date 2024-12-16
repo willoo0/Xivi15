@@ -11,6 +11,7 @@ import { Settings } from './apps/Settings'
 import { Browser } from './apps/Browser'
 
 import { Welcome } from './apps/Welcome'
+import { TimerClock } from './apps/TimerClock'
 
 const components: Record<string, React.ComponentType> = {
   TextEditor,
@@ -19,6 +20,7 @@ const components: Record<string, React.ComponentType> = {
   Settings,
   Browser,
   Welcome,
+  TimerClock,
 }
 
 // Use background images from public folder

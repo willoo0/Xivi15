@@ -18,6 +18,7 @@ import {
   Map,
   Clock,
   Folder,
+  Timer,
 } from 'lucide-react'
 
 interface StartMenuProps {
@@ -25,6 +26,13 @@ interface StartMenuProps {
 }
 
 const apps = [
+  {
+    id: 'timerclock',
+    title: 'Timer & Clock',
+    component: 'TimerClock',
+    icon: Timer,
+    category: 'Accessories'
+  },
   {
     id: 'browser',
     title: 'Web Browser',
