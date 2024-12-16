@@ -44,7 +44,10 @@ export function registerRoutes(app: Express): Server {
       res.set({
         'Content-Type': contentType,
         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'X-Frame-Options': 'SAMEORIGIN',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'no-referrer',
         'X-Final-URL': response.url
       });
 
@@ -59,13 +62,43 @@ export function registerRoutes(app: Express): Server {
         // Add navigation handler script
         const script = `
           <script>
-            document.addEventListener('click', (e) => {
-              const link = e.target.closest('a');
-              if (link && link.href) {
-                e.preventDefault();
-                window.parent.postMessage({ type: 'navigate', url: link.href }, '*');
+            (function() {
+              // Handle all link clicks
+              document.addEventListener('click', (e) => {
+                const link = e.target.closest('a');
+                if (link && link.href) {
+                  e.preventDefault();
+                  window.parent.postMessage({ type: 'navigate', url: link.href }, '*');
+                }
+              });
+
+              // Handle form submissions
+              document.addEventListener('submit', (e) => {
+                const form = e.target;
+                if (form.method.toLowerCase() === 'get') {
+                  e.preventDefault();
+                  const formData = new FormData(form);
+                  const queryString = new URLSearchParams(formData).toString();
+                  const url = form.action + (form.action.includes('?') ? '&' : '?') + queryString;
+                  window.parent.postMessage({ type: 'navigate', url }, '*');
+                }
+              });
+
+              // Handle base target changes
+              const bases = document.getElementsByTagName('base');
+              for (const base of bases) {
+                base.target = '_self';
               }
-            });
+
+              // Override window.open
+              const originalOpen = window.open;
+              window.open = function(url) {
+                if (url) {
+                  window.parent.postMessage({ type: 'navigate', url }, '*');
+                }
+                return null;
+              };
+            })();
           </script>
         `;
         html = html.replace('</body>', `${script}</body>`);

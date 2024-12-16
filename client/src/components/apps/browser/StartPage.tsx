@@ -1,43 +1,45 @@
-import { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Search } from 'lucide-react'
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
 interface StartPageProps {
-  onNavigate: (url: string) => void
+  onNavigate: (url: string) => void;
 }
 
 export function StartPage({ onNavigate }: StartPageProps) {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    let finalUrl = query.trim()
-    
+    e.preventDefault();
+
+    let finalUrl = query.trim();
+
     // Check if it's a valid URL
     try {
-      new URL(finalUrl)
+      new URL(finalUrl);
       // If it doesn't have a protocol, add https://
-      if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
-        finalUrl = `https://${finalUrl}`
+      if (!finalUrl.startsWith("http://") && !finalUrl.startsWith("https://")) {
+        finalUrl = `https://${finalUrl}`;
       }
     } catch {
       // Not a valid URL, search on Google
-      finalUrl = `https://www.google.com/search?q=${encodeURIComponent(finalUrl)}`
+      finalUrl = `https://www.google.com/search?q=${encodeURIComponent(finalUrl)}`;
     }
-    
-    onNavigate(finalUrl)
-  }
+
+    onNavigate(finalUrl);
+  };
 
   return (
     <div className="h-full flex flex-col items-center justify-center p-6 bg-background/80">
       <div className="w-full max-w-2xl space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">Web Browser</h1>
-          <p className="text-lg text-muted-foreground">Search or enter website name</p>
+          <h1 className="text-4xl font-bold">🏄 Xivr Surf</h1>
+          <p className="text-lg text-muted-foreground">
+            Search or enter website name
+          </p>
         </div>
-        
+
         <form onSubmit={handleSearch} className="flex gap-2">
           <Input
             type="text"
@@ -53,5 +55,5 @@ export function StartPage({ onNavigate }: StartPageProps) {
         </form>
       </div>
     </div>
-  )
+  );
 }
