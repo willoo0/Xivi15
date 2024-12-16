@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { SelectionBox } from './desktop/SelectionBox'
 import { useDesktopStore } from '@/store/desktop'
 import { Window } from './desktop/Window'
 import { Taskbar } from './desktop/Taskbar'
@@ -36,7 +37,8 @@ export function Desktop() {
 
   return (
     <div 
-      className="h-screen w-screen overflow-hidden"
+      className="h-screen w-screen overflow-hidden desktop-background"
+      onMouseDown={(e) => e.currentTarget === e.target}
       style={{
         backgroundColor: theme === 'dark' ? 'hsl(222.2 84% 4.9%)' : 'hsl(0 0% 100%)',
         backgroundImage: `url(${theme === 'dark' ? '/dark-theme.jpg' : '/light-theme.jpg'})`,
@@ -59,6 +61,7 @@ export function Desktop() {
         )
       })}
       <Taskbar />
+      <SelectionBox />
     </div>
   )
 }
