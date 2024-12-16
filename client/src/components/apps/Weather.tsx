@@ -53,13 +53,18 @@ export function Weather() {
             <div>{forecast.description}</div>
             <div>Wind: {forecast.wind}</div>
           </Card>
-          {forecast.forecast?.map((day: any, index: number) => (
-            <Card key={index} className="p-4">
-              <div className="font-bold">Day {index + 1}</div>
-              <div className="text-2xl">{day.temperature}</div>
-              <div>Wind: {day.wind}</div>
-            </Card>
-          ))}
+          {forecast.forecast?.map((day: any, index: number) => {
+            const date = new Date();
+            date.setDate(date.getDate() + index + 1);
+            const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+            return (
+              <Card key={index} className="p-4">
+                <div className="font-bold">{dayName}</div>
+                <div className="text-2xl">{day.temperature}</div>
+                <div>Wind: {day.wind}</div>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>
