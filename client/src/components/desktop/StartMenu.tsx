@@ -1,3 +1,4 @@
+
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
@@ -18,8 +19,6 @@ import {
   Timer,
   Monitor,
   Grid,
-  Ghost,
-  CircleDot,
 } from 'lucide-react'
 
 interface StartMenuProps {
@@ -60,21 +59,14 @@ const apps = [
     id: 'minesweeper',
     title: 'Minesweeper',
     component: 'Minesweeper',
-    icon: Ghost,
+    icon: Grid,
     category: 'Games'
   },
   {
     id: 'snake',
     title: 'Snake',
     component: 'Snake',
-    icon: CircleDot,
-    category: 'Games'
-  },
-  {
-    id: 'pacman',
-    title: 'Pacman',
-    component: 'Pacman',
-    icon: Ghost,
+    icon: Grid,
     category: 'Games'
   },
   {
