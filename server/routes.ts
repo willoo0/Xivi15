@@ -6,16 +6,19 @@ import fetch from "node-fetch";
 export function registerRoutes(app: Express): Server {
   app.get('/api/proxy', async (req: Request, res) => {
     try {
-      const url = decodeURIComponent(req.query.url as string);
-      const mode = req.query.mode as string;
-      
+      let url = req.query.url as string;
       if (!url) {
         return res.status(400).send('URL parameter is required');
       }
 
-      // Prevent URL concatenation by ensuring valid URL format
+      // Clean up the URL if it's been recursively encoded
+      while (url.includes('api/proxy?url=')) {
+        url = decodeURIComponent(url.split('api/proxy?url=').pop() || '');
+      }
+
+      // Ensure the URL is properly formatted
       if (!url.match(/^https?:\/\//)) {
-        return res.status(400).send('Invalid URL format');
+        url = 'https://' + url;
       }
 
       const fetchOptions = {
@@ -25,40 +28,45 @@ export function registerRoutes(app: Express): Server {
         }
       };
 
-      if (mode === 'head') {
-        const response = await fetch(url, { ...fetchOptions, method: 'HEAD' });
-        res.setHeader('x-final-url', response.url);
-        return res.status(200).end();
-      }
-
       const response = await fetch(url, fetchOptions);
       const contentType = response.headers.get('content-type') || '';
-      const baseUrl = new URL(url).origin;
+      const baseUrl = new URL(response.url).origin;
 
+      // Set CORS and content type headers
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', '*');
       res.setHeader('Content-Type', contentType);
+      res.setHeader('X-Final-Url', response.url);
 
+      // Handle HTML and CSS content
       if (contentType.includes('text/html') || contentType.includes('text/css')) {
         let text = await response.text();
         
         // Rewrite relative URLs to absolute ones
-        text = text.replace(/(?:href|src)=['"](?!http|data:|#)([^'"]+)['"]/g, (match, path) => {
-          const absoluteUrl = new URL(path, baseUrl).toString();
-          return match.replace(path, `/api/proxy?url=${encodeURIComponent(absoluteUrl)}`);
+        text = text.replace(/(?:href|src)=['"](?!http|data:|#|javascript:|mailto:)([^'"]+)['"]/g, (match, path) => {
+          try {
+            const absoluteUrl = new URL(path, response.url).toString();
+            return match.replace(path, `/api/proxy?url=${encodeURIComponent(absoluteUrl)}`);
+          } catch {
+            return match;
+          }
         });
         
         // Handle CSS url() references
-        text = text.replace(/url\(['"]?(?!data:)([^'")]+)['"]?\)/g, (match, path) => {
-          if (path.startsWith('http')) return match;
-          const absoluteUrl = new URL(path, baseUrl).toString();
-          return `url('/api/proxy?url=${encodeURIComponent(absoluteUrl)}')`;
+        text = text.replace(/url\(['"]?(?!data:|https?:|#)([^'")]+)['"]?\)/g, (match, path) => {
+          try {
+            const absoluteUrl = new URL(path, response.url).toString();
+            return `url('/api/proxy?url=${encodeURIComponent(absoluteUrl)}')`;
+          } catch {
+            return match;
+          }
         });
         
         return res.send(text);
       }
 
+      // Stream other content types directly
       response.body?.pipe(res);
     } catch (error) {
       console.error('Proxy error:', error);

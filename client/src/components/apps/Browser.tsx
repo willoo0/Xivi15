@@ -24,31 +24,34 @@ export function Browser() {
 
   const handleIframeLoad = async (tabId: number, iframe: HTMLIFrameElement) => {
     try {
-      const currentUrl = iframe.contentWindow?.location.href
-      if (currentUrl && currentUrl !== 'about:blank') {
-        const cleanUrl = currentUrl.replace('/api/proxy?url=', '')
-        const decodedUrl = decodeURIComponent(cleanUrl)
-        
-        setTabs(tabs.map(t => 
-          t.id === tabId ? { 
-            ...t, 
-            url: decodedUrl,
-            title: decodedUrl,
-            icon: `${new URL(decodedUrl).origin}/favicon.ico`
-          } : t
-        ))
-        setInputUrl(decodedUrl)
-        
-        // Update history
-        const tabHistory = history[tabId] || []
-        const tabHistoryIndex = historyIndex[tabId] || 0
-        
-        // Remove forward history if navigating from middle
-        const newHistory = tabHistory.slice(0, tabHistoryIndex + 1)
-        newHistory.push(decodedUrl)
-        
-        setHistory({ ...history, [tabId]: newHistory })
-        setHistoryIndex({ ...historyIndex, [tabId]: newHistory.length - 1 })
+      const response = await fetch(`/api/proxy?url=${encodeURIComponent(tabs.find(t => t.id === tabId)?.url || '')}&mode=head`);
+      if (response.ok) {
+        const finalUrl = response.headers.get('x-final-url');
+        if (finalUrl) {
+          const title = tabs.find(t => t.id === tabId)?.title || finalUrl;
+          
+          setTabs(tabs.map(t => 
+            t.id === tabId ? { 
+              ...t, 
+              url: finalUrl,
+              title: title,
+              icon: `${new URL(finalUrl).origin}/favicon.ico`
+            } : t
+          ))
+          setInputUrl(finalUrl)
+          
+          // Update history
+          const tabHistory = history[tabId] || []
+          const tabHistoryIndex = historyIndex[tabId] || 0
+          
+          // Only add to history if it's a new URL
+          if (tabHistory[tabHistoryIndex] !== finalUrl) {
+            const newHistory = tabHistory.slice(0, tabHistoryIndex + 1)
+            newHistory.push(finalUrl)
+            setHistory({ ...history, [tabId]: newHistory })
+            setHistoryIndex({ ...historyIndex, [tabId]: newHistory.length - 1 })
+          }
+        }
       }
     } catch (error) {
       console.error('Error handling iframe load:', error)

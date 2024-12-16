@@ -1,0 +1,107 @@
+> rest-express@1.0.0 dev
+> tsx server/index.ts
+
+1:17:29 AM [express] serving on port 5000
+1:17:37 AM [express] GET /api/proxy 200 in 322ms
+1:17:37 AM [express] GET /api/proxy 200 in 13ms
+1:17:37 AM [express] GET /api/proxy 200 in 36ms
+1:17:38 AM [express] GET /api/proxy 200 in 49ms
+1:17:38 AM [express] GET /api/proxy 200 in 4ms
+Proxy error: FetchError: request to https://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps//www.google.com failed, reason: getaddrinfo ENOTFOUND 56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps
+    at ClientRequest.<anonymous> (file:///home/runner/BrowserOS-Simulator/node_modules/node-fetch/src/index.js:108:11)
+    at ClientRequest.emit (node:events:519:28)
+    at TLSSocket.socketErrorListener (node:_http_client:500:9)
+    at TLSSocket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  type: 'system',
+  errno: 'ENOTFOUND',
+  code: 'ENOTFOUND',
+  erroredSysCall: 'getaddrinfo'
+}
+1:17:39 AM [express] GET /api/proxy 500 in 8ms
+Proxy error: FetchError: request to https://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps//56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://www.google.com failed, reason: getaddrinfo ENOTFOUND 56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps
+    at ClientRequest.<anonymous> (file:///home/runner/BrowserOS-Simulator/node_modules/node-fetch/src/index.js:108:11)
+    at ClientRequest.emit (node:events:519:28)
+    at TLSSocket.socketErrorListener (node:_http_client:500:9)
+    at TLSSocket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  type: 'system',
+  errno: 'ENOTFOUND',
+  code: 'ENOTFOUND',
+  erroredSysCall: 'getaddrinfo'
+}
+1:17:39 AM [express] GET /api/proxy 500 in 4ms
+Proxy error: FetchError: request to https://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps//56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://www.google.com failed, reason: getaddrinfo ENOTFOUND 56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps
+    at ClientRequest.<anonymous> (file:///home/runner/BrowserOS-Simulator/node_modules/node-fetch/src/index.js:108:11)
+    at ClientRequest.emit (node:events:519:28)
+    at TLSSocket.socketErrorListener (node:_http_client:500:9)
+    at TLSSocket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  type: 'system',
+  errno: 'ENOTFOUND',
+  code: 'ENOTFOUND',
+  erroredSysCall: 'getaddrinfo'
+}
+1:17:40 AM [express] GET /api/proxy 500 in 4ms
+Proxy error: FetchError: request to https://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps//56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://www.google.com failed, reason: getaddrinfo ENOTFOUND 56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps
+    at ClientRequest.<anonymous> (file:///home/runner/BrowserOS-Simulator/node_modules/node-fetch/src/index.js:108:11)
+    at ClientRequest.emit (node:events:519:28)
+    at TLSSocket.socketErrorListener (node:_http_client:500:9)
+    at TLSSocket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  type: 'system',
+  errno: 'ENOTFOUND',
+  code: 'ENOTFOUND',
+  erroredSysCall: 'getaddrinfo'
+}
+1:17:40 AM [express] GET /api/proxy 500 in 4ms
+Proxy error: FetchError: request to https://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps//56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://www.google.com failed, reason: getaddrinfo ENOTFOUND 56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps
+    at ClientRequest.<anonymous> (file:///home/runner/BrowserOS-Simulator/node_modules/node-fetch/src/index.js:108:11)
+    at ClientRequest.emit (node:events:519:28)
+    at TLSSocket.socketErrorListener (node:_http_client:500:9)
+    at TLSSocket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  type: 'system',
+  errno: 'ENOTFOUND',
+  code: 'ENOTFOUND',
+  erroredSysCall: 'getaddrinfo'
+}
+1:17:40 AM [express] GET /api/proxy 500 in 5ms
+Proxy error: FetchError: request to https://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps//56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://www.google.com failed, reason: getaddrinfo ENOTFOUND 56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps
+    at ClientRequest.<anonymous> (file:///home/runner/BrowserOS-Simulator/node_modules/node-fetch/src/index.js:108:11)
+    at ClientRequest.emit (node:events:519:28)
+    at TLSSocket.socketErrorListener (node:_http_client:500:9)
+    at TLSSocket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  type: 'system',
+  errno: 'ENOTFOUND',
+  code: 'ENOTFOUND',
+  erroredSysCall: 'getaddrinfo'
+}
+1:17:41 AM [express] GET /api/proxy 500 in 5ms
+Proxy error: FetchError: request to https://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps//56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps://www.google.com failed, reason: getaddrinfo ENOTFOUND 56f85264-1c16-4a16-bd1e-55992b659b63-00-2f561r66wyo16.picard.repl.cohttps
+    at ClientRequest.<anonymous> (file:///home/runner/BrowserOS-Simulator/node_modules/node-fetch/src/index.js:108:11)
+    at ClientRequest.emit (node:events:519:28)
+    at TLSSocket.socketErrorListener (node:_http_client:500:9)
+    at TLSSocket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  type: 'system',
+  errno: 'ENOTFOUND',
+  code: 'ENOTFOUND',
+  erroredSysCall: 'getaddrinfo'
+}
+1:17:41 AM [express] GET /api/proxy 500 in 5ms
