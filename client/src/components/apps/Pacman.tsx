@@ -11,7 +11,6 @@ type Direction = 'up' | 'down' | 'left' | 'right';
 
 export function Pacman() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -198,7 +197,7 @@ export function Pacman() {
   }, [maze, pacman, ghosts, pellets]);
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center gap-4 p-4" style={{ minWidth: '450px', minHeight: '450px' }}>
+    <div className="w-[500px] h-[600px] flex flex-col items-center gap-4 p-4">
       <div className="flex justify-between w-full">
         <h2 className="text-xl font-bold">Pacman</h2>
         <span className="text-xl">Score: {score}</span>
