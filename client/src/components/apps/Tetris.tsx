@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -192,15 +193,14 @@ export function Tetris() {
       <div 
         className="grid gap-px bg-gray-800 p-2 rounded"
         style={{
-          gridTemplateColumns: `repeat(${BOARD_WIDTH}, 15px)`, // Adjusted cell size
-          width: `${BOARD_WIDTH * 15 + 4}px` // Added width for better responsiveness
+          gridTemplateColumns: `repeat(${BOARD_WIDTH}, 20px)`,
         }}
       >
         {board.map((row, y) => 
           row.map((cell, x) => (
             <div
               key={`${x}-${y}`}
-              className="w-6 h-6" // Adjusted cell size
+              className="w-5 h-5"
               style={{
                 backgroundColor: cell || (
                   currentPiece &&
