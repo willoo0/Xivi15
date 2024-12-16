@@ -29,6 +29,13 @@ interface StartMenuProps {
 
 const apps = [
   {
+    id: 'tetris',
+    title: 'Tetris',
+    component: 'Tetris',
+    icon: Grid,
+    category: 'Games'
+  },
+  {
     id: 'minesweeper',
     title: 'Minesweeper',
     component: 'Minesweeper',

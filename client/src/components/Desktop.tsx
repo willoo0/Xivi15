@@ -16,6 +16,7 @@ import { SystemInfo } from './apps/SystemInfo';
 import { Paint } from './apps/Paint';
 import { Todo } from './apps/Todo';
 import { Minesweeper } from './apps/Minesweeper';
+import { Tetris } from './apps/Tetris';
 
 const components: Record<string, React.ComponentType> = {
   TextEditor,
@@ -28,7 +29,8 @@ const components: Record<string, React.ComponentType> = {
   SystemInfo,
   Paint,
   Todo,
-  Minesweeper
+  Minesweeper,
+  Tetris
 }
 
 // Use background images from public folder
