@@ -17,27 +17,14 @@ export function Weather() {
         
         // Get location from IP
         const ipRes = await axios.get('https://ipapi.co/json/');
-        const { city, latitude: lat, longitude: lon } = ipRes.data;
-        setLocation(`${city}`);
-
-        const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
-        if (!API_KEY) {
-          throw new Error('OpenWeather API key not configured');
-        }
+        const { city } = ipRes.data;
+        setLocation(city);
 
         const weatherRes = await axios.get(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
+          `https://goweather.herokuapp.com/weather/${city}`
         );
 
-        const dailyData = weatherRes.data.list.reduce((days: any, item: any) => {
-          const date = new Date(item.dt * 1000).toLocaleDateString();
-          if (!days[date]) {
-            days[date] = item;
-          }
-          return days;
-        }, {});
-
-        setForecast(Object.values(dailyData).slice(0, 7));
+        setForecast(weatherRes.data);
       } catch (err: any) {
         setError(err.message || 'Failed to fetch weather data');
         console.error('Weather error:', err);
@@ -60,16 +47,17 @@ export function Weather() {
 
       {forecast && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {forecast.map((day: any) => (
-            <Card key={day.dt} className="p-4">
-              <div className="font-bold">
-                {new Date(day.dt * 1000).toLocaleDateString()}
-              </div>
-              <div className="text-2xl">
-                {Math.round(day.main.temp)}°C
-              </div>
-              <div>{day.weather[0].main}</div>
-              <div>Humidity: {day.main.humidity}%</div>
+          <Card className="p-4">
+            <div className="font-bold">Today</div>
+            <div className="text-2xl">{forecast.temperature}</div>
+            <div>{forecast.description}</div>
+            <div>Wind: {forecast.wind}</div>
+          </Card>
+          {forecast.forecast?.map((day: any, index: number) => (
+            <Card key={index} className="p-4">
+              <div className="font-bold">Day {index + 1}</div>
+              <div className="text-2xl">{day.temperature}</div>
+              <div>Wind: {day.wind}</div>
             </Card>
           ))}
         </div>
