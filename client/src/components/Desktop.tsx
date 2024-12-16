@@ -32,6 +32,10 @@ export function Desktop() {
       setIsSelecting(true);
       setSelectionStart({ x: e.clientX, y: e.clientY });
       setSelectionCurrent({ x: e.clientX, y: e.clientY });
+    } else {
+      setIsSelecting(false);
+      setSelectionStart({ x: 0, y: 0 });
+      setSelectionCurrent({ x: 0, y: 0 });
     }
   };
   

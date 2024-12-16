@@ -20,6 +20,7 @@ export function SelectionBox({ isSelecting, setIsSelecting, start, current, setC
     const handleMouseUp = () => {
       if (isSelecting) {
         setIsSelecting(false);
+        setCurrent({ x: 0, y: 0 });
       }
     };
 
