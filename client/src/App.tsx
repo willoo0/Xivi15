@@ -9,7 +9,7 @@ import { useDesktopStore } from './store/desktop'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const { addWindow } = useDesktopStore();
+  const { addWindow, windows } = useDesktopStore();
 
   useEffect(() => {
     const hideWelcome = localStorage.getItem('hideWelcome');
