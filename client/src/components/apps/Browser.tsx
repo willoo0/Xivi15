@@ -57,13 +57,20 @@ export function Browser() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    let finalUrl = inputUrl
-    if (!finalUrl.startsWith('http')) {
+    let finalUrl = inputUrl.trim()
+    
+    try {
+      const url = new URL(finalUrl)
+      if (!url.protocol) {
+        finalUrl = `https://${finalUrl}`
+      }
+    } catch {
       finalUrl = `https://${finalUrl}`
     }
     
     const tab = tabs.find(t => t.id === activeTab)
     if (tab) {
+      setInputUrl(finalUrl)
       setTabs(tabs.map(t => 
         t.id === activeTab ? { ...t, url: finalUrl } : t
       ))
