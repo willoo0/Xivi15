@@ -29,6 +29,13 @@ interface StartMenuProps {
 
 const apps = [
   {
+    id: 'dino',
+    title: 'Dino Jump',
+    component: 'DinoGame',
+    icon: Bird,
+    category: 'Games'
+  },
+  {
     id: 'tetris',
     title: 'Tetris',
     component: 'Tetris',
