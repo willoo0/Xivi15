@@ -6,9 +6,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export function TimerClock() {
   // Timer state
-  const [seconds, setSeconds] = useState<number>(0);
-  const [inputSeconds, setInputSeconds] = useState<string>('');
+  const [hours, setHours] = useState<string>('');
+  const [minutes, setMinutes] = useState<string>('');
+  const [seconds, setSeconds] = useState<string>('');
+  const [totalSeconds, setTotalSeconds] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
+
+  // Stopwatch state
+  const [stopwatchTime, setStopwatchTime] = useState<number>(0);
+  const [isStopwatchActive, setIsStopwatchActive] = useState<boolean>(false);
 
   // Clock state
   const [time, setTime] = useState<string>('');
@@ -18,18 +24,33 @@ export function TimerClock() {
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
-    if (isActive && seconds > 0) {
+    if (isActive && totalSeconds > 0) {
       interval = setInterval(() => {
-        setSeconds((prevSeconds) => prevSeconds - 1);
+        setTotalSeconds(prev => prev - 1);
       }, 1000);
-    } else if (seconds === 0) {
+    } else if (totalSeconds === 0) {
       setIsActive(false);
     }
 
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive, seconds]);
+  }, [isActive, totalSeconds]);
+
+  // Stopwatch effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isStopwatchActive) {
+      interval = setInterval(() => {
+        setStopwatchTime(prev => prev + 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isStopwatchActive]);
 
   // Clock effect
   useEffect(() => {
@@ -44,18 +65,30 @@ export function TimerClock() {
     return () => clearInterval(interval);
   }, []);
 
+  const formatTime = (time: number) => {
+    const h = Math.floor(time / 3600);
+    const m = Math.floor((time % 3600) / 60);
+    const s = time % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
   const handleStart = () => {
-    const parsedSeconds = parseInt(inputSeconds, 10);
-    if (!isNaN(parsedSeconds) && parsedSeconds > 0) {
-      setSeconds(parsedSeconds);
+    const h = parseInt(hours) || 0;
+    const m = parseInt(minutes) || 0;
+    const s = parseInt(seconds) || 0;
+    const total = h * 3600 + m * 60 + s;
+    if (total > 0) {
+      setTotalSeconds(total);
       setIsActive(true);
     }
   };
 
   const handleReset = () => {
     setIsActive(false);
-    setSeconds(0);
-    setInputSeconds('');
+    setTotalSeconds(0);
+    setHours('');
+    setMinutes('');
+    setSeconds('');
   };
 
   return (
@@ -63,25 +96,47 @@ export function TimerClock() {
       <Tabs defaultValue="timer">
         <TabsList className="w-full">
           <TabsTrigger value="timer" className="flex-1">Timer</TabsTrigger>
+          <TabsTrigger value="stopwatch" className="flex-1">Stopwatch</TabsTrigger>
           <TabsTrigger value="clock" className="flex-1">Clock</TabsTrigger>
         </TabsList>
         
         <TabsContent value="timer" className="space-y-4">
-          <Input
-            type="number"
-            value={inputSeconds}
-            onChange={(e) => setInputSeconds(e.target.value)}
-            placeholder="Enter seconds"
-            disabled={isActive}
-          />
+          <div className="flex gap-2">
+            <Input
+              type="number"
+              value={hours}
+              onChange={(e) => setHours(e.target.value)}
+              placeholder="Hours"
+              disabled={isActive}
+              min="0"
+            />
+            <Input
+              type="number"
+              value={minutes}
+              onChange={(e) => setMinutes(e.target.value)}
+              placeholder="Minutes"
+              disabled={isActive}
+              min="0"
+              max="59"
+            />
+            <Input
+              type="number"
+              value={seconds}
+              onChange={(e) => setSeconds(e.target.value)}
+              placeholder="Seconds"
+              disabled={isActive}
+              min="0"
+              max="59"
+            />
+          </div>
           <div className="text-4xl font-bold text-center">
-            {seconds} seconds
+            {formatTime(totalSeconds)}
           </div>
           <div className="flex gap-2">
             <Button
               className="flex-1"
               onClick={handleStart}
-              disabled={isActive || !inputSeconds}
+              disabled={isActive || (!hours && !minutes && !seconds)}
             >
               Start
             </Button>
@@ -89,6 +144,30 @@ export function TimerClock() {
               className="flex-1"
               variant="outline"
               onClick={handleReset}
+            >
+              Reset
+            </Button>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="stopwatch" className="space-y-4">
+          <div className="text-4xl font-bold text-center">
+            {formatTime(stopwatchTime)}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              className="flex-1"
+              onClick={() => setIsStopwatchActive(!isStopwatchActive)}
+            >
+              {isStopwatchActive ? 'Pause' : 'Start'}
+            </Button>
+            <Button
+              className="flex-1"
+              variant="outline"
+              onClick={() => {
+                setIsStopwatchActive(false);
+                setStopwatchTime(0);
+              }}
             >
               Reset
             </Button>
