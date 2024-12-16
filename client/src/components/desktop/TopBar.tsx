@@ -7,10 +7,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Power } from 'lucide-react';
+import { Power, Maximize2 } from 'lucide-react';
 
 export function TopBar() {
   const [dateTime, setDateTime] = useState('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
 
   useEffect(() => {
     const updateTime = () => {
@@ -57,6 +68,14 @@ export function TopBar() {
       </DropdownMenu>
       
       <div className="flex-1" />
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="h-6 w-6 mr-2" 
+        onClick={toggleFullscreen}
+      >
+        <Maximize2 className="h-4 w-4" />
+      </Button>
       <div className="text-sm">{dateTime}</div>
     </div>
   );
