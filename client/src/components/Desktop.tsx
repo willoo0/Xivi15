@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { SelectionBox } from './desktop/SelectionBox'
+import { TopBar } from './desktop/TopBar'
 import { useDesktopStore } from '@/store/desktop'
 import { Window } from './desktop/Window'
 import { Taskbar } from './desktop/Taskbar'
@@ -73,6 +74,7 @@ export function Desktop() {
           </Window>
         )
       })}
+      <TopBar />
       <Taskbar />
       <SelectionBox 
         isSelecting={isSelecting}
