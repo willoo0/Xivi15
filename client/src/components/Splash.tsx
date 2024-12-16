@@ -21,9 +21,9 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
         transition: 'opacity 0.3s ease-in-out'
       }}
     >
-      <div className="text-center space-y-4">
+      <div className="text-center">
         <h1 
-          className="text-4xl font-bold text-white"
+          className="text-4xl font-bold text-white mb-6"
           style={{
             animation: 'fadeIn 0.5s ease-out',
             opacity: opacity
@@ -32,10 +32,10 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
           BrowserOS
         </h1>
         <div 
-          className="w-10 h-10 border-3 border-zinc-400 border-t-transparent rounded-full mx-auto"
+          className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto"
           style={{
-            animation: 'spin 1s linear infinite',
-            opacity: opacity * 0.7
+            animation: 'spin 1.2s linear infinite',
+            opacity: opacity * 0.5
           }}
         />
       </div>
