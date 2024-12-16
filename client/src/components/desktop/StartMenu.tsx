@@ -19,6 +19,7 @@ import {
   Clock,
   Folder,
   Timer,
+  Monitor,
 } from 'lucide-react'
 
 interface StartMenuProps {
