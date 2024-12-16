@@ -2,10 +2,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 
-const GRAVITY = 0.8;
-const JUMP_FORCE = -12;
-const GROUND_Y = 200;
-const OBSTACLE_SPEED = 5;
+const GRAVITY = 1.5;
+const JUMP_FORCE = -20;
+const GROUND_Y = 250;
+const OBSTACLE_SPEED = 6;
 
 export function DinoGame() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -41,37 +41,33 @@ export function DinoGame() {
     if (!gameStarted || gameOver) return;
 
     const gameLoop = setInterval(() => {
-      // Update dino position
       setDinoY(y => {
         const newY = y + dinoVelocity;
         return Math.min(Math.max(newY, 0), GROUND_Y);
       });
+      
       setDinoVelocity(v => {
         const newV = v + GRAVITY;
         return dinoY >= GROUND_Y ? 0 : newV;
       });
 
-      // Update obstacles
       setObstacles(prev => {
         let newObstacles = prev.map(x => x - OBSTACLE_SPEED);
         if (newObstacles.length === 0 || newObstacles[newObstacles.length - 1] < 400) {
           newObstacles.push(800);
         }
-        newObstacles = newObstacles.filter(x => x > -50);
-        return newObstacles;
+        return newObstacles.filter(x => x > -50);
       });
 
-      // Check collisions
       obstacles.forEach(obstacleX => {
         if (
           obstacleX > 50 && obstacleX < 100 &&
-          dinoY > GROUND_Y - 40
+          dinoY > GROUND_Y - 50
         ) {
           setGameOver(true);
         }
       });
 
-      // Update score
       setScore(s => s + 1);
     }, 1000/60);
 
@@ -90,17 +86,22 @@ export function DinoGame() {
   return (
     <div className="p-4 select-none" tabIndex={0}>
       <div className="mb-4 flex justify-between items-center">
-        <div>Score: {score}</div>
+        <div className="text-xl font-bold">Score: {score}</div>
         <Button onClick={restartGame}>New Game</Button>
       </div>
       
-      <div className="relative w-[800px] h-[300px] border-b-2 border-gray-400">
+      <div className="relative w-[800px] h-[300px] border-b-2 border-gray-400 bg-gradient-to-b from-sky-100 to-white">
         {/* Dino */}
         <div
-          className="absolute w-10 h-10 bg-black"
+          className="absolute"
           style={{ 
             bottom: `${300 - dinoY}px`,
-            left: '50px'
+            left: '50px',
+            width: '40px',
+            height: '50px',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20,80 L20,40 L40,20 L60,20 L80,40 L80,60 L60,80 Z' fill='%23535353'/%3E%3Ccircle cx='45' cy='35' r='5' fill='white'/%3E%3Cpath d='M20,80 L30,90 L40,80' fill='%23535353'/%3E%3C/svg%3E")`,
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat'
           }}
         />
         
@@ -108,22 +109,27 @@ export function DinoGame() {
         {obstacles.map((x, i) => (
           <div
             key={i}
-            className="absolute w-6 h-10 bg-red-500"
+            className="absolute"
             style={{
               bottom: '0px',
-              left: `${x}px`
+              left: `${x}px`,
+              width: '20px',
+              height: '40px',
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20,20 L80,20 L80,80 L20,80 Z' fill='%23c43e3e'/%3E%3C/svg%3E")`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat'
             }}
           />
         ))}
         
         {!gameStarted && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center text-xl font-bold">
             Press Space to Start
           </div>
         )}
         
         {gameOver && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-2xl font-bold">
             Game Over!
           </div>
         )}
