@@ -1,28 +1,27 @@
-
-import { useState } from 'react'
-import { Window } from '@/components/desktop/Window'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { useDesktopStore } from '@/store/desktop'
+import { useState } from "react";
+import { Window } from "@/components/desktop/Window";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useDesktopStore } from "@/store/desktop";
 
 export function Welcome() {
-  const [showAgain, setShowAgain] = useState(true)
-  const { windows, removeWindow } = useDesktopStore()
-  
+  const [showAgain, setShowAgain] = useState(true);
+  const { windows, removeWindow } = useDesktopStore();
+
   const handleClose = () => {
     if (!showAgain) {
-      localStorage.setItem('hideWelcome', 'true')
+      localStorage.setItem("hideWelcome", "true");
     }
-    const welcomeWindow = windows.find(w => w.component === 'Welcome')
+    const welcomeWindow = windows.find((w) => w.component === "Welcome");
     if (welcomeWindow) {
-      removeWindow(welcomeWindow.id)
+      removeWindow(welcomeWindow.id);
     }
-  }
+  };
 
   return (
     <div className="p-6 max-w-md space-y-4">
-      <h1 className="text-2xl font-bold">Welcome to BrowserOS! 👋</h1>
-      
+      <h1 className="text-2xl font-bold">👋 Welcome to Xivi!</h1>
+
       <div className="space-y-2 text-muted-foreground">
         <p>Here's how to get started:</p>
         <ul className="list-disc pl-4 space-y-1">
@@ -34,8 +33,8 @@ export function Welcome() {
       </div>
 
       <div className="flex items-center gap-2">
-        <Checkbox 
-          id="show-again" 
+        <Checkbox
+          id="show-again"
           checked={!showAgain}
           onCheckedChange={(checked) => setShowAgain(!checked)}
         />
@@ -48,5 +47,5 @@ export function Welcome() {
         Get Started
       </Button>
     </div>
-  )
+  );
 }
