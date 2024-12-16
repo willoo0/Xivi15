@@ -102,7 +102,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
           <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
             <Maximize2 className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => handleClose()}>
+          <Button variant="ghost" size="icon" onClick={() => removeWindow(id)}>
             <X className="h-4 w-4" />
           </Button>
         </div>
