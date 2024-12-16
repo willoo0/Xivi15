@@ -18,6 +18,9 @@ import {
   Timer,
   Monitor,
   Grid,
+  Scissors,
+  Bomb,
+  Hammer,
 } from "lucide-react";
 
 interface StartMenuProps {
@@ -30,15 +33,15 @@ const appIcons: Record<string, any> = {
   FileExplorer: Folder,
   Settings: Settings,
   Weather: Cloud,
-  Tetris: Grid,
-  Snake: Grid,
-  Minesweeper: Grid,
+  Tetris: Layout,
+  Snake: Scissors,
+  Minesweeper: Bomb,
   Todo: Calendar,
   Paint: Image,
   SystemInfo: Monitor,
   TimerClock: Timer,
   Browser: Globe,
-  WhackAMole: Grid, // Added icon for Whack-a-Mole
+  WhackAMole: Hammer,
 };
 
 const apps = [
@@ -53,28 +56,28 @@ const apps = [
     id: "tetris",
     title: "Tetris",
     component: "Tetris",
-    icon: Grid,
+    icon: Layout,
     category: "Games",
   },
   {
     id: "minesweeper",
     title: "Minesweeper",
     component: "Minesweeper",
-    icon: Grid,
+    icon: Bomb,
     category: "Games",
   },
   {
     id: "snake",
     title: "Snake",
     component: "Snake",
-    icon: Grid,
+    icon: Scissors,
     category: "Games",
   },
   {
     id: "whackamole",
     title: "Whack-a-Mole",
     component: "WhackAMole",
-    icon: Grid,
+    icon: Hammer,
     category: "Games",
   },
   {
