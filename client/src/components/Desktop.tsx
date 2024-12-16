@@ -17,7 +17,7 @@ import { Paint } from './apps/Paint';
 import { Todo } from './apps/Todo';
 import { Minesweeper } from './apps/Minesweeper';
 import { Tetris } from './apps/Tetris';
-import { DinoGame } from './apps/DinoGame';
+
 
 const components: Record<string, React.ComponentType> = {
   TextEditor,
