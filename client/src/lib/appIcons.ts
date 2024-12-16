@@ -14,7 +14,8 @@ import {
   Timer,
   Globe,
   Hammer,
-  AppWindow
+  AppWindow,
+  Wave
 } from 'lucide-react';
 
 export const appIcons: Record<string, any> = {
@@ -32,6 +33,7 @@ export const appIcons: Record<string, any> = {
   TimerClock: Timer,
   Browser: Globe,
   WhackAMole: Hammer,
+  Welcome: Wave,
 };
 
 export const getAppIcon = (component: string) => appIcons[component] || AppWindow;
