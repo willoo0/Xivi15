@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 export type WindowPosition = {
   x: number
@@ -23,7 +23,7 @@ export type PinnedApp = {
   component: string
 }
 
-type DesktopState = {
+interface DesktopState {
   windows: AppWindow[]
   activeWindowId: string | null
   maxZIndex: number
@@ -42,20 +42,25 @@ type DesktopState = {
   updateSettings: (settings: Partial<Pick<DesktopState, 'theme' | 'blurEffects' | 'animations' | 'notifications'>>) => void
 }
 
+const initialState: Omit<DesktopState, keyof DesktopState> = {
+  windows: [],
+  activeWindowId: null,
+  maxZIndex: 0,
+  pinnedApps: [
+    { title: 'Files', component: 'FileExplorer' },
+    { title: 'Browser', component: 'Browser' },
+    { title: 'Settings', component: 'Settings' }
+  ],
+  theme: 'system',
+  blurEffects: true,
+  animations: true,
+  notifications: true,
+}
+
 export const useDesktopStore = create<DesktopState>()(
   persist(
-    (set) => ({
-      windows: [],
-      activeWindowId: null,
-      maxZIndex: 0,
-      pinnedApps: [
-        { title: 'Files', component: 'FileExplorer' },
-        { title: 'Settings', component: 'Settings' }
-      ],
-      theme: 'system',
-      blurEffects: true,
-      animations: true,
-      notifications: true,
+    (set, get) => ({
+      ...initialState,
       
       addWindow: (window) => set((state) => {
         const newZIndex = state.maxZIndex + 1
@@ -117,7 +122,9 @@ export const useDesktopStore = create<DesktopState>()(
       }))
     }),
     {
-      name: 'desktop-store'
+      name: 'desktop-store',
+      version: 1,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 )
