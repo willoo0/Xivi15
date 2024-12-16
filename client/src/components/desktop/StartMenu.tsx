@@ -27,6 +27,13 @@ interface StartMenuProps {
 
 const apps = [
   {
+    id: 'systeminfo',
+    title: 'System Info',
+    component: 'SystemInfo',
+    icon: Monitor,
+    category: 'System'
+  },
+  {
     id: 'timerclock',
     title: 'Timer & Clock',
     component: 'TimerClock',
