@@ -10,15 +10,10 @@ import {
   Settings,
   FileText,
   Calculator,
-  Terminal,
   Image,
-  Music,
-  Mail,
   Globe,
   Calendar,
-  Map,
   Cloud,
-  Clock,
   Folder,
   Timer,
   Monitor,
@@ -27,6 +22,21 @@ import {
 
 interface StartMenuProps {
   onClose: () => void
+}
+
+const appIcons: Record<string, any> = {
+  TextEditor: FileText,
+  Calculator: Calculator,
+  FileExplorer: Folder,
+  Settings: Settings,
+  Weather: Cloud,
+  Tetris: Grid,
+  Minesweeper: Grid,
+  Todo: Calendar,
+  Paint: Image,
+  SystemInfo: Monitor,
+  TimerClock: Timer,
+  Browser: Globe,
 }
 
 const apps = [
@@ -173,16 +183,18 @@ export function StartMenu({ onClose }: StartMenuProps) {
                   {category}
                 </h3>
                 <div className="grid grid-cols-1 gap-1.5">
-                  {categoryApps.map(app => (
-                    <Button
-                      key={app.id}
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start h-8 px-2 hover:bg-accent"
-                      onClick={() => handleAppClick(app)}
-                      onContextMenu={(e) => handleRightClick(e, app)}
-                    >
-                      <app.icon className="h-4 w-4 mr-2" />
+                  {categoryApps.map(app => {
+                    const Icon = appIcons[app.component] || AppWindow
+                    return (
+                      <Button
+                        key={app.id}
+                        variant="ghost"
+                        size="sm"
+                        className="justify-start h-8 px-2 hover:bg-accent"
+                        onClick={() => handleAppClick(app)}
+                        onContextMenu={(e) => handleRightClick(e, app)}
+                      >
+                        <Icon className="h-4 w-4 mr-2" />
                       <span className="text-sm">{app.title}</span>
                     </Button>
                   ))}
