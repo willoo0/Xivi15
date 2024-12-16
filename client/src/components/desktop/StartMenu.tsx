@@ -4,45 +4,12 @@ import { useState } from "react";
 import { useDesktopStore } from "@/store/desktop";
 import { ContextMenu } from "./ContextMenu";
 import { nanoid } from "nanoid";
-import {
-  AppWindow,
-  Layout,
-  Settings,
-  FileText,
-  Calculator,
-  Image,
-  Globe,
-  Calendar,
-  Cloud,
-  Folder,
-  Timer,
-  Monitor,
-  Grid,
-  Scissors,
-  Bomb,
-  Hammer,
-} from "lucide-react";
+import { AppWindow } from "lucide-react";
+import { getAppIcon } from "@/lib/appIcons";
 
 interface StartMenuProps {
   onClose: () => void;
 }
-
-const appIcons: Record<string, any> = {
-  TextEditor: FileText,
-  Calculator: Calculator,
-  FileExplorer: Folder,
-  Settings: Settings,
-  Weather: Cloud,
-  Tetris: Layout,
-  Snake: Scissors,
-  Minesweeper: Bomb,
-  Todo: Calendar,
-  Paint: Image,
-  SystemInfo: Monitor,
-  TimerClock: Timer,
-  Browser: Globe,
-  WhackAMole: Hammer,
-};
 
 const apps = [
   {
@@ -209,7 +176,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
                 </h3>
                 <div className="grid grid-cols-1 gap-1.5">
                   {categoryApps.map((app) => {
-                    const Icon = appIcons[app.component] || AppWindow;
+                    const Icon = getAppIcon(app.component);
                     return (
                       <Button
                         key={app.id}

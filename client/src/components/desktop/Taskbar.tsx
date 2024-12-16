@@ -4,38 +4,8 @@ import { useDesktopStore } from '@/store/desktop'
 import { StartMenu } from './StartMenu'
 import { ContextMenu } from './ContextMenu'
 import { nanoid } from 'nanoid'
-import {
-  AppWindow,
-  Layout,
-  Settings,
-  FileText,
-  Calculator,
-  Folder,
-  Cloud,
-  Grid,
-  Calendar,
-  Image,
-  Monitor,
-  Timer,
-  Globe,
-} from 'lucide-react'
-
-const appIcons: Record<string, any> = {
-  TextEditor: FileText,
-  Calculator: Calculator,
-  FileExplorer: Folder,
-  Settings: Settings,
-  Weather: Cloud,
-  Tetris: Grid,
-  Minesweeper: Grid,
-  Snake: Grid,
-  WhackAMole: Grid,
-  Todo: Calendar,
-  Paint: Image,
-  SystemInfo: Monitor,
-  TimerClock: Timer,
-  Browser: Globe,
-}
+import { AppWindow } from 'lucide-react'
+import { getAppIcon } from '@/lib/appIcons'
 
 export function Taskbar() {
   const { windows, activeWindowId, pinnedApps, setActiveWindow, toggleMinimize, addWindow } = useDesktopStore()
@@ -105,7 +75,7 @@ export function Taskbar() {
         <div className="flex-1 flex items-center space-x-1">
           {/* Pinned Apps */}
           {pinnedApps.map((app) => {
-            const Icon = appIcons[app.component] || AppWindow
+            const Icon = getAppIcon(app.component)
             return (
               <Button
                 key={app.component}
