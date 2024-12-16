@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useDesktopStore } from '@/store/desktop'
 import { Window } from './desktop/Window'
 import { Taskbar } from './desktop/Taskbar'
