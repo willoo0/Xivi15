@@ -1,10 +1,9 @@
-
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { useState } from 'react'
-import { useDesktopStore } from '@/store/desktop'
-import { ContextMenu } from './ContextMenu'
-import { nanoid } from 'nanoid'
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useDesktopStore } from "@/store/desktop";
+import { ContextMenu } from "./ContextMenu";
+import { nanoid } from "nanoid";
 import {
   AppWindow,
   Layout,
@@ -19,10 +18,10 @@ import {
   Timer,
   Monitor,
   Grid,
-} from 'lucide-react'
+} from "lucide-react";
 
 interface StartMenuProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 const appIcons: Record<string, any> = {
@@ -32,128 +31,129 @@ const appIcons: Record<string, any> = {
   Settings: Settings,
   Weather: Cloud,
   Tetris: Grid,
+  Snake: Grid,
   Minesweeper: Grid,
   Todo: Calendar,
   Paint: Image,
   SystemInfo: Monitor,
   TimerClock: Timer,
   Browser: Globe,
-}
+};
 
 const apps = [
   {
-    id: 'weather',
-    title: 'Weather',
-    component: 'Weather',
+    id: "weather",
+    title: "Weather",
+    component: "Weather",
     icon: Cloud,
-    category: 'Internet'
+    category: "Internet",
   },
   {
-    id: 'tetris',
-    title: 'Tetris',
-    component: 'Tetris',
+    id: "tetris",
+    title: "Tetris",
+    component: "Tetris",
     icon: Grid,
-    category: 'Games'
+    category: "Games",
   },
   {
-    id: 'minesweeper',
-    title: 'Minesweeper',
-    component: 'Minesweeper',
+    id: "minesweeper",
+    title: "Minesweeper",
+    component: "Minesweeper",
     icon: Grid,
-    category: 'Games'
+    category: "Games",
   },
   {
-    id: 'snake',
-    title: 'Snake',
-    component: 'Snake',
+    id: "snake",
+    title: "Snake",
+    component: "Snake",
     icon: Grid,
-    category: 'Games'
+    category: "Games",
   },
   {
-    id: 'snake',
-    title: 'Snake',
-    component: 'Snake',
-    icon: Grid,
-    category: 'Games'
-  },
-  {
-    id: 'todo',
-    title: 'Todo List',
-    component: 'Todo',
+    id: "todo",
+    title: "Todo List",
+    component: "Todo",
     icon: Calendar,
-    category: 'Productivity'
+    category: "Productivity",
   },
   {
-    id: 'paint',
-    title: 'Paint',
-    component: 'Paint',
+    id: "paint",
+    title: "Paint",
+    component: "Paint",
     icon: Image,
-    category: 'Media'
+    category: "Media",
   },
   {
-    id: 'systeminfo',
-    title: 'System Info',
-    component: 'SystemInfo',
+    id: "systeminfo",
+    title: "System Info",
+    component: "SystemInfo",
     icon: Monitor,
-    category: 'System'
+    category: "System",
   },
   {
-    id: 'timerclock',
-    title: 'Timer & Clock',
-    component: 'TimerClock',
+    id: "timerclock",
+    title: "Timer & Clock",
+    component: "TimerClock",
     icon: Timer,
-    category: 'Accessories'
+    category: "Accessories",
   },
   {
-    id: 'browser',
-    title: 'Web Browser',
-    component: 'Browser',
+    id: "browser",
+    title: "Web Browser",
+    component: "Browser",
     icon: Globe,
-    category: 'Internet'
+    category: "Internet",
   },
   {
-    id: 'text-editor',
-    title: 'Text Editor',
-    component: 'TextEditor',
+    id: "text-editor",
+    title: "Text Editor",
+    component: "TextEditor",
     icon: FileText,
-    category: 'Productivity'
+    category: "Productivity",
   },
   {
-    id: 'calculator',
-    title: 'Calculator',
-    component: 'Calculator',
+    id: "calculator",
+    title: "Calculator",
+    component: "Calculator",
     icon: Calculator,
-    category: 'Accessories'
+    category: "Accessories",
   },
   {
-    id: 'file-explorer',
-    title: 'Files',
-    component: 'FileExplorer',
+    id: "file-explorer",
+    title: "Files",
+    component: "FileExplorer",
     icon: Folder,
-    category: 'System'
+    category: "System",
   },
   {
-    id: 'settings',
-    title: 'Settings',
-    component: 'Settings',
+    id: "settings",
+    title: "Settings",
+    component: "Settings",
     icon: Settings,
-    category: 'System'
-  }
-]
+    category: "System",
+  },
+];
 
-const categories = ['Internet', 'Productivity', 'Media', 'System', 'Accessories', 'Games']
+const categories = [
+  "Internet",
+  "Productivity",
+  "Media",
+  "System",
+  "Accessories",
+  "Games",
+];
 
 export function StartMenu({ onClose }: StartMenuProps) {
-  const { addWindow } = useDesktopStore()
+  const { addWindow } = useDesktopStore();
   const [contextMenu, setContextMenu] = useState<{
-    x: number
-    y: number
-    appId: string
-    appComponent: string
-    appTitle: string
-  } | null>(null)
+    x: number;
+    y: number;
+    appId: string;
+    appComponent: string;
+    appTitle: string;
+  } | null>(null);
 
-  const handleAppClick = (app: typeof apps[0]) => {
+  const handleAppClick = (app: (typeof apps)[0]) => {
     addWindow({
       id: nanoid(),
       title: app.title,
@@ -162,43 +162,42 @@ export function StartMenu({ onClose }: StartMenuProps) {
         x: 50 + Math.random() * 100,
         y: 50 + Math.random() * 100,
         width: 600,
-        height: 400
+        height: 400,
       },
       isMinimized: false,
-      isMaximized: false
-    })
-    onClose()
-  }
+      isMaximized: false,
+    });
+    onClose();
+  };
 
-  const handleRightClick = (
-    e: React.MouseEvent,
-    app: typeof apps[0]
-  ) => {
-    e.preventDefault()
+  const handleRightClick = (e: React.MouseEvent, app: (typeof apps)[0]) => {
+    e.preventDefault();
     setContextMenu({
       x: e.clientX,
       y: e.clientY,
-      appId: '',
+      appId: "",
       appComponent: app.component,
-      appTitle: app.title
-    })
-  }
+      appTitle: app.title,
+    });
+  };
 
   return (
     <>
       <Card className="fixed bottom-12 left-2 w-[420px] p-4 bg-background/80 backdrop-blur-md z-[100000] menu-transition">
         <div className="grid grid-cols-2 gap-6">
           {categories.map((category) => {
-            const categoryApps = apps.filter(app => app.category === category)
-            if (categoryApps.length === 0) return null
-            
+            const categoryApps = apps.filter(
+              (app) => app.category === category,
+            );
+            if (categoryApps.length === 0) return null;
+
             return (
               <div key={category} className="space-y-2">
                 <h3 className="text-sm font-semibold text-muted-foreground border-b pb-1">
                   {category}
                 </h3>
                 <div className="grid grid-cols-1 gap-1.5">
-                  {categoryApps.map(app => {
+                  {categoryApps.map((app) => {
                     const Icon = appIcons[app.component] || AppWindow;
                     return (
                       <Button
@@ -222,11 +221,8 @@ export function StartMenu({ onClose }: StartMenuProps) {
       </Card>
 
       {contextMenu && (
-        <ContextMenu
-          {...contextMenu}
-          onClose={() => setContextMenu(null)}
-        />
+        <ContextMenu {...contextMenu} onClose={() => setContextMenu(null)} />
       )}
     </>
-  )
+  );
 }
