@@ -243,7 +243,8 @@ export function Browser() {
           key={currentTab?.url}
           src={`/api/proxy?url=${encodeURIComponent(currentTab?.url || '')}`}
           className="absolute inset-0 w-full h-full"
-          sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+          sandbox="allow-scripts allow-forms allow-popups"
+          referrerPolicy="no-referrer-when-downgrade"
           onLoad={(e) => handleIframeLoad(activeTab, e.currentTarget)}
         />
       </div>
