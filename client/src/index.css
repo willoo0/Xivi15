@@ -13,6 +13,12 @@
   to { transform: rotate(360deg); }
 }
 
+@keyframes jiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-0.5deg); }
+  75% { transform: rotate(0.5deg); }
+}
+
 .fade-in {
   animation: fadeIn 0.1s ease-in-out;
 }

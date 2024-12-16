@@ -80,7 +80,8 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       ref={windowRef}
       className={cn(
         'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in window-transition',
-        isMaximized && 'w-full h-full !left-0 !top-0'
+        isMaximized && 'w-full h-full !left-0 !top-0',
+        isDragging && 'animate-[jiggle_0.15s_ease-in-out_infinite]'
       )}
       style={{
         left: position.x,
@@ -112,4 +113,12 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       </div>
     </Card>
   )
+}
+
+@keyframes jiggle {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(2px, -2px); }
+  50% { transform: translate(-2px, 2px); }
+  75% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
 }
