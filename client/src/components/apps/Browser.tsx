@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -15,69 +14,43 @@ interface Tab {
 
 export function Browser() {
   const [tabs, setTabs] = useState<Tab[]>([
-    { id: 1, url: 'https://www.google.com', title: 'Google', icon: 'https://www.google.com/favicon.ico' }
+    { id: 1, url: 'https://www.google.com', title: 'Google' }
   ])
   const [activeTab, setActiveTab] = useState(1)
   const [inputUrl, setInputUrl] = useState('https://www.google.com')
-  const [history, setHistory] = useState<{ [key: number]: string[]}>({ 1: ['https://www.google.com'] })
+  const [history, setHistory] = useState<{ [key: number]: string[] }>({ 1: ['https://www.google.com'] })
   const [historyIndex, setHistoryIndex] = useState<{ [key: number]: number }>({ 1: 0 })
+  const [loading, setLoading] = useState(false)
 
-  const handleIframeLoad = async (tabId: number, iframe: HTMLIFrameElement) => {
+  const navigate = useCallback((tabId: number, url: string, addToHistory = true) => {
+    let finalUrl = url.trim()
     try {
-      const response = await fetch(`/api/proxy?url=${encodeURIComponent(tabs.find(t => t.id === tabId)?.url || '')}&mode=head`);
-      if (response.ok) {
-        const finalUrl = response.headers.get('x-final-url');
-        if (finalUrl) {
-          const title = tabs.find(t => t.id === tabId)?.title || finalUrl;
-          
-          setTabs(tabs.map(t => 
-            t.id === tabId ? { 
-              ...t, 
-              url: finalUrl,
-              title: title,
-              icon: `${new URL(finalUrl).origin}/favicon.ico`
-            } : t
-          ))
-          setInputUrl(finalUrl)
-          
-          // Update history
-          const tabHistory = history[tabId] || []
-          const tabHistoryIndex = historyIndex[tabId] || 0
-          
-          // Only add to history if it's a new URL
-          if (tabHistory[tabHistoryIndex] !== finalUrl) {
-            const newHistory = tabHistory.slice(0, tabHistoryIndex + 1)
-            newHistory.push(finalUrl)
-            setHistory({ ...history, [tabId]: newHistory })
-            setHistoryIndex({ ...historyIndex, [tabId]: newHistory.length - 1 })
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error handling iframe load:', error)
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    let finalUrl = inputUrl.trim()
-    
-    try {
-      const url = new URL(finalUrl)
-      if (!url.protocol) {
-        finalUrl = `https://${finalUrl}`
-      }
+      new URL(finalUrl)
     } catch {
       finalUrl = `https://${finalUrl}`
     }
-    
-    const tab = tabs.find(t => t.id === activeTab)
-    if (tab) {
-      setInputUrl(finalUrl)
-      setTabs(tabs.map(t => 
-        t.id === activeTab ? { ...t, url: finalUrl } : t
-      ))
+
+    setTabs(tabs => tabs.map(tab =>
+      tab.id === tabId ? { ...tab, url: finalUrl } : tab
+    ))
+    setInputUrl(finalUrl)
+
+    if (addToHistory) {
+      setHistory(prev => {
+        const tabHistory = [...(prev[tabId] || []).slice(0, (historyIndex[tabId] || 0) + 1)]
+        tabHistory.push(finalUrl)
+        return { ...prev, [tabId]: tabHistory }
+      })
+      setHistoryIndex(prev => ({
+        ...prev,
+        [tabId]: (prev[tabId] || 0) + 1
+      }))
     }
+  }, [historyIndex])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    navigate(activeTab, inputUrl)
   }
 
   const addTab = () => {
@@ -85,12 +58,11 @@ export function Browser() {
     setTabs([...tabs, { 
       id: newId, 
       url: 'https://www.google.com', 
-      title: 'New Tab',
-      icon: 'https://www.google.com/favicon.ico'
+      title: 'New Tab'
     }])
     setActiveTab(newId)
-    setHistory({ ...history, [newId]: ['https://www.google.com'] })
-    setHistoryIndex({ ...historyIndex, [newId]: 0 })
+    setHistory(prev => ({ ...prev, [newId]: ['https://www.google.com'] }))
+    setHistoryIndex(prev => ({ ...prev, [newId]: 0 }))
   }
 
   const closeTab = (id: number, e: React.MouseEvent) => {
@@ -99,72 +71,50 @@ export function Browser() {
       const newTabs = tabs.filter(t => t.id !== id)
       setTabs(newTabs)
       if (activeTab === id) {
-        const lastTab = newTabs[newTabs.length - 1]
-        setActiveTab(lastTab.id)
+        setActiveTab(newTabs[newTabs.length - 1].id)
       }
     }
   }
 
-  const navigate = (direction: 'back' | 'forward') => {
-    const tabHistory = history[activeTab] || []
+  const goBack = () => {
     const currentIndex = historyIndex[activeTab] || 0
-    
-    if (direction === 'back' && currentIndex > 0) {
+    if (currentIndex > 0) {
       const newIndex = currentIndex - 1
-      const url = tabHistory[newIndex]
-      setTabs(tabs.map(t => 
-        t.id === activeTab ? { ...t, url } : t
-      ))
-      setHistoryIndex({ ...historyIndex, [activeTab]: newIndex })
-      setInputUrl(url)
-    } else if (direction === 'forward' && currentIndex < tabHistory.length - 1) {
+      const url = history[activeTab][newIndex]
+      navigate(activeTab, url, false)
+      setHistoryIndex(prev => ({ ...prev, [activeTab]: newIndex }))
+    }
+  }
+
+  const goForward = () => {
+    const currentIndex = historyIndex[activeTab] || 0
+    const tabHistory = history[activeTab] || []
+    if (currentIndex < tabHistory.length - 1) {
       const newIndex = currentIndex + 1
       const url = tabHistory[newIndex]
-      setTabs(tabs.map(t => 
-        t.id === activeTab ? { ...t, url } : t
-      ))
-      setHistoryIndex({ ...historyIndex, [activeTab]: newIndex })
-      setInputUrl(url)
+      navigate(activeTab, url, false)
+      setHistoryIndex(prev => ({ ...prev, [activeTab]: newIndex }))
     }
   }
 
-  const refreshTab = () => {
+  const refresh = () => {
     const tab = tabs.find(t => t.id === activeTab)
     if (tab) {
-      setTabs(tabs.map(t => 
-        t.id === activeTab ? { ...t, url: t.url + '?' + Date.now() } : t
-      ))
+      navigate(activeTab, tab.url)
     }
   }
-
-  const currentTab = tabs.find(t => t.id === activeTab)
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'navigate' && event.data?.url) {
-        try {
-          const url = new URL(event.data.url);
-          // Prevent recursive loading of our own app
-          if (url.hostname === window.location.hostname) {
-            return;
-          }
-          
-          setInputUrl(url.toString());
-          const tab = tabs.find(t => t.id === activeTab);
-          if (tab) {
-            setTabs(tabs.map(t => 
-              t.id === activeTab ? { ...t, url: url.toString() } : t
-            ));
-          }
-        } catch (e) {
-          console.error('Invalid URL:', e);
-        }
+        navigate(activeTab, event.data.url)
       }
-    };
-    
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [activeTab, tabs, setTabs]);
+    }
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [activeTab, navigate])
+
+  const currentTab = tabs.find(t => t.id === activeTab)
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -173,21 +123,21 @@ export function Browser() {
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => navigate('back')}
-            disabled={!history[activeTab] || historyIndex[activeTab] === 0}
+            onClick={goBack}
+            disabled={!history[activeTab] || (historyIndex[activeTab] || 0) === 0}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => navigate('forward')}
-            disabled={!history[activeTab] || historyIndex[activeTab] === (history[activeTab]?.length || 0) - 1}
+            onClick={goForward}
+            disabled={!history[activeTab] || (historyIndex[activeTab] || 0) >= (history[activeTab]?.length || 0) - 1}
           >
             <ArrowRight className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={refreshTab} className="shrink-0">
-            <RotateCw className="h-4 w-4" />
+          <Button variant="ghost" size="icon" onClick={refresh}>
+            <RotateCw className={cn("h-4 w-4", loading && "animate-spin")} />
           </Button>
           
           <form onSubmit={handleSubmit} className="flex-1 flex gap-2">
@@ -239,14 +189,16 @@ export function Browser() {
       </div>
       
       <div className="flex-1 relative">
-        <iframe
-          key={currentTab?.url}
-          src={`/api/proxy?url=${encodeURIComponent(currentTab?.url || '')}`}
-          className="absolute inset-0 w-full h-full"
-          sandbox="allow-scripts allow-forms allow-popups"
-          referrerPolicy="no-referrer-when-downgrade"
-          onLoad={(e) => handleIframeLoad(activeTab, e.currentTarget)}
-        />
+        {currentTab && (
+          <iframe
+            key={`${currentTab.id}-${currentTab.url}`}
+            src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
+            className="absolute inset-0 w-full h-full"
+            sandbox="allow-same-origin allow-scripts"
+            onLoad={() => setLoading(false)}
+            onLoadStart={() => setLoading(true)}
+          />
+        )}
       </div>
     </div>
   )
