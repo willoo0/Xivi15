@@ -39,6 +39,7 @@ export function Desktop() {
     <div 
       className="h-screen w-screen overflow-hidden desktop-background"
       onMouseDown={(e) => e.currentTarget === e.target}
+      onContextMenu={(e) => e.preventDefault()}
       style={{
         backgroundColor: theme === 'dark' ? 'hsl(222.2 84% 4.9%)' : 'hsl(0 0% 100%)',
         backgroundImage: `url(${theme === 'dark' ? '/dark-theme.jpg' : '/light-theme.jpg'})`,

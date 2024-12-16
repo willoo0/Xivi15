@@ -1,11 +1,7 @@
 
 import { useState, useEffect } from 'react';
 
-interface SelectionBoxProps {
-  onSelection?: (selection: { x: number; y: number; width: number; height: number }) => void;
-}
-
-export function SelectionBox({ onSelection }: SelectionBoxProps) {
+export function SelectionBox() {
   const [isSelecting, setIsSelecting] = useState(false);
   const [start, setStart] = useState({ x: 0, y: 0 });
   const [current, setCurrent] = useState({ x: 0, y: 0 });
@@ -14,13 +10,6 @@ export function SelectionBox({ onSelection }: SelectionBoxProps) {
     const handleMouseUp = () => {
       if (isSelecting) {
         setIsSelecting(false);
-        if (onSelection) {
-          const width = Math.abs(current.x - start.x);
-          const height = Math.abs(current.y - start.y);
-          const x = Math.min(start.x, current.x);
-          const y = Math.min(start.y, current.y);
-          onSelection({ x, y, width, height });
-        }
       }
     };
 
