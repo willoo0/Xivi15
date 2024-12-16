@@ -1,21 +1,48 @@
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { useDesktopStore } from '@/store/desktop'
+import { useToast } from '@/hooks/use-toast'
 
 export function Settings() {
+  const { theme, blurEffects, animations, notifications, updateSettings } = useDesktopStore()
+  const { toast } = useToast()
+  
+  const handleSave = () => {
+    toast({
+      title: "Settings saved",
+      description: "Your changes have been applied successfully.",
+    })
+  }
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-lg font-semibold mb-4">Appearance</h2>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Dark Mode</Label>
-              <div className="text-sm text-muted-foreground">
-                Switch between light and dark themes
+          <div className="space-y-2">
+            <Label>Theme</Label>
+            <RadioGroup
+              value={theme}
+              onValueChange={(value) => 
+                updateSettings({ theme: value as 'light' | 'dark' | 'system' })
+              }
+              className="flex flex-col space-y-1"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="light" id="light" />
+                <Label htmlFor="light">Light</Label>
               </div>
-            </div>
-            <Switch />
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="dark" id="dark" />
+                <Label htmlFor="dark">Dark</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="system" id="system" />
+                <Label htmlFor="system">System</Label>
+              </div>
+            </RadioGroup>
           </div>
           
           <div className="flex items-center justify-between">
@@ -25,7 +52,10 @@ export function Settings() {
                 Enable window blur effects
               </div>
             </div>
-            <Switch defaultChecked />
+            <Switch 
+              checked={blurEffects}
+              onCheckedChange={(checked) => updateSettings({ blurEffects: checked })}
+            />
           </div>
         </div>
       </div>
@@ -40,7 +70,10 @@ export function Settings() {
                 Show system notifications
               </div>
             </div>
-            <Switch defaultChecked />
+            <Switch 
+              checked={notifications}
+              onCheckedChange={(checked) => updateSettings({ notifications: checked })}
+            />
           </div>
           
           <div className="flex items-center justify-between">
@@ -50,12 +83,17 @@ export function Settings() {
                 Enable system animations
               </div>
             </div>
-            <Switch defaultChecked />
+            <Switch 
+              checked={animations}
+              onCheckedChange={(checked) => updateSettings({ animations: checked })}
+            />
           </div>
         </div>
       </div>
       
-      <Button className="w-full">Save Changes</Button>
+      <Button className="w-full" onClick={handleSave}>
+        Save Changes
+      </Button>
     </div>
   )
 }
