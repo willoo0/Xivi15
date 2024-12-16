@@ -18,6 +18,8 @@ import {
   Monitor,
   Timer,
   Globe,
+  Ghost,
+  CircleDot,
 } from 'lucide-react'
 
 const appIcons: Record<string, any> = {
@@ -33,6 +35,8 @@ const appIcons: Record<string, any> = {
   SystemInfo: Monitor,
   TimerClock: Timer,
   Browser: Globe,
+  Pacman: Ghost,
+  Snake: CircleDot,
 }
 
 export function Taskbar() {

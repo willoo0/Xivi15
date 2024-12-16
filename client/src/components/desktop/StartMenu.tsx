@@ -19,6 +19,8 @@ import {
   Timer,
   Monitor,
   Grid,
+  Ghost,
+  CircleDot,
 } from 'lucide-react'
 
 interface StartMenuProps {
@@ -59,14 +61,14 @@ const apps = [
     id: 'minesweeper',
     title: 'Minesweeper',
     component: 'Minesweeper',
-    icon: Grid,
+    icon: Ghost,
     category: 'Games'
   },
   {
     id: 'snake',
     title: 'Snake',
     component: 'Snake',
-    icon: Grid,
+    icon: CircleDot,
     category: 'Games'
   },
   {
