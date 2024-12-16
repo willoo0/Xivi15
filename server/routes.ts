@@ -11,14 +11,29 @@ export function registerRoutes(app: Express): Server {
         return res.status(400).send('URL parameter is required');
       }
 
-      // Clean up the URL if it's been recursively encoded
-      while (url.includes('api/proxy?url=')) {
-        url = decodeURIComponent(url.split('api/proxy?url=').pop() || '');
-      }
+      try {
+        // Clean up the URL if it's been recursively encoded
+        while (url.includes('api/proxy?url=')) {
+          url = decodeURIComponent(url.split('api/proxy?url=').pop() || '');
+        }
 
-      // Ensure the URL is properly formatted
-      if (!url.match(/^https?:\/\//)) {
-        url = 'https://' + url;
+        // Parse and validate the URL
+        const parsedUrl = new URL(url);
+        if (!parsedUrl.protocol.startsWith('http')) {
+          parsedUrl.protocol = 'https:';
+        }
+        
+        // Prevent recursive loading of our own app
+        if (parsedUrl.hostname === req.hostname) {
+          return res.status(400).send('Cannot proxy internal URLs');
+        }
+
+        url = parsedUrl.toString();
+      } catch (e) {
+        // If URL parsing fails, try prepending https://
+        if (!url.match(/^https?:\/\//)) {
+          url = 'https://' + url;
+        }
       }
 
       const fetchOptions = {

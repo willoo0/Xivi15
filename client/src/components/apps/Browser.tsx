@@ -142,12 +142,22 @@ export function Browser() {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'navigate' && event.data?.url) {
-        setInputUrl(event.data.url);
-        const tab = tabs.find(t => t.id === activeTab);
-        if (tab) {
-          setTabs(tabs.map(t => 
-            t.id === activeTab ? { ...t, url: event.data.url } : t
-          ));
+        try {
+          const url = new URL(event.data.url);
+          // Prevent recursive loading of our own app
+          if (url.hostname === window.location.hostname) {
+            return;
+          }
+          
+          setInputUrl(url.toString());
+          const tab = tabs.find(t => t.id === activeTab);
+          if (tab) {
+            setTabs(tabs.map(t => 
+              t.id === activeTab ? { ...t, url: url.toString() } : t
+            ));
+          }
+        } catch (e) {
+          console.error('Invalid URL:', e);
         }
       }
     };
@@ -233,7 +243,7 @@ export function Browser() {
           key={currentTab?.url}
           src={`/api/proxy?url=${encodeURIComponent(currentTab?.url || '')}`}
           className="absolute inset-0 w-full h-full"
-          sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+          sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
           onLoad={(e) => handleIframeLoad(activeTab, e.currentTarget)}
         />
       </div>
