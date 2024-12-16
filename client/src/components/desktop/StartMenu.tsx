@@ -28,6 +28,13 @@ interface StartMenuProps {
 
 const apps = [
   {
+    id: 'paint',
+    title: 'Paint',
+    component: 'Paint',
+    icon: Image,
+    category: 'Media'
+  },
+  {
     id: 'systeminfo',
     title: 'System Info',
     component: 'SystemInfo',

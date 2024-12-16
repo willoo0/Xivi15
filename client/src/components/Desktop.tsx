@@ -12,7 +12,8 @@ import { Browser } from './apps/Browser'
 
 import { Welcome } from './apps/Welcome'
 import { TimerClock } from './apps/TimerClock'
-import { SystemInfo } from './apps/SystemInfo'; // Added import for SystemInfo
+import { SystemInfo } from './apps/SystemInfo';
+import { Paint } from './apps/Paint';
 
 const components: Record<string, React.ComponentType> = {
   TextEditor,
@@ -22,7 +23,8 @@ const components: Record<string, React.ComponentType> = {
   Browser,
   Welcome,
   TimerClock,
-  SystemInfo, // Added SystemInfo to components
+  SystemInfo,
+  Paint
 }
 
 // Use background images from public folder
