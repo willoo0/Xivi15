@@ -20,7 +20,7 @@ export function Weather() {
         const { city, latitude: lat, longitude: lon } = ipRes.data;
         setLocation(`${city}`);
 
-        const API_KEY = process.env.OPENWEATHER_API_KEY;
+        const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
         if (!API_KEY) {
           throw new Error('OpenWeather API key not configured');
         }
