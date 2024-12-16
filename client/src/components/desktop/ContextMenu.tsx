@@ -31,7 +31,7 @@ export function ContextMenu({ x, y, appId, appComponent, appTitle, onClose }: Co
   return (
     <Card 
       ref={menuRef}
-      className="fixed min-w-[160px] z-[1000] bg-background/80 backdrop-blur-md"
+      className="fixed min-w-[160px] z-[9999] bg-background/80 backdrop-blur-md"
       style={{ 
         left: Math.min(x, window.innerWidth - 200),
         top: Math.min(y, window.innerHeight - 150),
