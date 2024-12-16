@@ -13,7 +13,8 @@ function App() {
 
   useEffect(() => {
     const hideWelcome = localStorage.getItem('hideWelcome');
-    if (!hideWelcome) {
+    const hasWelcomeWindow = windows.some(w => w.component === 'Welcome');
+    if (!hideWelcome && !hasWelcomeWindow) {
       addWindow({
         id: nanoid(),
         title: 'Welcome',

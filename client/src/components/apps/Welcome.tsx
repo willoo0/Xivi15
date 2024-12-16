@@ -1,15 +1,21 @@
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Window } from '@/components/desktop/Window'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useDesktopStore } from '@/store/desktop'
 
 export function Welcome() {
   const [showAgain, setShowAgain] = useState(true)
+  const { windows, removeWindow } = useDesktopStore()
   
   const handleClose = () => {
     if (!showAgain) {
       localStorage.setItem('hideWelcome', 'true')
+    }
+    const welcomeWindow = windows.find(w => w.component === 'Welcome')
+    if (welcomeWindow) {
+      removeWindow(welcomeWindow.id)
     }
   }
 
