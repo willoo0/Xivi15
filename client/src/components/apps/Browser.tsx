@@ -139,6 +139,23 @@ export function Browser() {
 
   const currentTab = tabs.find(t => t.id === activeTab)
 
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'navigate' && event.data?.url) {
+        setInputUrl(event.data.url);
+        const tab = tabs.find(t => t.id === activeTab);
+        if (tab) {
+          setTabs(tabs.map(t => 
+            t.id === activeTab ? { ...t, url: event.data.url } : t
+          ));
+        }
+      }
+    };
+    
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [activeTab, tabs, setTabs]);
+
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex flex-col border-b">

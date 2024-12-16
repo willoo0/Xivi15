@@ -43,6 +43,45 @@ export function registerRoutes(app: Express): Server {
       if (contentType.includes('text/html') || contentType.includes('text/css')) {
         let text = await response.text();
         
+        if (contentType.includes('text/html')) {
+          // Inject script to handle link clicks
+          const linkHandlerScript = `
+            <script>
+              document.addEventListener('click', function(e) {
+                var link = e.target.closest('a');
+                if (link) {
+                  e.preventDefault();
+                  var href = link.href;
+                  if (href && !href.startsWith('javascript:') && !href.startsWith('mailto:')) {
+                    window.parent.postMessage({ type: 'navigate', url: href }, '*');
+                  }
+                }
+              }, true);
+              
+              // Handle form submissions
+              document.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var form = e.target;
+                var url = form.action;
+                var method = form.method.toUpperCase();
+                
+                if (method === 'GET') {
+                  var formData = new FormData(form);
+                  var params = new URLSearchParams(formData);
+                  url = url + (url.includes('?') ? '&' : '?') + params.toString();
+                  window.parent.postMessage({ type: 'navigate', url: url }, '*');
+                }
+              }, true);
+            </script>
+          `;
+          
+          // Insert script before </body> or at the end if no </body>
+          text = text.replace('</body>', linkHandlerScript + '</body>');
+          if (!text.includes('</body>')) {
+            text += linkHandlerScript;
+          }
+        }
+        
         // Rewrite relative URLs to absolute ones
         text = text.replace(/(?:href|src)=['"](?!http|data:|#|javascript:|mailto:)([^'"]+)['"]/g, (match, path) => {
           try {
