@@ -52,7 +52,7 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
     { title: 'Text Editor', component: 'TextEditor' },
     { title: 'Settings', component: 'Settings' }
   ],
-  theme: 'dark',
+  theme: 'system',
   blurEffects: true,
   animations: true,
   notifications: true,
@@ -81,9 +81,7 @@ export const useDesktopStore = create<DesktopState>()(
         const newZIndex = state.maxZIndex + 1
         return {
           windows: state.windows.map(w => 
-            w.id === id 
-              ? { ...w, zIndex: newZIndex, isMinimized: false } 
-              : { ...w, zIndex: w.zIndex < newZIndex ? w.zIndex : w.zIndex - 1 }
+            w.id === id ? { ...w, zIndex: newZIndex } : w
           ),
           activeWindowId: id,
           maxZIndex: newZIndex

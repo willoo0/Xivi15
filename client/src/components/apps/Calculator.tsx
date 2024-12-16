@@ -47,8 +47,8 @@ export function Calculator() {
   }
 
   return (
-    <div className="h-full grid grid-cols-4 gap-2">
-      <div className="col-span-4 bg-muted p-4 rounded mb-2 text-right text-2xl">
+    <div className="grid grid-cols-4 gap-1">
+      <div className="col-span-4 bg-muted p-2 rounded mb-1 text-right text-xl">
         {display}
       </div>
       <Button variant="outline" onClick={() => clear()}>C</Button>

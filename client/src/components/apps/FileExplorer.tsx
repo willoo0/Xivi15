@@ -13,7 +13,7 @@ const demoFiles = [
 export function FileExplorer() {
   return (
     <div className="flex h-full">
-      <div className="w-56 border-r p-4">
+      <div className="w-48 border-r p-2">
         <div className="space-y-1">
           {['Home', 'Desktop', 'Downloads'].map((item) => (
             <Button
