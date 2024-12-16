@@ -22,6 +22,7 @@ export function Tetris() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   function createEmptyBoard() {
     return Array.from({ length: BOARD_HEIGHT }, () =>
@@ -37,7 +38,7 @@ export function Tetris() {
   }, []);
 
   const moveDown = useCallback(() => {
-    if (!currentPiece) return;
+    if (!currentPiece || isPaused) return;
     
     if (isValidMove(currentPiece.shape, position.x, position.y + 1)) {
       setPosition(prev => ({ ...prev, y: prev.y + 1 }));
@@ -47,7 +48,7 @@ export function Tetris() {
       setScore(prev => prev + newScore * 100);
       spawnPiece();
     }
-  }, [currentPiece, position]);
+  }, [currentPiece, position, isPaused]);
 
   function isValidMove(shape, newX, newY) {
     for (let y = 0; y < shape.length; y++) {
@@ -71,6 +72,7 @@ export function Tetris() {
   }
 
   function mergePiece() {
+    if (!currentPiece) return;
     const newBoard = [...board];
     currentPiece.shape.forEach((row, y) => {
       row.forEach((value, x) => {
@@ -104,7 +106,7 @@ export function Tetris() {
   }
 
   function handleKeyDown(e) {
-    if (!currentPiece || gameOver) return;
+    if (!currentPiece || gameOver || isPaused) return;
 
     switch (e.key) {
       case 'ArrowLeft':
@@ -128,24 +130,53 @@ export function Tetris() {
           setCurrentPiece({ ...currentPiece, shape: rotated });
         }
         break;
+      case ' ':
+        setIsPaused(prev => !prev);
+        break;
     }
   }
 
+  const startNewGame = () => {
+    setBoard(createEmptyBoard());
+    setGameOver(false);
+    setScore(0);
+    setIsPaused(false);
+    spawnPiece();
+  };
+
   useEffect(() => {
     spawnPiece();
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   useEffect(() => {
-    if (gameOver) return;
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentPiece, position, gameOver, isPaused]);
+
+  useEffect(() => {
+    if (gameOver || isPaused) return;
     const interval = setInterval(moveDown, INITIAL_SPEED);
     return () => clearInterval(interval);
-  }, [currentPiece, position, board, gameOver]);
+  }, [currentPiece, position, board, gameOver, isPaused]);
 
   return (
     <div className="p-4 flex flex-col items-center" tabIndex={0}>
-      <div className="mb-4">Score: {score}</div>
+      <div className="mb-4 space-y-2">
+        <div className="flex gap-2">
+          <Button onClick={startNewGame}>New Game</Button>
+          <Button onClick={() => setIsPaused(p => !p)}>
+            {isPaused ? 'Resume' : 'Pause'}
+          </Button>
+        </div>
+        <div className="text-lg">Score: {score}</div>
+        <div className="text-sm text-muted-foreground">
+          Controls:<br/>
+          ↑ - Rotate<br/>
+          ← → - Move left/right<br/>
+          ↓ - Move down<br/>
+          Space - Pause/Resume
+        </div>
+      </div>
       <div 
         className="grid gap-px bg-gray-800 p-2 rounded"
         style={{
@@ -176,16 +207,7 @@ export function Tetris() {
       {gameOver && (
         <div className="mt-4 text-center">
           <div className="mb-2">Game Over!</div>
-          <Button
-            onClick={() => {
-              setBoard(createEmptyBoard());
-              setGameOver(false);
-              setScore(0);
-              spawnPiece();
-            }}
-          >
-            Play Again
-          </Button>
+          <Button onClick={startNewGame}>Play Again</Button>
         </div>
       )}
     </div>
