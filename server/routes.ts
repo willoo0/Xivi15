@@ -6,11 +6,16 @@ import fetch from "node-fetch";
 export function registerRoutes(app: Express): Server {
   app.get('/api/proxy', async (req: Request, res) => {
     try {
-      const url = req.query.url as string;
+      const url = decodeURIComponent(req.query.url as string);
       const mode = req.query.mode as string;
       
       if (!url) {
         return res.status(400).send('URL parameter is required');
+      }
+
+      // Prevent URL concatenation by ensuring valid URL format
+      if (!url.match(/^https?:\/\//)) {
+        return res.status(400).send('Invalid URL format');
       }
 
       const fetchOptions = {
