@@ -27,18 +27,37 @@ export function Browser() {
     }
   }, [activeTab])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const tab = tabs.find(t => t.id === activeTab)
     if (tab) {
       let finalUrl = inputUrl
-      if (!inputUrl.startsWith('http')) {
-        finalUrl = `https://${inputUrl}`
+      if (!finalUrl.startsWith('http')) {
+        finalUrl = `https://${finalUrl}`
       }
-      setTabs(tabs.map(t => 
-        t.id === activeTab ? { ...t, url: finalUrl, title: finalUrl } : t
-      ))
-      setInputUrl(finalUrl)
+      try {
+        // First check if URL is valid and get any redirects
+        const response = await fetch(`/api/proxy?url=${encodeURIComponent(finalUrl)}&mode=head`);
+        if (response.ok) {
+          const actualUrl = response.headers.get('x-final-url');
+          if (actualUrl) {
+            finalUrl = actualUrl;
+          }
+          
+          // Update tab with the new URL
+          setTabs(tabs.map(t => 
+            t.id === activeTab ? { 
+              ...t, 
+              url: finalUrl,
+              title: finalUrl,
+              icon: `${new URL(finalUrl).origin}/favicon.ico`
+            } : t
+          ))
+          setInputUrl(finalUrl)
+        }
+      } catch (error) {
+        console.error('Error checking URL:', error);
+      }
     }
   }
 
