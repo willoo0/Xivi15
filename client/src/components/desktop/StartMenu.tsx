@@ -20,6 +20,7 @@ import {
   Folder,
   Timer,
   Monitor,
+  Grid,
 } from 'lucide-react'
 
 interface StartMenuProps {
