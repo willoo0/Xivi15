@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,6 +11,7 @@ import { Power, Maximize2 } from 'lucide-react';
 export function TopBar() {
   const [dateTime, setDateTime] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // Added state for menu visibility
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -42,22 +42,35 @@ export function TopBar() {
   }, []);
 
   const handleShutdown = () => {
-    window.close();
+    // Add fade-out animation before closing
+    document.body.classList.add('fade-out');
+    setTimeout(() => {
+      window.close();
+    }, 300); // Adjust duration as needed
   };
 
   const handleRestart = () => {
     window.location.reload();
   };
 
+  const handleMenuOpen = () => {
+    setMenuOpen(true);
+  };
+
+  const handleMenuClose = () => {
+    setMenuOpen(false);
+  };
+
+
   return (
     <div className="fixed top-0 left-0 right-0 h-8 bg-background/80 backdrop-blur-md border-b flex items-center px-2 z-[9999]">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-6 w-6">
+        <DropdownMenuTrigger asChild onClick={handleMenuOpen}> {/* Added onClick */}
+          <Button variant="ghost" size="icon" className="h-6 w-6 menu-transition"> {/* Added class */}
             <Power className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="menu-transition" onClose={handleMenuClose}> {/* Added class and onClose */}
           <DropdownMenuItem onClick={handleRestart}>
             Restart
           </DropdownMenuItem>
@@ -66,11 +79,11 @@ export function TopBar() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="h-6 w-6 ml-1" 
+
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-6 w-6 ml-1"
         onClick={toggleFullscreen}
       >
         <Maximize2 className="h-4 w-4" />

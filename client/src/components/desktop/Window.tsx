@@ -39,6 +39,15 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       setIsDragging(false)
     }
 
+    const handleClose = () => {
+      if (windowRef.current) {
+        windowRef.current.classList.add('fade-out')
+        windowRef.current.addEventListener('animationend', () => {
+          removeWindow(id)
+        }, { once: true })
+      }
+    }
+
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)
@@ -70,7 +79,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     <Card
       ref={windowRef}
       className={cn(
-        'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg',
+        'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in',
         isMaximized && 'w-full h-full !left-0 !top-0'
       )}
       style={{
@@ -93,7 +102,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
           <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
             <Maximize2 className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => removeWindow(id)}>
+          <Button variant="ghost" size="icon" onClick={() => handleClose()}>
             <X className="h-4 w-4" />
           </Button>
         </div>
