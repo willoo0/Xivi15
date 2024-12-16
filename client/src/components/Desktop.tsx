@@ -93,17 +93,3 @@ export function Desktop() {
     </div>
   )
 }
-
-// Added SystemInfo component
-export const SystemInfo = () => {
-  return (
-    <div>
-      <h1>System Information</h1>
-      <p>OS: Xivr Linux</p>
-      <p>RAM: 16GB</p>
-      <p>CPU: Intel® Core™ i9 14th gen</p>
-      {/* Public IP address would need a backend call to fetch.  Placeholder below. */}
-      <p>Public IP:  (Fetching IP address...requires backend integration)</p>
-    </div>
-  );
-};
