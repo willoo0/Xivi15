@@ -67,15 +67,16 @@ export function TopBar() {
         </DropdownMenuContent>
       </DropdownMenu>
       
-      <div className="flex-1" />
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-6 w-6 mr-2" 
+        className="h-6 w-6 ml-1" 
         onClick={toggleFullscreen}
       >
         <Maximize2 className="h-4 w-4" />
       </Button>
+
+      <div className="flex-1" />
       <div className="text-sm">{dateTime}</div>
     </div>
   );
