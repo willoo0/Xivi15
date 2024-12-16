@@ -18,6 +18,7 @@ import { Todo } from './apps/Todo';
 import { Minesweeper } from './apps/Minesweeper';
 import { Tetris } from './apps/Tetris';
 import { Weather } from './apps/Weather';
+import { Snake } from './apps/Snake';
 
 
 const components: Record<string, React.ComponentType> = {
@@ -33,7 +34,8 @@ const components: Record<string, React.ComponentType> = {
   Paint,
   Todo,
   Minesweeper,
-  Tetris
+  Tetris,
+  Snake
 }
 
 // Use background images from public folder

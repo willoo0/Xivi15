@@ -63,6 +63,13 @@ const apps = [
     category: 'Games'
   },
   {
+    id: 'snake',
+    title: 'Snake',
+    component: 'Snake',
+    icon: Grid,
+    category: 'Games'
+  },
+  {
     id: 'todo',
     title: 'Todo List',
     component: 'Todo',
