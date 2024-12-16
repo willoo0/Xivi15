@@ -1,3 +1,4 @@
+
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
@@ -184,7 +185,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
                 </h3>
                 <div className="grid grid-cols-1 gap-1.5">
                   {categoryApps.map(app => {
-                    const Icon = appIcons[app.component] || AppWindow
+                    const Icon = appIcons[app.component] || AppWindow;
                     return (
                       <Button
                         key={app.id}
@@ -195,12 +196,13 @@ export function StartMenu({ onClose }: StartMenuProps) {
                         onContextMenu={(e) => handleRightClick(e, app)}
                       >
                         <Icon className="h-4 w-4 mr-2" />
-                      <span className="text-sm">{app.title}</span>
-                    </Button>
-                  ))}
+                        <span className="text-sm">{app.title}</span>
+                      </Button>
+                    );
+                  })}
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </Card>
