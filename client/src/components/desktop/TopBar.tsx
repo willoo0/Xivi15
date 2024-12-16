@@ -65,8 +65,13 @@ export function TopBar() {
   return (
     <div className="fixed top-0 left-0 right-0 h-8 bg-background/80 backdrop-blur-md border-b flex items-center px-2 z-[9999]">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild onClick={handleMenuOpen}> {/* Added onClick */}
-          <Button variant="ghost" size="icon" className="h-6 w-6 menu-transition"> {/* Added class */}
+        <DropdownMenuTrigger asChild>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-6 w-6 menu-transition"
+            onClick={handleMenuOpen}
+          >
             <Power className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
