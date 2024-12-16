@@ -19,70 +19,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   const { setActiveWindow, updateWindowPosition, toggleMinimize, toggleMaximize, removeWindow } = useDesktopStore()
   const [isDragging, setIsDragging] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
-  const [isResizing, setIsResizing] = useState(false)
-  const [resizeEdge, setResizeEdge] = useState<string | null>(null)
   const windowRef = useRef<HTMLDivElement>(null)
-
-  const startResize = (e: React.MouseEvent, edge: string) => {
-    if (!isMaximized) {
-      e.preventDefault()
-      e.stopPropagation()
-      setIsResizing(true)
-      setResizeEdge(edge)
-      setActiveWindow(id)
-    }
-  }
-
-  useEffect(() => {
-    const handleResize = (e: MouseEvent) => {
-      if (isResizing && windowRef.current && !isMaximized) {
-        const rect = windowRef.current.getBoundingClientRect()
-        let newWidth = position.width
-        let newHeight = position.height
-        let newX = position.x
-        let newY = position.y
-
-        if (resizeEdge?.includes('right')) {
-          newWidth = Math.max(200, e.clientX - rect.left)
-        }
-        if (resizeEdge?.includes('bottom')) {
-          newHeight = Math.max(200, e.clientY - rect.top)
-        }
-        if (resizeEdge?.includes('left')) {
-          const deltaX = e.clientX - rect.left
-          newWidth = Math.max(200, rect.width - deltaX)
-          newX = position.x + deltaX
-        }
-        if (resizeEdge?.includes('top')) {
-          const deltaY = e.clientY - rect.top
-          newHeight = Math.max(200, rect.height - deltaY)
-          newY = position.y + deltaY
-        }
-
-        updateWindowPosition(id, {
-          x: newX,
-          y: newY,
-          width: newWidth,
-          height: newHeight
-        })
-      }
-    }
-
-    const stopResize = () => {
-      setIsResizing(false)
-      setResizeEdge(null)
-    }
-
-    if (isResizing) {
-      document.addEventListener('mousemove', handleResize)
-      document.addEventListener('mouseup', stopResize)
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleResize)
-      document.removeEventListener('mouseup', stopResize)
-    }
-  }, [isResizing, resizeEdge, id, position, updateWindowPosition, isMaximized])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -134,17 +71,14 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       ref={windowRef}
       className={cn(
         'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg',
-        isMaximized && 'w-full h-full !left-0 !top-0',
-        !isMaximized && 'resize-handle'
+        isMaximized && 'w-full h-full !left-0 !top-0'
       )}
       style={{
         left: position.x,
         top: position.y,
         width: isMaximized ? '100%' : position.width,
         height: isMaximized ? '100%' : position.height,
-        zIndex,
-        position: 'absolute',
-        cursor: isDragging ? 'move' : 'default'
+        zIndex
       }}
     >
       <div
