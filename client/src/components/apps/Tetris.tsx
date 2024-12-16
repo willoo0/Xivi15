@@ -74,8 +74,13 @@ export function Tetris() {
   function mergePiece() {
     if (!currentPiece) return;
     const newBoard = [...board];
+    let isGameOver = false;
+    
     currentPiece.shape.forEach((row, y) => {
       row.forEach((value, x) => {
+        if (value && position.y + y <= 0) {
+          isGameOver = true;
+        }
         if (value) {
           const boardY = position.y + y;
           if (boardY < 0) {
@@ -87,6 +92,9 @@ export function Tetris() {
       });
     });
     setBoard(newBoard);
+    if (isGameOver) {
+      setGameOver(true);
+    }
   }
 
   function checkLines() {
@@ -107,6 +115,11 @@ export function Tetris() {
 
   function handleKeyDown(e) {
     if (!currentPiece || gameOver || isPaused) return;
+    
+    // Prevent scrolling with arrow keys
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+      e.preventDefault();
+    }
 
     switch (e.key) {
       case 'ArrowLeft':
