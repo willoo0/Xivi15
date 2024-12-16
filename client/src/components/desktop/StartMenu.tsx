@@ -6,9 +6,10 @@ import { ContextMenu } from './ContextMenu'
 import { nanoid } from 'nanoid'
 import {
   AppWindow,
-  Calculator,
-  FileText,
+  Layout,
   Settings,
+  FileText,
+  Calculator,
   Terminal,
   Image,
   Music,
@@ -21,6 +22,7 @@ import {
   Timer,
   Monitor,
   Grid,
+  Bird,
 } from 'lucide-react'
 
 interface StartMenuProps {
