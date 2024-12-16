@@ -11,6 +11,13 @@ import {
   FileText,
   Calculator,
   Folder,
+  Cloud,
+  Grid,
+  Calendar,
+  Image,
+  Monitor,
+  Timer,
+  Globe,
 } from 'lucide-react'
 
 const appIcons: Record<string, any> = {
@@ -18,6 +25,14 @@ const appIcons: Record<string, any> = {
   Calculator: Calculator,
   FileExplorer: Folder,
   Settings: Settings,
+  Weather: Cloud,
+  Tetris: Grid,
+  Minesweeper: Grid,
+  Todo: Calendar,
+  Paint: Image,
+  SystemInfo: Monitor,
+  TimerClock: Timer,
+  Browser: Globe,
 }
 
 export function Taskbar() {
