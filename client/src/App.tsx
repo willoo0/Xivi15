@@ -12,6 +12,16 @@ function App() {
   const { addWindow, windows } = useDesktopStore();
 
   useEffect(() => {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      // Trigger install prompt immediately
+      if (e instanceof BeforeInstallPromptEvent) {
+        e.prompt();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     const hideWelcome = localStorage.getItem('hideWelcome');
     const hasWelcomeWindow = windows.some(w => w.component === 'Welcome');
     if (!hideWelcome && !hasWelcomeWindow) {
