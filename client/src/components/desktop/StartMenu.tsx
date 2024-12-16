@@ -28,6 +28,13 @@ interface StartMenuProps {
 
 const apps = [
   {
+    id: 'todo',
+    title: 'Todo List',
+    component: 'Todo',
+    icon: Calendar,
+    category: 'Productivity'
+  },
+  {
     id: 'paint',
     title: 'Paint',
     component: 'Paint',
