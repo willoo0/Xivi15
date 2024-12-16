@@ -114,11 +114,3 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     </Card>
   )
 }
-
-@keyframes jiggle {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(2px, -2px); }
-  50% { transform: translate(-2px, 2px); }
-  75% { transform: translate(1px, -1px); }
-  100% { transform: translate(0, 0); }
-}
