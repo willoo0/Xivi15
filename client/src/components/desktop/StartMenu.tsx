@@ -28,6 +28,13 @@ interface StartMenuProps {
 
 const apps = [
   {
+    id: 'minesweeper',
+    title: 'Minesweeper',
+    component: 'Minesweeper',
+    icon: Grid,
+    category: 'Games'
+  },
+  {
     id: 'todo',
     title: 'Todo List',
     component: 'Todo',

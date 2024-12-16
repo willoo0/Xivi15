@@ -15,6 +15,7 @@ import { TimerClock } from './apps/TimerClock'
 import { SystemInfo } from './apps/SystemInfo';
 import { Paint } from './apps/Paint';
 import { Todo } from './apps/Todo';
+import { Minesweeper } from './apps/Minesweeper';
 
 const components: Record<string, React.ComponentType> = {
   TextEditor,
@@ -26,7 +27,8 @@ const components: Record<string, React.ComponentType> = {
   TimerClock,
   SystemInfo,
   Paint,
-  Todo
+  Todo,
+  Minesweeper
 }
 
 // Use background images from public folder
