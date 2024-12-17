@@ -227,23 +227,38 @@ class FileSystem {
 
       // Navigate to parent directory
       for (let i = 0; i < path.length - 1; i++) {
-        if (!current[path[i]] || current[path[i]].type !== 'folder') {
+        const segment = path[i];
+        if (!current[segment] || current[segment].type !== 'folder') {
+          console.error('Invalid path segment:', segment);
           return false;
         }
-        current = current[path[i]].children!;
+        current = current[segment].children!;
       }
 
       const fileName = path[path.length - 1];
-      if (!current[fileName] || current[fileName].type !== 'file') {
+      if (!current[fileName]) {
+        console.error('File not found:', fileName);
         return false;
       }
 
-      current[fileName].content = content;
-      current[fileName].updatedAt = Date.now();
+      if (current[fileName].type !== 'file') {
+        console.error('Not a file:', fileName);
+        return false;
+      }
 
+      // Update the file content
+      current[fileName] = {
+        ...current[fileName],
+        content: content,
+        updatedAt: Date.now()
+      };
+
+      // Save to localStorage
       this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+      console.log('File saved successfully:', path.join('/'));
       return true;
-    } catch {
+    } catch (error) {
+      console.error('Error saving file:', error);
       return false;
     }
   }

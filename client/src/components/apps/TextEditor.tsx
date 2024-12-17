@@ -26,18 +26,31 @@ export function TextEditor({ path }: TextEditorProps) {
   }, [path])
 
   const handleSave = () => {
+    if (!path || path.length === 0) {
+      toast({
+        title: "Error",
+        description: "Invalid file path",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Attempting to save file:', path.join('/'));
     const success = fs.updateFileContent(path, content);
+    
     if (success) {
       toast({
         title: "File saved",
         description: "Your changes have been saved successfully."
       });
+      console.log('File saved successfully');
     } else {
       toast({
         title: "Error",
-        description: "Failed to save file",
+        description: "Failed to save file. Please check the console for details.",
         variant: "destructive"
       });
+      console.error('Failed to save file. Path:', path.join('/'));
     }
   }
 
