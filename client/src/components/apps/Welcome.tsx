@@ -30,7 +30,7 @@ export function Welcome() {
           <li>Drag windows to move them around</li>
           <li>Right-click on the desktop for more options</li>
         </ul>
-        <p style="text-color; yellow">
+        <p style={{ color: 'yellow' }}>
           We are aware of a recent File System issue and are working on it! This
           has minimal affection 😊
         </p>
