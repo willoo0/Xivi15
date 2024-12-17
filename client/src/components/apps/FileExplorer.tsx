@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/context-menu'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogHeader, DialogContent, DialogFooter, DialogTitle } from '@/components/ui/dialog'
+import { toast } from '@/components/ui/toast'
 
 
 export function FileExplorer() {
@@ -80,42 +81,15 @@ export function FileExplorer() {
           path: filePath,
         },
       });
-      
     } catch (error) {
       console.error('[FileExplorer] Error:', error);
+      // Assuming 'toast' is a function available in the scope.  Replace with your actual error handling if different.
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "An error occurred",
         variant: "destructive"
       });
     }
-      console.error('[FileExplorer] Failed to construct valid file path');
-      return;
-    }
-
-    // Verify file exists in filesystem
-    const fileContent = fs.getFileContent(filePath);
-    console.log('[FileExplorer] File content check:', fileContent !== null ? 'exists' : 'not found');
-
-    console.log('[FileExplorer] Creating window for file:', filePath.join('/'));
-    addWindow({
-      id: nanoid(),
-      title: name,
-      component: 'TextEditor',
-      position: {
-        x: 50 + Math.random() * 100,
-        y: 50 + Math.random() * 100,
-        width: 600,
-        height: 400,
-      },
-      isMinimized: false,
-      isMaximized: false,
-      props: {
-        path: filePath,
-      },
-    });
-    
-    console.log('[FileExplorer] Window created with props:', { path: filePath });
   }
 
   const navigateToFolder = (folder: string) => {
