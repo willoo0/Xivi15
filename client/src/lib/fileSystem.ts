@@ -1,4 +1,3 @@
-
 interface FSNode {
   type: 'file' | 'folder';
   name: string;
@@ -75,7 +74,7 @@ class FileSystem {
   }
 
   updateFileContent(path: string[], content: string): { success: boolean; error?: string } {
-    if (!path.length) return { success: false, error: 'Invalid path' };
+      if (!Array.isArray(path) || !path.length) return { success: false, error: 'Invalid path' };
     
     try {
       const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');

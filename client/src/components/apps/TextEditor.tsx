@@ -28,6 +28,14 @@ export function TextEditor({ path }: TextEditorProps) {
   }, [path])
 
   const handleSave = () => {
+    if (!path || !Array.isArray(path) || path.length === 0) {
+      toast({
+        title: "Error",
+        description: "Invalid file path",
+        variant: "destructive"
+      });
+      return;
+    }
     const result = fs.updateFileContent(path, content);
     if (result.success) {
       toast({
@@ -37,7 +45,7 @@ export function TextEditor({ path }: TextEditorProps) {
     } else {
       toast({
         title: "Error",
-        description: "Failed to save file",
+        description: result.error || "Failed to save file",
         variant: "destructive"
       });
     }
