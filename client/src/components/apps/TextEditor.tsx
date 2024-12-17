@@ -26,15 +26,6 @@ export function TextEditor({ path }: TextEditorProps) {
   }, [path])
 
   const handleSave = () => {
-    if (!path || !Array.isArray(path) || path.length === 0) {
-      toast({
-        title: "Error saving file",
-        description: "Invalid file path. Please try again.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     const result = fs.updateFileContent(path, content);
     if (result.success) {
       toast({
@@ -43,11 +34,10 @@ export function TextEditor({ path }: TextEditorProps) {
       });
     } else {
       toast({
-        title: "Error saving file",
-        description: result.error || "Failed to save file. Please try again.",
+        title: "Error",
+        description: "Failed to save file",
         variant: "destructive"
       });
-      console.error("Save error details:", { path, error: result.error });
     }
   }
 
