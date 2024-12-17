@@ -52,6 +52,8 @@ export function FileExplorer() {
       }
 
       const filePath = [...currentPath, name].filter(Boolean);
+      console.log('[FileExplorer] Constructed file path:', filePath);
+
       if (filePath.length === 0) {
         throw new Error('Cannot construct valid file path');
       }
@@ -60,15 +62,6 @@ export function FileExplorer() {
       if (fileExists === null) {
         throw new Error(`File not found: ${filePath.join('/')}`);
       }
-
-    if (typeof name !== 'string') {
-      console.error('[FileExplorer] Invalid file name type:', typeof name);
-      return;
-    }
-
-    // Construct and validate full path
-    const filePath = [...currentPath, name].filter(Boolean);
-    console.log('[FileExplorer] Constructed file path:', filePath);
 
     if (filePath.length === 0) {
       console.error('[FileExplorer] Failed to construct valid file path');
