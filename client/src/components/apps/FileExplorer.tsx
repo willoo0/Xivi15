@@ -148,15 +148,15 @@ export function FileExplorer() {
           </ContextMenu>
         </ScrollArea>
         <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
-          <DialogHeader>
-            <DialogTitle>Rename File</DialogTitle>
-          </DialogHeader>
           <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Rename File</DialogTitle>
+            </DialogHeader>
             <Input value={newFileName} onChange={(e) => setNewFileName(e.target.value)} placeholder="New file name" />
+            <DialogFooter>
+              <Button onClick={handleRename}>Rename</Button>
+            </DialogFooter>
           </DialogContent>
-          <DialogFooter>
-            <Button onClick={handleRename}>Rename</Button>
-          </DialogFooter>
         </Dialog>
       </div>
     </div>
