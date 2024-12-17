@@ -13,7 +13,7 @@ import {
   ContextMenuSeparator,
 } from '@/components/ui/context-menu'
 import { Input } from '@/components/ui/input'
-import { Dialog, DialogHeader, DialogBody, DialogFooter, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogHeader, DialogContent, DialogFooter, DialogTitle } from '@/components/ui/dialog'
 
 
 export function FileExplorer() {
@@ -151,9 +151,9 @@ export function FileExplorer() {
           <DialogHeader>
             <DialogTitle>Rename File</DialogTitle>
           </DialogHeader>
-          <DialogBody>
+          <DialogContent>
             <Input value={newFileName} onChange={(e) => setNewFileName(e.target.value)} placeholder="New file name" />
-          </DialogBody>
+          </DialogContent>
           <DialogFooter>
             <Button onClick={handleRename}>Rename</Button>
           </DialogFooter>
