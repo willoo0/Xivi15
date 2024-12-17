@@ -20,9 +20,23 @@ class FileSystem {
   private initializeFS() {
     if (!this.storage.getItem(this.ROOT_KEY)) {
       const root: Record<string, FSNode> = {
+        'Desktop': {
+          type: 'folder',
+          name: 'Desktop',
+          children: {},
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        },
         'Documents': {
           type: 'folder',
           name: 'Documents',
+          children: {},
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        },
+        'Downloads': {
+          type: 'folder',
+          name: 'Downloads',
           children: {},
           createdAt: Date.now(),
           updatedAt: Date.now()
@@ -40,81 +54,132 @@ class FileSystem {
   }
 
   getFiles(path: string[] = []): Record<string, FSNode> {
-    const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
-    let current = root;
-    
-    for (const segment of path) {
-      if (current[segment]?.children) {
-        current = current[segment].children;
-      } else {
-        return {};
+    try {
+      const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      let current = root;
+      
+      for (const segment of path) {
+        if (current[segment]?.children) {
+          current = current[segment].children;
+        } else {
+          return {};
+        }
       }
+      
+      return current;
+    } catch (error) {
+      console.error('Error getting files:', error);
+      return {};
     }
-    
-    return current;
   }
 
-  createFile(name: string, path: string[] = []): boolean {
-    const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
-    let current = root;
-    
-    for (const segment of path) {
-      if (current[segment]?.children) {
-        current = current[segment].children;
-      } else {
-        return false;
+  createFile(name: string, path: string[] = [], type: 'file' | 'folder' = 'file'): boolean {
+    try {
+      const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      let current = root;
+      
+      for (const segment of path) {
+        if (current[segment]?.children) {
+          current = current[segment].children;
+        } else {
+          return false;
+        }
       }
+      
+      if (current[name]) return false;
+      
+      current[name] = {
+        type,
+        name,
+        ...(type === 'folder' ? { children: {} } : { content: '' }),
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      };
+      
+      this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+      return true;
+    } catch (error) {
+      console.error('Error creating file:', error);
+      return false;
     }
-    
-    if (current[name]) return false;
-    
-    current[name] = {
-      type: 'file',
-      name,
-      content: '',
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    };
-    
-    this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
-    return true;
   }
 
   getFileContent(path: string[]): string | null {
-    const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
-    let current = root;
+    if (!path || path.length === 0) return null;
     
-    for (let i = 0; i < path.length - 1; i++) {
-      if (current[path[i]]?.children) {
-        current = current[path[i]].children;
-      } else {
-        return null;
+    try {
+      const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      let current = root;
+      
+      for (let i = 0; i < path.length - 1; i++) {
+        if (current[path[i]]?.children) {
+          current = current[path[i]].children;
+        } else {
+          return null;
+        }
       }
+      
+      const file = current[path[path.length - 1]];
+      return file?.type === 'file' ? file.content || '' : null;
+    } catch (error) {
+      console.error('Error getting file content:', error);
+      return null;
     }
-    
-    return current[path[path.length - 1]]?.content || null;
   }
 
   updateFileContent(path: string[], content: string): boolean {
-    const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
-    let current = root;
+    if (!path || path.length === 0) return false;
     
-    for (let i = 0; i < path.length - 1; i++) {
-      if (current[path[i]]?.children) {
-        current = current[path[i]].children;
-      } else {
-        return false;
+    try {
+      const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      let current = root;
+      
+      for (let i = 0; i < path.length - 1; i++) {
+        if (current[path[i]]?.children) {
+          current = current[path[i]].children;
+        } else {
+          return false;
+        }
       }
+      
+      if (current[path[path.length - 1]]?.type === 'file') {
+        current[path[path.length - 1]].content = content;
+        current[path[path.length - 1]].updatedAt = Date.now();
+        this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Error updating file content:', error);
+      return false;
     }
+  }
+
+  deleteFile(path: string[]): boolean {
+    if (!path || path.length === 0) return false;
     
-    if (current[path[path.length - 1]]?.type === 'file') {
-      current[path[path.length - 1]].content = content;
-      current[path[path.length - 1]].updatedAt = Date.now();
-      this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
-      return true;
+    try {
+      const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      let current = root;
+      
+      for (let i = 0; i < path.length - 1; i++) {
+        if (current[path[i]]?.children) {
+          current = current[path[i]].children;
+        } else {
+          return false;
+        }
+      }
+      
+      const success = delete current[path[path.length - 1]];
+      if (success) {
+        this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+      }
+      return success;
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      return false;
     }
-    
-    return false;
   }
 }
 

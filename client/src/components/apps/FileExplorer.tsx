@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Folder, File, ChevronRight } from 'lucide-react'
+import { Folder, File, ChevronRight, ChevronUp, Trash, Plus } from 'lucide-react'
 import { fs } from '@/lib/fileSystem'
 import { useDesktopStore } from '@/store/desktop'
 import { nanoid } from 'nanoid'
@@ -11,20 +11,29 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
+  ContextMenuSeparator,
 } from '@/components/ui/context-menu'
+import { Input } from '@/components/ui/input'
 
 export function FileExplorer() {
   const [currentPath, setCurrentPath] = useState<string[]>([])
   const [files, setFiles] = useState<Record<string, any>>({})
+  const [newFileName, setNewFileName] = useState('')
   const { addWindow } = useDesktopStore()
 
   useEffect(() => {
     setFiles(fs.getFiles(currentPath))
   }, [currentPath])
 
-  const handleCreateFile = () => {
-    const name = `New File ${Date.now()}`
-    if (fs.createFile(name, currentPath)) {
+  const handleCreateFile = (type: 'file' | 'folder' = 'file') => {
+    const name = type === 'file' ? `New File ${Date.now()}` : `New Folder ${Date.now()}`
+    if (fs.createFile(name, currentPath, type)) {
+      setFiles(fs.getFiles(currentPath))
+    }
+  }
+
+  const handleDeleteFile = (name: string) => {
+    if (fs.deleteFile([...currentPath, name])) {
       setFiles(fs.getFiles(currentPath))
     }
   }
@@ -49,60 +58,76 @@ export function FileExplorer() {
   }
 
   return (
-    <div className="flex h-full">
-      <div className="w-48 border-r p-2">
-        <div className="space-y-1">
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => setCurrentPath([])}
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Home
-          </Button>
+    <div className="flex h-full flex-col">
+      <div className="border-b p-2 flex items-center space-x-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={navigateUp}
+          disabled={currentPath.length === 0}
+        >
+          <ChevronUp className="h-4 w-4" />
+        </Button>
+        <div className="flex-1 text-sm">
+          {currentPath.length === 0 ? 'Home' : currentPath.join(' / ')}
         </div>
       </div>
       
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-2">
-          {currentPath.length > 0 && (
-            <Button
-              variant="ghost"
-              onClick={navigateUp}
-              className="w-full justify-start"
-            >
-              ..
-            </Button>
-          )}
-          
+      <div className="flex-1 relative">
+        <ScrollArea className="h-full">
           <ContextMenu>
-            <ContextMenuTrigger className="w-full h-full min-h-[200px]">
+            <ContextMenuTrigger className="flex flex-col min-h-[200px] p-4">
               <div className="grid grid-cols-4 gap-4">
                 {Object.entries(files).map(([name, file]) => (
-                  <Button
-                    key={name}
-                    variant="ghost"
-                    className="h-24 flex flex-col items-center justify-center space-y-2"
-                    onClick={() => file.type === 'folder' ? navigateToFolder(name) : handleOpenFile(name)}
-                  >
-                    {file.type === 'folder' ? (
-                      <Folder className="h-8 w-8" />
-                    ) : (
-                      <File className="h-8 w-8" />
-                    )}
-                    <span className="text-sm">{name}</span>
-                  </Button>
+                  <ContextMenu key={name}>
+                    <ContextMenuTrigger>
+                      <Button
+                        variant="ghost"
+                        className="h-24 w-full flex flex-col items-center justify-center space-y-2"
+                        onClick={() => file.type === 'folder' ? navigateToFolder(name) : handleOpenFile(name)}
+                      >
+                        {file.type === 'folder' ? (
+                          <Folder className="h-8 w-8" />
+                        ) : (
+                          <File className="h-8 w-8" />
+                        )}
+                        <span className="text-sm truncate max-w-full">{name}</span>
+                      </Button>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent>
+                      {file.type === 'file' && (
+                        <ContextMenuItem onClick={() => handleOpenFile(name)}>
+                          Open
+                        </ContextMenuItem>
+                      )}
+                      {file.type === 'folder' && (
+                        <ContextMenuItem onClick={() => navigateToFolder(name)}>
+                          Open
+                        </ContextMenuItem>
+                      )}
+                      <ContextMenuSeparator />
+                      <ContextMenuItem
+                        onClick={() => handleDeleteFile(name)}
+                        className="text-red-600"
+                      >
+                        Delete
+                      </ContextMenuItem>
+                    </ContextMenuContent>
+                  </ContextMenu>
                 ))}
               </div>
             </ContextMenuTrigger>
             <ContextMenuContent>
-              <ContextMenuItem onClick={handleCreateFile}>
+              <ContextMenuItem onClick={() => handleCreateFile('file')}>
                 New File
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleCreateFile('folder')}>
+                New Folder
               </ContextMenuItem>
             </ContextMenuContent>
           </ContextMenu>
-        </div>
-      </ScrollArea>
+        </ScrollArea>
+      </div>
     </div>
   )
 }
