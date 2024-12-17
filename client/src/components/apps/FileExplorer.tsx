@@ -64,9 +64,6 @@ export function FileExplorer() {
     if (newFileName && newFileName !== selectedFile) {
       if (fs.renameFile([...currentPath, selectedFile], newFileName)) {
         setFiles(fs.getFiles(currentPath));
-        setRenameDialogOpen(false);
-        setNewFileName("");
-        setSelectedFile("");
       }
       setRenameDialogOpen(false);
       setNewFileName("");
