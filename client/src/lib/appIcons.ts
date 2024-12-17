@@ -3,6 +3,7 @@ import {
   FileText,
   Calculator,
   Folder,
+  Gamepad2,
   Settings,
   Cloud,
   Layout,
@@ -34,6 +35,7 @@ export const appIcons: Record<string, any> = {
   Browser: Globe,
   WhackAMole: Hammer,
   Welcome: Hand,
+  Minecraft: Gamepad2,
 };
 
 export const getAppIcon = (component: string) => appIcons[component] || AppWindow;

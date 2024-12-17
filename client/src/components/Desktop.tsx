@@ -19,8 +19,8 @@ import { Minesweeper } from './apps/Minesweeper';
 import { Tetris } from './apps/Tetris';
 import { Weather } from './apps/Weather';
 import { Snake } from './apps/Snake';
-import { WhackAMole } from './apps/WhackAMole'; // Added import for WhackAMole
-
+import { WhackAMole } from './apps/WhackAMole';
+import { Minecraft } from './apps/Minecraft';
 
 const components: Record<string, React.ComponentType> = {
   TextEditor,
@@ -37,7 +37,8 @@ const components: Record<string, React.ComponentType> = {
   Minesweeper,
   Tetris,
   Snake,
-  WhackAMole // Added WhackAMole to components
+  WhackAMole,
+  Minecraft
 }
 
 // Use background images from public folder
