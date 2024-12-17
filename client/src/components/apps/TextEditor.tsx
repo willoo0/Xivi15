@@ -21,7 +21,7 @@ export function TextEditor({ path }: TextEditorProps) {
     console.log('[TextEditor] Component mounted');
     console.log('[TextEditor] Current path:', path);
     
-    if (!path || !Array.isArray(path) || path.length === 0) {
+    if (!path || !Array.isArray(path) || path.length === 0 || !path.every(segment => typeof segment === 'string' && segment.length > 0)) {
       console.error('[TextEditor] Invalid path:', path);
       setContent('');
       return;

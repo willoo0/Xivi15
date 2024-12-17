@@ -42,8 +42,18 @@ export function FileExplorer() {
   }
 
   const handleOpenFile = (name: string) => {
-    const filePath = [...currentPath, name];
+    if (!name || typeof name !== 'string') {
+      console.error('[FileExplorer] Invalid file name:', name);
+      return;
+    }
+    
+    const filePath = [...currentPath, name].filter(Boolean);
     console.log('[FileExplorer] Opening file with path:', filePath);
+    
+    if (filePath.length === 0) {
+      console.error('[FileExplorer] Empty file path');
+      return;
+    }
     
     addWindow({
       id: nanoid(),
