@@ -30,7 +30,10 @@ export function Welcome() {
           <li>Drag windows to move them around</li>
           <li>Right-click on the desktop for more options</li>
         </ul>
-        <p style={{ color: "yellow" }}>We are aware of a recent File System issue and working on it 😊</p>
+        <p style="text-color; yellow">
+          We are aware of a recent File System issue and are working on it! This
+          has minimal affection 😊
+        </p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -38,6 +41,7 @@ export function Welcome() {
           id="show-again"
           checked={!showAgain}
           onCheckedChange={(checked) => setShowAgain(!checked)}
+          style={{ display: 'flex', alignItems: 'center' }}
         />
         <label htmlFor="show-again" className="text-sm">
           Don't show this again
