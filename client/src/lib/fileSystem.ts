@@ -38,10 +38,31 @@ class FileSystem {
     }
   }
 
-  private validatePath(path: string[]): boolean {
-    return Array.isArray(path) && path.every(segment => 
-      typeof segment === 'string' && segment.length > 0
-    );
+  private validatePath(path: string[] | undefined | null): boolean {
+    if (!path || !Array.isArray(path)) {
+      console.error('Invalid path: path must be an array', path);
+      return false;
+    }
+    
+    if (path.length === 0) {
+      console.error('Invalid path: path array is empty');
+      return false;
+    }
+    
+    const validSegments = path.every((segment, index) => {
+      if (!segment || typeof segment !== 'string' || segment.trim().length === 0) {
+        console.error(`Invalid path segment at index ${index}:`, segment);
+        return false;
+      }
+      return true;
+    });
+
+    if (!validSegments) {
+      return false;
+    }
+
+    console.log('Path validation passed:', path);
+    return true;
   }
 
   private getNodeAtPath(path: string[]): { 

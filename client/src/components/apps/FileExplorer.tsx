@@ -43,53 +43,51 @@ export function FileExplorer() {
   }
 
   const handleOpenFile = (name: string) => {
-    try {
-      if (!name || typeof name !== 'string' || name.trim().length === 0) {
-        throw new Error('Invalid file name: name cannot be empty');
-      }
-
-      if (!Array.isArray(currentPath)) {
-        throw new Error('Invalid current directory path');
-      }
-
-      const filePath = [...(currentPath || []), name].filter(Boolean);
-      console.log('[FileExplorer] Constructed file path:', filePath);
-
-      if (!filePath || filePath.length === 0) {
-        throw new Error('Cannot construct valid file path');
-      }
-
-      const fileExists = fs.getFileContent(filePath);
-      if (fileExists === null) {
-        throw new Error(`File not found: ${filePath.join('/')}`);
-      }
-
-      console.log('[FileExplorer] Creating window for file:', filePath.join('/'));
-      addWindow({
-        id: nanoid(),
-        title: name,
-        component: 'TextEditor',
-        position: {
-          x: 50 + Math.random() * 100,
-          y: 50 + Math.random() * 100,
-          width: 600,
-          height: 400,
-        },
-        isMinimized: false,
-        isMaximized: false,
-        props: {
-          path: filePath,
-        },
-      });
-    } catch (error) {
-      console.error('[FileExplorer] Error:', error);
-      // Assuming 'toast' is a function available in the scope.  Replace with your actual error handling if different.
+    console.log('[FileExplorer] Opening file:', name, 'from path:', currentPath);
+    
+    if (!name || typeof name !== 'string' || name.trim().length === 0) {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
+        description: "Invalid file name",
         variant: "destructive"
       });
+      return;
     }
+
+    const filePath = [...currentPath, name];
+    console.log('[FileExplorer] Constructed file path:', filePath);
+
+    // Verify if the file exists
+    if (fs.getFileContent(filePath) === null) {
+      // Create the file if it doesn't exist
+      console.log('[FileExplorer] File not found, creating new file');
+      if (!fs.createFile(name, currentPath)) {
+        toast({
+          title: "Error",
+          description: "Failed to create file",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
+
+    console.log('[FileExplorer] Opening editor with path:', filePath);
+    addWindow({
+      id: nanoid(),
+      title: name,
+      component: 'TextEditor',
+      position: {
+        x: 50 + Math.random() * 100,
+        y: 50 + Math.random() * 100,
+        width: 600,
+        height: 400,
+      },
+      isMinimized: false,
+      isMaximized: false,
+      props: {
+        path: filePath,
+      },
+    });
   }
 
   const navigateToFolder = (folder: string) => {

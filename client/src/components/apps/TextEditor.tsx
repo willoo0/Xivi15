@@ -16,105 +16,69 @@ export function TextEditor({ path }: TextEditorProps) {
   const [showRenameDialog, setShowRenameDialog] = useState(false)
   const [newFileName, setNewFileName] = useState('')
   const { toast } = useToast()
+  const [filePath, setFilePath] = useState<string[]>([])
 
   useEffect(() => {
-    try {
-      if (!Array.isArray(path) || !path) {
-        console.error('[TextEditor] Invalid path:', path);
-        setContent('');
-        toast({
-          title: "Error",
-          description: "Invalid file path provided",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      if (path.length === 0) {
-        console.error('[TextEditor] Empty path array');
-        setContent('');
-        toast({
-          title: "Error",
-          description: "File path is empty",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      path.forEach((segment, index) => {
-        if (!segment || typeof segment !== 'string') {
-          throw new Error(`Invalid path segment at position ${index}: ${segment}`);
-        }
-        if (segment.trim().length === 0) {
-          throw new Error(`Empty path segment at position ${index}`);
-        }
-      });
-
-      const fullPath = path.join('/');
-      console.log('[TextEditor] Loading file:', fullPath);
-    } catch (error) {
-      console.error('[TextEditor] Error:', error);
+    console.log('[TextEditor] Received path prop:', path);
+    
+    if (!path || !Array.isArray(path)) {
+      console.error('[TextEditor] Invalid or missing path prop:', path);
       setContent('');
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
+        description: "Invalid file path provided",
         variant: "destructive"
       });
       return;
     }
 
-    // Validate each path segment
-    const invalidSegments = path.filter(segment => !segment || typeof segment !== 'string' || segment.length === 0);
-    if (invalidSegments.length > 0) {
-      console.error('[TextEditor] Invalid path segments found:', invalidSegments);
-      setContent('');
-      return;
-    }
+    // Store validated path
+    setFilePath(path);
 
-    console.log('[TextEditor] Path validation passed');
-    console.log('[TextEditor] Attempting to load content for path:', path.join('/'));
-    
+    // Load file content
     const fileContent = fs.getFileContent(path);
+    console.log('[TextEditor] Loaded content:', fileContent !== null ? 'success' : 'failed');
+    
     if (fileContent !== null) {
-      console.log('[TextEditor] Content loaded successfully, length:', fileContent.length);
       setContent(fileContent);
     } else {
-      console.log('[TextEditor] No existing content found, initializing empty file');
       setContent('');
+      if (path.length > 0) {
+        toast({
+          title: "Notice",
+          description: "Creating new file",
+        });
+      }
     }
   }, [path])
 
   const handleSave = () => {
-    console.log('[TextEditor] Attempting to save file');
-    console.log('[TextEditor] Current path:', path);
-    console.log('[TextEditor] Current content length:', content.length);
+    console.log('[TextEditor] Attempting to save file with path:', filePath);
     
-    if (!path || !Array.isArray(path) || path.length === 0 || !path.every(segment => typeof segment === 'string' && segment.length > 0)) {
-      console.error('[TextEditor] Invalid path:', path);
+    if (filePath.length === 0) {
+      console.error('[TextEditor] No file path available for saving');
       toast({
         title: "Error",
-        description: "Invalid file path",
+        description: "No file path available for saving",
         variant: "destructive"
       });
       return;
     }
 
-    console.log('[TextEditor] Saving file:', path.join('/'));
-    const success = fs.updateFileContent([...path], content);
+    const success = fs.updateFileContent(filePath, content);
+    console.log('[TextEditor] Save result:', success ? 'success' : 'failed');
     
     if (success) {
       toast({
         title: "Success",
         description: "File saved successfully"
       });
-      console.log('[TextEditor] File saved successfully:', path.join('/'));
     } else {
       toast({
         title: "Error",
         description: "Failed to save file",
         variant: "destructive"
       });
-      console.error('[TextEditor] Failed to save file. Path:', path.join('/'));
     }
   }
 
