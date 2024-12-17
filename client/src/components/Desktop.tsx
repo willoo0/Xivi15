@@ -21,6 +21,7 @@ import { Weather } from './apps/Weather';
 import { Snake } from './apps/Snake';
 import { WhackAMole } from './apps/WhackAMole';
 import { Minecraft } from './apps/Minecraft';
+import { Games } from './apps/Games';
 
 const components: Record<string, React.ComponentType> = {
   TextEditor,

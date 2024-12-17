@@ -48,11 +48,11 @@ const apps = [
     category: "Games",
   },
   {
-    id: "minecraft",
-    title: "Minecraft",
-    component: "Minecraft",
+    id: "games",
+    title: "Games",
+    component: "Games",
     icon: Gamepad2,
-    category: "Games",
+    category: "Applications",
   },
   {
     id: "todo",
