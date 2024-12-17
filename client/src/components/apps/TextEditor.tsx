@@ -81,11 +81,8 @@ export function TextEditor({ path }: TextEditorProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-end gap-2 p-2 border-b">
-        <Button size="sm" onClick={handleRename}>
-          Rename
-        </Button>
-        <Button size="sm" onClick={handleSave}>
+      <div className="p-2 border-b">
+        <Button size="sm" className="w-full" onClick={handleSave}>
           <Save className="h-4 w-4 mr-2" />
           Save
         </Button>
