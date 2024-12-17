@@ -127,16 +127,19 @@ class FileSystem {
     }
   }
 
-  updateFileContent(path: string[], content: string): boolean {
-    if (!path || path.length === 0) return false;
+  updateFileContent(path: string[], content: string): { success: boolean; error?: string } {
+    if (!path || path.length === 0) return { success: false, error: 'Invalid file path' };
     
     try {
       const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
       let current = root;
       
       for (let i = 0; i < path.length - 1; i++) {
-        if (!current[path[i]] || !current[path[i]].children) {
-          return false;
+        if (!current[path[i]]) {
+          return { success: false, error: `Directory "${path[i]}" not found` };
+        }
+        if (!current[path[i]].children) {
+          return { success: false, error: `"${path[i]}" is not a directory` };
         }
         current = current[path[i]].children;
       }
@@ -156,10 +159,10 @@ class FileSystem {
         current[fileName].content = content;
         current[fileName].updatedAt = Date.now();
         this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
-        return true;
+        return { success: true };
       }
       
-      return false;
+      return { success: false, error: `"${fileName}" is not a file` };
     } catch (error) {
       console.error('Error updating file content:', error);
       return false;
