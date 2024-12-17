@@ -75,6 +75,11 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     return null
   }
 
+  const constrainedY = Math.min(
+    Math.max(position?.y ?? 0, 8),
+    window.innerHeight - (position?.height ?? 400) - 48
+  )
+
   return (
     <Card
       ref={windowRef}
@@ -84,9 +89,9 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       )}
       style={{
         left: position?.x ?? 0,
-        top: position?.y ?? 0,
+        top: isMaximized ? 8 : constrainedY,
         width: isMaximized ? '100%' : (position?.width ?? 600),
-        height: isMaximized ? '100%' : (position?.height ?? 400),
+        height: isMaximized ? 'calc(100% - 56px)' : (position?.height ?? 400),
         zIndex
       }}
     >
