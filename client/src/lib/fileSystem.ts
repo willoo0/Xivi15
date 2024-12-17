@@ -219,7 +219,10 @@ class FileSystem {
   }
 
   updateFileContent(path: string[], content: string): boolean {
-    if (!path?.length) return false;
+    if (!Array.isArray(path) || path.length === 0) {
+      console.error('Invalid path array:', path);
+      return false;
+    }
 
     try {
       const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
@@ -228,21 +231,40 @@ class FileSystem {
       // Navigate to parent directory
       for (let i = 0; i < path.length - 1; i++) {
         const segment = path[i];
-        if (!current[segment] || current[segment].type !== 'folder') {
+        if (!segment || typeof segment !== 'string') {
           console.error('Invalid path segment:', segment);
+          return false;
+        }
+        if (!current[segment]) {
+          console.error('Directory not found:', segment);
+          return false;
+        }
+        if (current[segment].type !== 'folder') {
+          console.error('Path segment is not a folder:', segment);
           return false;
         }
         current = current[segment].children!;
       }
 
       const fileName = path[path.length - 1];
-      if (!current[fileName]) {
-        console.error('File not found:', fileName);
+      if (!fileName || typeof fileName !== 'string') {
+        console.error('Invalid filename:', fileName);
         return false;
       }
 
+      // Create file if it doesn't exist
+      if (!current[fileName]) {
+        current[fileName] = {
+          type: 'file',
+          name: fileName,
+          content: '',
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        };
+      }
+
       if (current[fileName].type !== 'file') {
-        console.error('Not a file:', fileName);
+        console.error('Path points to a non-file:', fileName);
         return false;
       }
 

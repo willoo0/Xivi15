@@ -26,10 +26,32 @@ export function TextEditor({ path }: TextEditorProps) {
   }, [path])
 
   const handleSave = () => {
-    if (!path || path.length === 0) {
+    if (!Array.isArray(path)) {
+      console.error('Path is not an array:', path);
       toast({
         title: "Error",
-        description: "Invalid file path",
+        description: "Invalid file path format",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (path.length === 0) {
+      console.error('Empty path array');
+      toast({
+        title: "Error",
+        description: "File path is empty",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate each path segment
+    if (!path.every(segment => typeof segment === 'string' && segment.length > 0)) {
+      console.error('Invalid path segments:', path);
+      toast({
+        title: "Error",
+        description: "Invalid file path segments",
         variant: "destructive"
       });
       return;
@@ -43,7 +65,7 @@ export function TextEditor({ path }: TextEditorProps) {
         title: "File saved",
         description: "Your changes have been saved successfully."
       });
-      console.log('File saved successfully');
+      console.log('File saved successfully:', path.join('/'));
     } else {
       toast({
         title: "Error",
