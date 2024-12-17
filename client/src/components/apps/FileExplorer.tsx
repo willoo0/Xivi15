@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/context-menu'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogHeader, DialogContent, DialogFooter, DialogTitle } from '@/components/ui/dialog'
-import { toast } from '@/hooks/use-toast'
 
 
 export function FileExplorer() {
@@ -43,35 +42,6 @@ export function FileExplorer() {
   }
 
   const handleOpenFile = (name: string) => {
-    console.log('[FileExplorer] Opening file:', name, 'from path:', currentPath);
-    
-    if (!name || typeof name !== 'string' || name.trim().length === 0) {
-      toast({
-        title: "Error",
-        description: "Invalid file name",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const filePath = [...currentPath, name];
-    console.log('[FileExplorer] Constructed file path:', filePath);
-
-    // Verify if the file exists
-    if (fs.getFileContent(filePath) === null) {
-      // Create the file if it doesn't exist
-      console.log('[FileExplorer] File not found, creating new file');
-      if (!fs.createFile(name, currentPath)) {
-        toast({
-          title: "Error",
-          description: "Failed to create file",
-          variant: "destructive"
-        });
-        return;
-      }
-    }
-
-    console.log('[FileExplorer] Opening editor with path:', filePath);
     addWindow({
       id: nanoid(),
       title: name,
@@ -85,9 +55,9 @@ export function FileExplorer() {
       isMinimized: false,
       isMaximized: false,
       props: {
-        path: filePath,
+        path: [...currentPath, name],
       },
-    });
+    })
   }
 
   const navigateToFolder = (folder: string) => {
