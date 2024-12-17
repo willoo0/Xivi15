@@ -22,11 +22,37 @@ export function TextEditor({ path }: TextEditorProps) {
   }, [path])
 
   const handleSave = () => {
-    fs.updateFileContent(path, content)
-    toast({
-      title: "File saved",
-      description: "Your changes have been saved successfully."
-    })
+    const success = fs.updateFileContent(path, content);
+    if (success) {
+      toast({
+        title: "File saved",
+        description: "Your changes have been saved successfully."
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to save file. Please try again.",
+        variant: "destructive"
+      });
+    }
+  }
+
+  const handleRename = () => {
+    const currentName = path[path.length - 1];
+    const newName = prompt('Enter new name:', currentName);
+    if (newName && newName !== currentName) {
+      const newPath = [...path.slice(0, -1), newName];
+      const success = fs.createFile(newName, path.slice(0, -1), 'file');
+      if (success) {
+        fs.updateFileContent(newPath, content);
+        fs.deleteFile(path);
+        path = newPath;
+        toast({
+          title: "File renamed",
+          description: "File has been renamed successfully."
+        });
+      }
+    }
   }
 
   useEffect(() => {
@@ -48,7 +74,10 @@ export function TextEditor({ path }: TextEditorProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-end p-2 border-b">
+      <div className="flex justify-end gap-2 p-2 border-b">
+        <Button size="sm" onClick={handleRename}>
+          Rename
+        </Button>
         <Button size="sm" onClick={handleSave}>
           <Save className="h-4 w-4 mr-2" />
           Save

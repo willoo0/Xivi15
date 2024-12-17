@@ -88,10 +88,10 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
-        left: position?.x ?? 0,
-        top: isMaximized ? 8 : constrainedY,
+        left: position?.x ?? 100,
+        top: position?.y ?? 40, // Start below topbar
         width: isMaximized ? '100%' : (position?.width ?? 600),
-        height: isMaximized ? 'calc(100% - 56px)' : (position?.height ?? 400),
+        height: isMaximized ? 'calc(100% - 88px)' : (position?.height ?? 400), // Account for topbar and taskbar
         zIndex
       }}
     >

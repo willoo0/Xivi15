@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -72,7 +71,7 @@ export function FileExplorer() {
           {currentPath.length === 0 ? 'Home' : currentPath.join(' / ')}
         </div>
       </div>
-      
+
       <div className="flex-1 relative">
         <ScrollArea className="h-full">
           <ContextMenu>
@@ -106,10 +105,20 @@ export function FileExplorer() {
                         </ContextMenuItem>
                       )}
                       <ContextMenuSeparator />
-                      <ContextMenuItem
-                        onClick={() => handleDeleteFile(name)}
-                        className="text-red-600"
-                      >
+                      <ContextMenuItem onClick={() => {
+                        const newName = prompt('Enter new name:', name);
+                        if (newName && newName !== name) {
+                          const content = fs.getFileContent([...currentPath, name]);
+                          if (fs.createFile(newName, currentPath, 'file') && content !== null) {
+                            fs.updateFileContent([...currentPath, newName], content);
+                            fs.deleteFile([...currentPath, name]);
+                            setFiles(fs.getFiles(currentPath));
+                          }
+                        }
+                      }}>
+                        Rename
+                      </ContextMenuItem>
+                      <ContextMenuItem onClick={() => handleDeleteFile(name)} className="text-red-600">
                         Delete
                       </ContextMenuItem>
                     </ContextMenuContent>
