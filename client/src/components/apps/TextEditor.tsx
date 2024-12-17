@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Save } from 'lucide-react'
-import { fs } from '@/lib/fileSystem'
 import { useToast } from '@/hooks/use-toast'
 
 interface TextEditorProps {
@@ -10,63 +9,15 @@ interface TextEditorProps {
 }
 
 export function TextEditor({ path }: TextEditorProps) {
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState('Welcome to Notepad!\nFile system is currently in demo mode.')
   const { toast } = useToast()
 
-  useEffect(() => {
-    console.log('TextEditor: Loading content for path:', path);
-    if (!Array.isArray(path) || path.length === 0) {
-      console.error('Invalid or empty path:', path);
-      return;
-    }
-
-    const fileContent = fs.getFileContent(path)
-    if (fileContent !== null) {
-      setContent(fileContent)
-    } else {
-      console.error('Could not load file content for path:', path);
-    }
-  }, [path])
-
   const handleSave = () => {
-    console.log('TextEditor: Attempting to save file with path:', path);
-    if (!Array.isArray(path) || path.length === 0) {
-      toast({
-        title: "Error",
-        description: "Invalid file path",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const success = fs.updateFileContent(path, content);
-    if (success) {
-      toast({
-        title: "Success",
-        description: "File saved successfully"
-      });
-      console.log('File saved successfully:', path.join('/'));
-    } else {
-      toast({
-        title: "Error",
-        description: "Failed to save file",
-        variant: "destructive"
-      });
-      console.error('Failed to save file. Path:', path.join('/'));
-    }
+    toast({
+      title: "Demo Mode",
+      description: "File system is currently in demo mode. Changes won't be saved.",
+    });
   }
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault()
-        handleSave()
-      }
-    }
-    
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [content])
 
   return (
     <div className="h-full flex flex-col">
