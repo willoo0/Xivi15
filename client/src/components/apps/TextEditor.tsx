@@ -19,22 +19,45 @@ export function TextEditor({ path }: TextEditorProps) {
 
   useEffect(() => {
     console.log('[TextEditor] Component mounted');
-    console.log('[TextEditor] Current path:', path);
+    console.log('[TextEditor] Received path:', path);
     
-    if (!path || !Array.isArray(path) || path.length === 0 || !path.every(segment => typeof segment === 'string' && segment.length > 0)) {
-      console.error('[TextEditor] Invalid path:', path);
+    // Path validation checks
+    if (!path) {
+      console.error('[TextEditor] Path is undefined or null');
       setContent('');
       return;
     }
 
-    console.log('[TextEditor] Loading content for path:', path.join('/'));
-    const fileContent = fs.getFileContent(path)
+    if (!Array.isArray(path)) {
+      console.error('[TextEditor] Path is not an array:', typeof path);
+      setContent('');
+      return;
+    }
+
+    if (path.length === 0) {
+      console.error('[TextEditor] Path array is empty');
+      setContent('');
+      return;
+    }
+
+    // Validate each path segment
+    const invalidSegments = path.filter(segment => !segment || typeof segment !== 'string' || segment.length === 0);
+    if (invalidSegments.length > 0) {
+      console.error('[TextEditor] Invalid path segments found:', invalidSegments);
+      setContent('');
+      return;
+    }
+
+    console.log('[TextEditor] Path validation passed');
+    console.log('[TextEditor] Attempting to load content for path:', path.join('/'));
+    
+    const fileContent = fs.getFileContent(path);
     if (fileContent !== null) {
-      console.log('[TextEditor] Content loaded successfully');
-      setContent(fileContent)
+      console.log('[TextEditor] Content loaded successfully, length:', fileContent.length);
+      setContent(fileContent);
     } else {
-      console.log('[TextEditor] New file');
-      setContent('')
+      console.log('[TextEditor] No existing content found, initializing empty file');
+      setContent('');
     }
   }, [path])
 

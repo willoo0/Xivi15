@@ -42,19 +42,34 @@ export function FileExplorer() {
   }
 
   const handleOpenFile = (name: string) => {
-    if (!name || typeof name !== 'string') {
-      console.error('[FileExplorer] Invalid file name:', name);
+    console.log('[FileExplorer] Attempting to open file:', name);
+    console.log('[FileExplorer] Current directory path:', currentPath);
+
+    // Validate filename
+    if (!name) {
+      console.error('[FileExplorer] File name is empty or undefined');
       return;
     }
-    
+
+    if (typeof name !== 'string') {
+      console.error('[FileExplorer] Invalid file name type:', typeof name);
+      return;
+    }
+
+    // Construct and validate full path
     const filePath = [...currentPath, name].filter(Boolean);
-    console.log('[FileExplorer] Opening file with path:', filePath);
-    
+    console.log('[FileExplorer] Constructed file path:', filePath);
+
     if (filePath.length === 0) {
-      console.error('[FileExplorer] Empty file path');
+      console.error('[FileExplorer] Failed to construct valid file path');
       return;
     }
-    
+
+    // Verify file exists in filesystem
+    const fileContent = fs.getFileContent(filePath);
+    console.log('[FileExplorer] File content check:', fileContent !== null ? 'exists' : 'not found');
+
+    console.log('[FileExplorer] Creating window for file:', filePath.join('/'));
     addWindow({
       id: nanoid(),
       title: name,
