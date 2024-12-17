@@ -136,4 +136,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.text-red-500 p-2 bg-red-50 rounded text-sm
+.notice {
+  @apply text-red-500 p-2 bg-red-50 rounded text-sm;
+}
