@@ -134,6 +134,21 @@ class FileSystem {
       const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
       let current = root;
       
+      // Handle root level files
+      if (path.length === 1) {
+        if (!current[path[0]]) {
+          return { success: false, error: `File "${path[0]}" not found` };
+        }
+        if (current[path[0]].type !== 'file') {
+          return { success: false, error: `"${path[0]}" is not a file` };
+        }
+        current[path[0]].content = content;
+        current[path[0]].updatedAt = Date.now();
+        this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+        return { success: true };
+      }
+
+      // Handle nested files
       for (let i = 0; i < path.length - 1; i++) {
         if (!current[path[i]]) {
           return { success: false, error: `Directory "${path[i]}" not found` };
