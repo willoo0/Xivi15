@@ -83,10 +83,10 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
-        left: position.x,
-        top: position.y,
-        width: isMaximized ? '100%' : position.width,
-        height: isMaximized ? '100%' : position.height,
+        left: position?.x ?? 0,
+        top: position?.y ?? 0,
+        width: isMaximized ? '100%' : (position?.width ?? 600),
+        height: isMaximized ? '100%' : (position?.height ?? 400),
         zIndex
       }}
     >
