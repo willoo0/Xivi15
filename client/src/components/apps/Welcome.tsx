@@ -30,6 +30,7 @@ export function Welcome() {
           <li>Drag windows to move them around</li>
           <li>Right-click on the desktop for more options</li>
         </ul>
+        <p style={{ color: "yellow" }}>We are aware of a recent File System issue and working on it 😊</p>
       </div>
 
       <div className="flex items-center gap-2">
