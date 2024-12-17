@@ -13,11 +13,15 @@ import {
   ContextMenuSeparator,
 } from '@/components/ui/context-menu'
 import { Input } from '@/components/ui/input'
+import { Dialog, DialogHeader, DialogBody, DialogFooter, DialogTitle } from '@/components/ui/dialog'
+
 
 export function FileExplorer() {
   const [currentPath, setCurrentPath] = useState<string[]>([])
   const [files, setFiles] = useState<Record<string, any>>({})
-  const [newFileName, setNewFileName] = useState('')
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false)
+  const [selectedFile, setSelectedFile] = useState("")
+  const [newFileName, setNewFileName] = useState("")
   const { addWindow } = useDesktopStore()
 
   useEffect(() => {
@@ -54,6 +58,20 @@ export function FileExplorer() {
 
   const navigateUp = () => {
     setCurrentPath(currentPath.slice(0, -1))
+  }
+
+  const handleRename = () => {
+    if (newFileName && newFileName !== selectedFile) {
+      const content = fs.getFileContent([...currentPath, selectedFile]);
+      if (fs.createFile(newFileName, currentPath, 'file') && content !== null) {
+        fs.updateFileContent([...currentPath, newFileName], content);
+        fs.deleteFile([...currentPath, selectedFile]);
+        setFiles(fs.getFiles(currentPath));
+      }
+      setRenameDialogOpen(false);
+      setNewFileName("");
+      setSelectedFile("");
+    }
   }
 
   return (
@@ -106,15 +124,8 @@ export function FileExplorer() {
                       )}
                       <ContextMenuSeparator />
                       <ContextMenuItem onClick={() => {
-                        const newName = prompt('Enter new name:', name);
-                        if (newName && newName !== name) {
-                          const content = fs.getFileContent([...currentPath, name]);
-                          if (fs.createFile(newName, currentPath, 'file') && content !== null) {
-                            fs.updateFileContent([...currentPath, newName], content);
-                            fs.deleteFile([...currentPath, name]);
-                            setFiles(fs.getFiles(currentPath));
-                          }
-                        }
+                        setSelectedFile(name);
+                        setRenameDialogOpen(true);
                       }}>
                         Rename
                       </ContextMenuItem>
@@ -136,6 +147,17 @@ export function FileExplorer() {
             </ContextMenuContent>
           </ContextMenu>
         </ScrollArea>
+        <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
+          <DialogHeader>
+            <DialogTitle>Rename File</DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <Input value={newFileName} onChange={(e) => setNewFileName(e.target.value)} placeholder="New file name" />
+          </DialogBody>
+          <DialogFooter>
+            <Button onClick={handleRename}>Rename</Button>
+          </DialogFooter>
+        </Dialog>
       </div>
     </div>
   )

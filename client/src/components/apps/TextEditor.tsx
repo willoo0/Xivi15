@@ -57,7 +57,7 @@ export function TextEditor({ path }: TextEditorProps) {
       if (success) {
         fs.updateFileContent(newPath, content);
         fs.deleteFile(path);
-        path = newPath;
+        window.location.reload(); // Refresh to update path
         toast({
           title: "File renamed",
           description: "File has been renamed successfully."
