@@ -1,9 +1,8 @@
-
 interface FSNode {
   type: 'file' | 'folder';
   name: string;
   content?: string;
-  children?: Record<string, FSNode>;
+  children?: { [key: string]: FSNode };
   createdAt: number;
   updatedAt: number;
 }
@@ -19,7 +18,7 @@ class FileSystem {
 
   private initializeFS() {
     if (!this.storage.getItem(this.ROOT_KEY)) {
-      const root: Record<string, FSNode> = {
+      const root: { [key: string]: FSNode } = {
         'Desktop': {
           type: 'folder',
           name: 'Desktop',
@@ -39,99 +38,81 @@ class FileSystem {
     }
   }
 
-  private getNodeAtPath(path: string[]): { node: FSNode | null; parent: Record<string, FSNode> | null } {
+  private getNodeAtPath(path: string[]): { 
+    node: FSNode | null; 
+    parent: { [key: string]: FSNode } | null;
+    parentPath: string[];
+  } {
     try {
       const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
-      let current = root;
-      let parent = null;
+      let current: { [key: string]: FSNode } = root;
+      let parent: { [key: string]: FSNode } | null = null;
+      let parentPath: string[] = [];
 
-      if (!path || path.length === 0) return { node: null, parent: root };
-      
+      if (!path || path.length === 0) {
+        return { node: null, parent: root, parentPath: [] };
+      }
+
+      // Navigate through the path except the last element
       for (let i = 0; i < path.length - 1; i++) {
-        if (!current[path[i]] || current[path[i]].type !== 'folder') {
-          return { node: null, parent: null };
+        const segment = path[i];
+        if (!current[segment] || current[segment].type !== 'folder') {
+          return { node: null, parent: null, parentPath: [] };
         }
         parent = current;
-        current = current[path[i]].children!;
+        parentPath = path.slice(0, i);
+        current = current[segment].children!;
       }
 
       const lastSegment = path[path.length - 1];
-      return { 
+      return {
         node: current[lastSegment] || null,
-        parent: parent || root
+        parent: parent || root,
+        parentPath: parentPath,
       };
     } catch {
-      return { node: null, parent: null };
+      return { node: null, parent: null, parentPath: [] };
     }
   }
 
-  getFiles(path: string[] = []): Record<string, FSNode> {
+  getFiles(path: string[] = []): { [key: string]: FSNode } {
     try {
-      if (!path.length) {
+      if (path.length === 0) {
         return JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
       }
-      const { node } = this.getNodeAtPath(path);
-      return node?.type === 'folder' ? node.children || {} : {};
+
+      let current = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      for (const segment of path) {
+        if (!current[segment] || current[segment].type !== 'folder') {
+          return {};
+        }
+        current = current[segment].children!;
+      }
+      return current;
     } catch {
       return {};
     }
   }
 
-  getFileContent(path: string[]): string | null {
-    try {
-      const { node } = this.getNodeAtPath(path);
-      return node?.type === 'file' ? node.content || '' : null;
-    } catch {
-      return null;
-    }
-  }
-
-  updateFileContent(path: string[], content: string): { success: boolean; error?: string } {
-    if (!path?.length) return { success: false, error: 'Invalid path' };
-    
-    try {
-      const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
-      const { node, parent } = this.getNodeAtPath(path);
-      const fileName = path[path.length - 1];
-
-      if (!node && parent) {
-        parent[fileName] = {
-          type: 'file',
-          name: fileName,
-          content: content,
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        };
-        this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
-        return { success: true };
-      }
-
-      if (node?.type === 'file') {
-        node.content = content;
-        node.updatedAt = Date.now();
-        this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
-        return { success: true };
-      }
-
-      return { success: false, error: 'Invalid file' };
-    } catch (error) {
-      return { success: false, error: 'Failed to update file' };
-    }
-  }
-
-  createFile(name: string, path: string[] = [], type: 'file' | 'folder'): boolean {
+  createFile(name: string, path: string[] = [], type: 'file' | 'folder' = 'file'): boolean {
     try {
       const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
       let current = root;
-      
-      // Navigate to target directory
+
+      // Navigate to the target directory
       for (const segment of path) {
-        if (!current[segment] || current[segment].type !== 'folder') return false;
+        if (!current[segment] || current[segment].type !== 'folder') {
+          return false;
+        }
         current = current[segment].children!;
       }
 
-      if (current[name]) return false;
+      // Check if file/folder already exists
+      if (current[name]) {
+        return false;
+      }
 
+      // Create new node
       current[name] = {
         type,
         name,
@@ -149,20 +130,27 @@ class FileSystem {
 
   deleteFile(path: string[]): boolean {
     if (!path?.length) return false;
-    
+
     try {
       const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
-      const { parent } = this.getNodeAtPath(path);
+      let current = root;
       
-      if (!parent) return false;
-      
-      const fileName = path[path.length - 1];
-      const success = delete parent[fileName];
-      
-      if (success) {
-        this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+      // Navigate to parent directory
+      for (let i = 0; i < path.length - 1; i++) {
+        if (!current[path[i]] || current[path[i]].type !== 'folder') {
+          return false;
+        }
+        current = current[path[i]].children!;
       }
-      return success;
+
+      const fileName = path[path.length - 1];
+      if (!current[fileName]) {
+        return false;
+      }
+
+      delete current[fileName];
+      this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+      return true;
     } catch {
       return false;
     }
@@ -173,22 +161,85 @@ class FileSystem {
 
     try {
       const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
-      const { node, parent } = this.getNodeAtPath(oldPath);
+      let current = root;
 
-      if (!node || !parent) return false;
+      // Navigate to parent directory
+      for (let i = 0; i < oldPath.length - 1; i++) {
+        if (!current[oldPath[i]] || current[oldPath[i]].type !== 'folder') {
+          return false;
+        }
+        current = current[oldPath[i]].children!;
+      }
 
       const oldName = oldPath[oldPath.length - 1];
-      if (parent[newName]) return false;
+      if (!current[oldName] || current[newName]) {
+        return false;
+      }
 
-      // Create new node with updated name
-      parent[newName] = {
-        ...node,
+      // Create new entry with updated name
+      current[newName] = {
+        ...current[oldName],
         name: newName,
         updatedAt: Date.now()
       };
 
-      // Delete old node
-      delete parent[oldName];
+      // Delete old entry
+      delete current[oldName];
+
+      this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  getFileContent(path: string[]): string | null {
+    if (!path?.length) return null;
+
+    try {
+      let current = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      
+      // Navigate to file
+      for (let i = 0; i < path.length - 1; i++) {
+        if (!current[path[i]] || current[path[i]].type !== 'folder') {
+          return null;
+        }
+        current = current[path[i]].children!;
+      }
+
+      const fileName = path[path.length - 1];
+      if (!current[fileName] || current[fileName].type !== 'file') {
+        return null;
+      }
+
+      return current[fileName].content || '';
+    } catch {
+      return null;
+    }
+  }
+
+  updateFileContent(path: string[], content: string): boolean {
+    if (!path?.length) return false;
+
+    try {
+      const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      let current = root;
+
+      // Navigate to parent directory
+      for (let i = 0; i < path.length - 1; i++) {
+        if (!current[path[i]] || current[path[i]].type !== 'folder') {
+          return false;
+        }
+        current = current[path[i]].children!;
+      }
+
+      const fileName = path[path.length - 1];
+      if (!current[fileName] || current[fileName].type !== 'file') {
+        return false;
+      }
+
+      current[fileName].content = content;
+      current[fileName].updatedAt = Date.now();
 
       this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
       return true;

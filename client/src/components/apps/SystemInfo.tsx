@@ -1,15 +1,14 @@
-
-import { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
 
 export function SystemInfo() {
-  const [publicIP, setPublicIP] = useState<string>('Loading...');
+  const [publicIP, setPublicIP] = useState<string>("Loading...");
 
   useEffect(() => {
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(data => setPublicIP(data.ip))
-      .catch(() => setPublicIP('Failed to load'));
+    fetch("https://api.ipify.org?format=json")
+      .then((res) => res.json())
+      .then((data) => setPublicIP(data.ip))
+      .catch(() => setPublicIP("Failed to load"));
   }, []);
 
   return (
@@ -17,7 +16,7 @@ export function SystemInfo() {
       <h2 className="text-2xl font-bold">System Information</h2>
       <Card className="p-4 space-y-2">
         <div>
-          <span className="font-semibold">Operating System:</span> Xivr Linux
+          <span className="font-semibold">Operating System:</span> Xivi Linux
         </div>
         <div>
           <span className="font-semibold">CPU:</span> Intel® Core™ i9 14th gen

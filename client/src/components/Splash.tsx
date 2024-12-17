@@ -1,12 +1,11 @@
-
 import { useEffect, useState } from "react";
 
 export function Splash({ onFinish }: { onFinish: () => void }) {
   const [opacity, setOpacity] = useState(1);
 
   const handleClick = () => {
-    document.documentElement.requestFullscreen().catch(err => {
-      console.warn('Could not enter fullscreen:', err);
+    document.documentElement.requestFullscreen().catch((err) => {
+      console.warn("Could not enter fullscreen:", err);
     });
     setOpacity(0);
     setTimeout(onFinish, 500);
@@ -29,8 +28,9 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
             opacity: opacity,
           }}
         >
-          Xivi 8
+          Xivi 15 Alpha
         </h1>
+        <p className="text-zinc-400">You are first in Queue!</p>
         <p className="text-zinc-400">Click anywhere to continue</p>
         <div
           className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto"

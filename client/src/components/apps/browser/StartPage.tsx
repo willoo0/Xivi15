@@ -34,7 +34,7 @@ export function StartPage({ onNavigate }: StartPageProps) {
     <div className="h-full flex flex-col items-center justify-center p-6 bg-background/80">
       <div className="w-full max-w-2xl space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">🏄 Xivr Surf</h1>
+          <h1 className="text-4xl font-bold">🏄 Xivi Surf</h1>
           <p className="text-lg text-muted-foreground">
             Search or enter website name
           </p>
