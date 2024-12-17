@@ -63,7 +63,32 @@ export function FileExplorer() {
         throw new Error(`File not found: ${filePath.join('/')}`);
       }
 
-    if (filePath.length === 0) {
+      console.log('[FileExplorer] Creating window for file:', filePath.join('/'));
+      addWindow({
+        id: nanoid(),
+        title: name,
+        component: 'TextEditor',
+        position: {
+          x: 50 + Math.random() * 100,
+          y: 50 + Math.random() * 100,
+          width: 600,
+          height: 400,
+        },
+        isMinimized: false,
+        isMaximized: false,
+        props: {
+          path: filePath,
+        },
+      });
+      
+    } catch (error) {
+      console.error('[FileExplorer] Error:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive"
+      });
+    }
       console.error('[FileExplorer] Failed to construct valid file path');
       return;
     }
