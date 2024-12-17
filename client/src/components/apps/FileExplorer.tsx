@@ -62,16 +62,11 @@ export function FileExplorer() {
 
   const handleRename = () => {
     if (newFileName && newFileName !== selectedFile) {
-      const file = files[selectedFile];
-      if (fs.createFile(newFileName, currentPath, file.type)) {
-        if (file.type === 'file') {
-          const content = fs.getFileContent([...currentPath, selectedFile]);
-          if (content !== null) {
-            fs.updateFileContent([...currentPath, newFileName], content);
-          }
-        }
-        fs.deleteFile([...currentPath, selectedFile]);
+      if (fs.renameFile([...currentPath, selectedFile], newFileName)) {
         setFiles(fs.getFiles(currentPath));
+        setRenameDialogOpen(false);
+        setNewFileName("");
+        setSelectedFile("");
       }
       setRenameDialogOpen(false);
       setNewFileName("");

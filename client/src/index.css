@@ -106,6 +106,7 @@
 @layer base {
   * {
     @apply border-border;
+    outline: none !important;
   }
   body {
     @apply bg-background text-foreground;

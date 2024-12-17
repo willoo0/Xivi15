@@ -135,16 +135,26 @@ class FileSystem {
       let current = root;
       
       for (let i = 0; i < path.length - 1; i++) {
-        if (current[path[i]]?.children) {
-          current = current[path[i]].children;
-        } else {
+        if (!current[path[i]] || !current[path[i]].children) {
           return false;
         }
+        current = current[path[i]].children;
       }
       
-      if (current[path[path.length - 1]]?.type === 'file') {
-        current[path[path.length - 1]].content = content;
-        current[path[path.length - 1]].updatedAt = Date.now();
+      const fileName = path[path.length - 1];
+      if (!current[fileName]) {
+        current[fileName] = {
+          type: 'file',
+          name: fileName,
+          content: '',
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        };
+      }
+      
+      if (current[fileName].type === 'file') {
+        current[fileName].content = content;
+        current[fileName].updatedAt = Date.now();
         this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
         return true;
       }
@@ -152,6 +162,36 @@ class FileSystem {
       return false;
     } catch (error) {
       console.error('Error updating file content:', error);
+      return false;
+    }
+  }
+
+  renameFile(oldPath: string[], newName: string): boolean {
+    if (!oldPath || oldPath.length === 0) return false;
+    
+    try {
+      const root = JSON.parse(this.storage.getItem(this.ROOT_KEY) || '{}');
+      let current = root;
+      
+      for (let i = 0; i < oldPath.length - 1; i++) {
+        if (!current[oldPath[i]] || !current[oldPath[i]].children) {
+          return false;
+        }
+        current = current[oldPath[i]].children;
+      }
+      
+      const oldName = oldPath[oldPath.length - 1];
+      if (!current[oldName]) return false;
+      
+      const item = current[oldName];
+      item.name = newName;
+      current[newName] = item;
+      delete current[oldName];
+      
+      this.storage.setItem(this.ROOT_KEY, JSON.stringify(root));
+      return true;
+    } catch (error) {
+      console.error('Error renaming file:', error);
       return false;
     }
   }
