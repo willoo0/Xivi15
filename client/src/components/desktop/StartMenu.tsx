@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDesktopStore } from "@/store/desktop";
 import { ContextMenu } from "./ContextMenu";
 import { nanoid } from "nanoid";
-import { AppWindow, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings } from "lucide-react";
+import { AppWindow, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2 } from "lucide-react";
 import { getAppIcon } from "@/lib/appIcons";
 
 interface StartMenuProps {
