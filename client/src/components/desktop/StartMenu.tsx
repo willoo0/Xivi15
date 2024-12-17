@@ -20,34 +20,6 @@ const apps = [
     category: "Internet",
   },
   {
-    id: "tetris",
-    title: "Tetris",
-    component: "Tetris",
-    icon: Layout,
-    category: "Games",
-  },
-  {
-    id: "minesweeper",
-    title: "Minesweeper",
-    component: "Minesweeper",
-    icon: Bomb,
-    category: "Games",
-  },
-  {
-    id: "snake",
-    title: "Snake",
-    component: "Snake",
-    icon: Scissors,
-    category: "Games",
-  },
-  {
-    id: "whackamole",
-    title: "Whack-a-Mole",
-    component: "WhackAMole",
-    icon: Hammer,
-    category: "Games",
-  },
-  {
     id: "games",
     title: "Games",
     component: "Games",
@@ -125,7 +97,7 @@ const categories = [
   "Media",
   "System",
   "Accessories",
-  "Games",
+  "Applications",
 ];
 
 export function StartMenu({ onClose }: StartMenuProps) {

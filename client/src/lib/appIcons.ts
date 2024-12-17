@@ -36,6 +36,7 @@ export const appIcons: Record<string, any> = {
   WhackAMole: Hammer,
   Welcome: Hand,
   Minecraft: Gamepad2,
+  Games: Gamepad2,
 };
 
 export const getAppIcon = (component: string) => appIcons[component] || AppWindow;
