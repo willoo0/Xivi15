@@ -21,13 +21,9 @@ export function TextEditor({ path }: TextEditorProps) {
     console.log('[TextEditor] Component mounted');
     console.log('[TextEditor] Current path:', path);
     
-    if (!path || !Array.isArray(path)) {
-      console.error('[TextEditor] Invalid or missing path:', path);
-      return;
-    }
-
-    if (path.length === 0) {
-      console.error('[TextEditor] Empty path array');
+    if (!path || !Array.isArray(path) || path.length === 0) {
+      console.error('[TextEditor] Invalid path:', path);
+      setContent('');
       return;
     }
 
@@ -37,7 +33,8 @@ export function TextEditor({ path }: TextEditorProps) {
       console.log('[TextEditor] Content loaded successfully');
       setContent(fileContent)
     } else {
-      console.error('[TextEditor] Failed to load file content');
+      console.log('[TextEditor] New file');
+      setContent('')
     }
   }, [path])
 
@@ -46,32 +43,11 @@ export function TextEditor({ path }: TextEditorProps) {
     console.log('[TextEditor] Current path:', path);
     console.log('[TextEditor] Current content length:', content.length);
     
-    if (!path || !Array.isArray(path)) {
-      console.error('[TextEditor] Invalid path format:', path);
+    if (!path || !Array.isArray(path) || path.length === 0 || !path.every(segment => typeof segment === 'string' && segment.length > 0)) {
+      console.error('[TextEditor] Invalid path:', path);
       toast({
         title: "Error",
-        description: "Invalid file path format",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (path.length === 0) {
-      console.error('[TextEditor] Empty path array');
-      toast({
-        title: "Error",
-        description: "File path is empty",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Validate each path segment
-    if (!path.every(segment => typeof segment === 'string' && segment.length > 0)) {
-      console.error('[TextEditor] Invalid path segments:', path);
-      toast({
-        title: "Error",
-        description: "Invalid file path segments",
+        description: "Invalid file path",
         variant: "destructive"
       });
       return;
