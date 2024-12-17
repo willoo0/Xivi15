@@ -39,7 +39,8 @@ const components: Record<string, React.ComponentType> = {
   Tetris,
   Snake,
   WhackAMole,
-  Minecraft
+  Minecraft,
+  Games
 }
 
 // Use background images from public folder
