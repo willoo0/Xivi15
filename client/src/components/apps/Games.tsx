@@ -57,28 +57,30 @@ export function Games() {
   };
 
   return (
-    <div className="p-6 grid grid-cols-2 gap-4">
-      <h2 className="text-2xl font-bold col-span-2 flex items-center gap-2">
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
         <Gamepad2 className="h-6 w-6" />
         Games Hub
       </h2>
-      {games.map((game) => {
-        const Icon = game.icon;
-        return (
-          <Button
-            key={game.component}
-            variant="outline"
-            className="h-40 text-lg flex flex-col items-center justify-center gap-2 p-4"
-            onClick={() => launchGame(game)}
-          >
-            <Icon className="h-8 w-8" />
-            <span className="font-bold">{game.title}</span>
-            <span className="text-xs text-muted-foreground text-center line-clamp-2">
-              {game.description}
-            </span>
-          </Button>
-        );
-      })}
+      <div className="grid grid-cols-2 gap-4">
+        {games.map((game) => {
+          const Icon = game.icon;
+          return (
+            <Button
+              key={game.component}
+              variant="outline"
+              className="h-[160px] w-full text-lg flex flex-col items-center justify-center gap-3 p-6"
+              onClick={() => launchGame(game)}
+            >
+              <Icon className="h-8 w-8" />
+              <span className="font-bold">{game.title}</span>
+              <span className="text-xs text-muted-foreground text-center max-w-[180px]">
+                {game.description}
+              </span>
+            </Button>
+          );
+        })}
+      </div>
     </div>
   );
 }
