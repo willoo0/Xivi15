@@ -46,6 +46,14 @@ export function FileExplorer() {
       id: nanoid(),
       title: name,
       component: 'TextEditor',
+      position: {
+        x: 50 + Math.random() * 100,
+        y: 50 + Math.random() * 100,
+        width: 600,
+        height: 400,
+      },
+      isMinimized: false,
+      isMaximized: false,
       props: {
         path: [...currentPath, name],
       },
