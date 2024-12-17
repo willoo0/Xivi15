@@ -33,7 +33,7 @@ const games = [
     title: "Minecraft", 
     component: "Minecraft",
     icon: Gamepad2,
-    description: "Classic browser version of Minecraft"
+    description: "Minecraft Java Edition in the browser"
   },
 ];
 
@@ -68,7 +68,7 @@ export function Games() {
           <Button
             key={game.component}
             variant="outline"
-            className="h-32 text-lg flex flex-col items-center justify-center gap-2 p-4"
+            className="h-36 text-lg flex flex-col items-center justify-center gap-2 p-4"
             onClick={() => launchGame(game)}
           >
             <Icon className="h-8 w-8" />
