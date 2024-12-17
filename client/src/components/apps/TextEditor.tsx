@@ -42,6 +42,16 @@ export function TextEditor({ path }: TextEditorProps) {
 
       const fullPath = path.join('/');
       console.log('[TextEditor] Loading file:', fullPath);
+    } catch (error) {
+      console.error('[TextEditor] Error:', error);
+      setContent('');
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive"
+      });
+      return;
+    }
 
     // Validate each path segment
     const invalidSegments = path.filter(segment => !segment || typeof segment !== 'string' || segment.length === 0);
