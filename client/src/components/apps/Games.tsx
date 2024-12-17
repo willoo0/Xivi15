@@ -68,12 +68,12 @@ export function Games() {
           <Button
             key={game.component}
             variant="outline"
-            className="h-36 text-lg flex flex-col items-center justify-center gap-2 p-4"
+            className="h-40 text-lg flex flex-col items-center justify-center gap-2 p-4"
             onClick={() => launchGame(game)}
           >
             <Icon className="h-8 w-8" />
             <span className="font-bold">{game.title}</span>
-            <span className="text-xs text-muted-foreground text-center">
+            <span className="text-xs text-muted-foreground text-center line-clamp-2">
               {game.description}
             </span>
           </Button>
