@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/context-menu'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogHeader, DialogContent, DialogFooter, DialogTitle } from '@/components/ui/dialog'
-import { toast } from '@/components/ui/toast'
+import { toast } from '@/hooks/use-toast'
 
 
 export function FileExplorer() {
