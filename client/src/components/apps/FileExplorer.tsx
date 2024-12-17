@@ -62,12 +62,13 @@ export function FileExplorer() {
 
   const handleRename = () => {
     if (newFileName && newFileName !== selectedFile) {
-      if (fs.renameFile([...currentPath, selectedFile], newFileName)) {
+      const success = fs.renameFile([...currentPath, selectedFile], newFileName);
+      if (success) {
         setFiles(fs.getFiles(currentPath));
+        setRenameDialogOpen(false);
+        setNewFileName("");
+        setSelectedFile("");
       }
-      setRenameDialogOpen(false);
-      setNewFileName("");
-      setSelectedFile("");
     }
   }
 
@@ -144,7 +145,7 @@ export function FileExplorer() {
             </ContextMenuContent>
           </ContextMenu>
         </ScrollArea>
-        <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
+        <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Rename File</DialogTitle>

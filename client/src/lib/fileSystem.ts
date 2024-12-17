@@ -249,4 +249,7 @@ class FileSystem {
   }
 }
 
-export const fs = new FileSystem();
+// Create a singleton instance
+const fs = new FileSystem();
+
+export { fs };

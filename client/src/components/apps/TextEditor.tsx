@@ -26,8 +26,8 @@ export function TextEditor({ path }: TextEditorProps) {
   }, [path])
 
   const handleSave = () => {
-    const result = fs.updateFileContent(path, content);
-    if (result.success) {
+    const success = fs.updateFileContent(path, content);
+    if (success) {
       toast({
         title: "File saved",
         description: "Your changes have been saved successfully."
@@ -35,7 +35,7 @@ export function TextEditor({ path }: TextEditorProps) {
     } else {
       toast({
         title: "Error",
-        description: result.error || "Failed to save file",
+        description: "Failed to save file",
         variant: "destructive"
       });
     }
