@@ -18,27 +18,30 @@ export function TextEditor({ path }: TextEditorProps) {
   const { toast } = useToast()
 
   useEffect(() => {
-    console.log('[TextEditor] Component mounted');
-    console.log('[TextEditor] Received path:', path);
-    
-    // Path validation checks
-    if (!path) {
-      console.error('[TextEditor] Path is undefined or null');
-      setContent('');
-      return;
-    }
+    try {
+      if (!path) {
+        throw new Error('File path is undefined or null');
+      }
 
-    if (!Array.isArray(path)) {
-      console.error('[TextEditor] Path is not an array:', typeof path);
-      setContent('');
-      return;
-    }
+      if (!Array.isArray(path)) {
+        throw new Error(`Invalid path type: expected array, got ${typeof path}`);
+      }
 
-    if (path.length === 0) {
-      console.error('[TextEditor] Path array is empty');
-      setContent('');
-      return;
-    }
+      if (path.length === 0) {
+        throw new Error('File path is empty');
+      }
+
+      path.forEach((segment, index) => {
+        if (!segment || typeof segment !== 'string') {
+          throw new Error(`Invalid path segment at position ${index}: ${segment}`);
+        }
+        if (segment.trim().length === 0) {
+          throw new Error(`Empty path segment at position ${index}`);
+        }
+      });
+
+      const fullPath = path.join('/');
+      console.log('[TextEditor] Loading file:', fullPath);
 
     // Validate each path segment
     const invalidSegments = path.filter(segment => !segment || typeof segment !== 'string' || segment.length === 0);
