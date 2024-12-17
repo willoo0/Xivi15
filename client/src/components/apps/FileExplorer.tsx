@@ -44,18 +44,18 @@ export function FileExplorer() {
 
   const handleOpenFile = (name: string) => {
     try {
-      if (!name || name.trim().length === 0) {
+      if (!name || typeof name !== 'string' || name.trim().length === 0) {
         throw new Error('Invalid file name: name cannot be empty');
       }
 
-      if (!currentPath || !Array.isArray(currentPath)) {
+      if (!Array.isArray(currentPath)) {
         throw new Error('Invalid current directory path');
       }
 
-      const filePath = [...currentPath, name].filter(Boolean);
+      const filePath = [...(currentPath || []), name].filter(Boolean);
       console.log('[FileExplorer] Constructed file path:', filePath);
 
-      if (filePath.length === 0) {
+      if (!filePath || filePath.length === 0) {
         throw new Error('Cannot construct valid file path');
       }
 

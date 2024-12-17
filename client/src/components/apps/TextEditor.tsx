@@ -19,16 +19,26 @@ export function TextEditor({ path }: TextEditorProps) {
 
   useEffect(() => {
     try {
-      if (!path) {
-        throw new Error('File path is undefined or null');
-      }
-
-      if (!Array.isArray(path)) {
-        throw new Error(`Invalid path type: expected array, got ${typeof path}`);
+      if (!Array.isArray(path) || !path) {
+        console.error('[TextEditor] Invalid path:', path);
+        setContent('');
+        toast({
+          title: "Error",
+          description: "Invalid file path provided",
+          variant: "destructive"
+        });
+        return;
       }
 
       if (path.length === 0) {
-        throw new Error('File path is empty');
+        console.error('[TextEditor] Empty path array');
+        setContent('');
+        toast({
+          title: "Error",
+          description: "File path is empty",
+          variant: "destructive"
+        });
+        return;
       }
 
       path.forEach((segment, index) => {
