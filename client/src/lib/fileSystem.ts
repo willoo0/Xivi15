@@ -44,7 +44,7 @@ class FileSystem {
     let current = root;
     let parent = null;
 
-    if (path.length === 0) return { node: null, parent: root };
+    if (!Array.isArray(path) || path.length === 0) return { node: null, parent: root };
     
     for (let i = 0; i < path.length - 1; i++) {
       if (!current[path[i]] || current[path[i]].type !== 'folder') {

@@ -19,9 +19,11 @@ export function TextEditor({ path }: TextEditorProps) {
   const { toast } = useToast()
 
   useEffect(() => {
-    const fileContent = fs.getFileContent(path)
-    if (fileContent !== null) {
-      setContent(fileContent)
+    if (path && Array.isArray(path)) {
+      const fileContent = fs.getFileContent(path)
+      if (fileContent !== null) {
+        setContent(fileContent)
+      }
     }
   }, [path])
 
