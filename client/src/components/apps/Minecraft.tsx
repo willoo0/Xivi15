@@ -15,10 +15,13 @@ export function Minecraft() {
   }, []);
 
   return (
-    <iframe
-      src="/minecraft.html"
-      className="w-full h-full border-none"
-      title="Minecraft"
-    />
+    <div className="w-full h-full">
+      <iframe
+        src="/minecraft.html"
+        className="w-full h-full border-0"
+        title="Minecraft"
+        style={{ width: '100%', height: '100%', display: 'block' }}
+      />
+    </div>
   );
 }
