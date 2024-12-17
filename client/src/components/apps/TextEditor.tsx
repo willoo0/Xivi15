@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Save } from 'lucide-react'
 import { fs } from '@/lib/fileSystem'
 import { useToast } from '@/hooks/use-toast'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 
 interface TextEditorProps {
   path: string[];
@@ -12,6 +14,8 @@ interface TextEditorProps {
 
 export function TextEditor({ path }: TextEditorProps) {
   const [content, setContent] = useState('')
+  const [showRenameDialog, setShowRenameDialog] = useState(false)
+  const [newFileName, setNewFileName] = useState('')
   const { toast } = useToast()
 
   useEffect(() => {
@@ -38,11 +42,18 @@ export function TextEditor({ path }: TextEditorProps) {
   }
 
   const handleRename = () => {
+    if (!path || path.length === 0) return;
     const currentName = path[path.length - 1];
-    const newName = prompt('Enter new name:', currentName);
-    if (newName && newName !== currentName) {
-      const newPath = [...path.slice(0, -1), newName];
-      const success = fs.createFile(newName, path.slice(0, -1), 'file');
+    setNewFileName(currentName);
+    setShowRenameDialog(true);
+  }
+
+  const confirmRename = () => {
+    if (!newFileName || !path || path.length === 0) return;
+    const currentName = path[path.length - 1];
+    if (newFileName !== currentName) {
+      const newPath = [...path.slice(0, -1), newFileName];
+      const success = fs.createFile(newFileName, path.slice(0, -1), 'file');
       if (success) {
         fs.updateFileContent(newPath, content);
         fs.deleteFile(path);
@@ -53,6 +64,7 @@ export function TextEditor({ path }: TextEditorProps) {
         });
       }
     }
+    setShowRenameDialog(false);
   }
 
   useEffect(() => {
@@ -67,11 +79,6 @@ export function TextEditor({ path }: TextEditorProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [content])
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newContent = e.target.value
-    setContent(newContent)
-  }
-
   return (
     <div className="h-full flex flex-col">
       <div className="flex justify-end gap-2 p-2 border-b">
@@ -85,10 +92,27 @@ export function TextEditor({ path }: TextEditorProps) {
       </div>
       <Textarea
         value={content}
-        onChange={handleChange}
+        onChange={(e) => setContent(e.target.value)}
         placeholder="Start typing..."
         className="flex-1 resize-none rounded-none border-0"
       />
+      
+      <Dialog open={showRenameDialog} onOpenChange={setShowRenameDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename File</DialogTitle>
+          </DialogHeader>
+          <Input
+            value={newFileName}
+            onChange={(e) => setNewFileName(e.target.value)}
+            placeholder="Enter new filename"
+          />
+          <DialogFooter>
+            <Button onClick={() => setShowRenameDialog(false)} variant="outline">Cancel</Button>
+            <Button onClick={confirmRename}>Rename</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
