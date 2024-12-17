@@ -16,6 +16,7 @@ export type AppWindow = {
   isMinimized: boolean
   isMaximized: boolean
   zIndex: number
+  props?: Record<string, any>
 }
 
 export type PinnedApp = {

@@ -42,6 +42,9 @@ export function FileExplorer() {
   }
 
   const handleOpenFile = (name: string) => {
+    const filePath = [...currentPath, name];
+    console.log('[FileExplorer] Opening file with path:', filePath);
+    
     addWindow({
       id: nanoid(),
       title: name,
@@ -55,9 +58,11 @@ export function FileExplorer() {
       isMinimized: false,
       isMaximized: false,
       props: {
-        path: [...currentPath, name],
+        path: filePath,
       },
-    })
+    });
+    
+    console.log('[FileExplorer] Window created with props:', { path: filePath });
   }
 
   const navigateToFolder = (folder: string) => {

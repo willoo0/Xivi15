@@ -11,30 +11,43 @@ interface TextEditorProps {
   path?: string[];
 }
 
-export function TextEditor({ path = [] }: TextEditorProps) {
+export function TextEditor({ path }: TextEditorProps) {
   const [content, setContent] = useState('')
   const [showRenameDialog, setShowRenameDialog] = useState(false)
   const [newFileName, setNewFileName] = useState('')
   const { toast } = useToast()
 
   useEffect(() => {
-    console.log('TextEditor mounted with path:', path);
-    if (!Array.isArray(path)) {
-      console.error('Path is not an array:', path);
+    console.log('[TextEditor] Component mounted');
+    console.log('[TextEditor] Current path:', path);
+    
+    if (!path || !Array.isArray(path)) {
+      console.error('[TextEditor] Invalid or missing path:', path);
       return;
     }
 
+    if (path.length === 0) {
+      console.error('[TextEditor] Empty path array');
+      return;
+    }
+
+    console.log('[TextEditor] Loading content for path:', path.join('/'));
     const fileContent = fs.getFileContent(path)
     if (fileContent !== null) {
+      console.log('[TextEditor] Content loaded successfully');
       setContent(fileContent)
+    } else {
+      console.error('[TextEditor] Failed to load file content');
     }
   }, [path])
 
   const handleSave = () => {
-    console.log('Attempting to save file with path:', path);
+    console.log('[TextEditor] Attempting to save file');
+    console.log('[TextEditor] Current path:', path);
+    console.log('[TextEditor] Current content length:', content.length);
     
-    if (!Array.isArray(path)) {
-      console.error('Path is not an array:', path);
+    if (!path || !Array.isArray(path)) {
+      console.error('[TextEditor] Invalid path format:', path);
       toast({
         title: "Error",
         description: "Invalid file path format",
@@ -44,7 +57,7 @@ export function TextEditor({ path = [] }: TextEditorProps) {
     }
 
     if (path.length === 0) {
-      console.error('Empty path array');
+      console.error('[TextEditor] Empty path array');
       toast({
         title: "Error",
         description: "File path is empty",
@@ -55,7 +68,7 @@ export function TextEditor({ path = [] }: TextEditorProps) {
 
     // Validate each path segment
     if (!path.every(segment => typeof segment === 'string' && segment.length > 0)) {
-      console.error('Invalid path segments:', path);
+      console.error('[TextEditor] Invalid path segments:', path);
       toast({
         title: "Error",
         description: "Invalid file path segments",
@@ -64,22 +77,22 @@ export function TextEditor({ path = [] }: TextEditorProps) {
       return;
     }
 
-    console.log('Saving file:', path.join('/'));
-    const success = fs.updateFileContent(path, content);
+    console.log('[TextEditor] Saving file:', path.join('/'));
+    const success = fs.updateFileContent([...path], content);
     
     if (success) {
       toast({
         title: "Success",
         description: "File saved successfully"
       });
-      console.log('File saved successfully:', path.join('/'));
+      console.log('[TextEditor] File saved successfully:', path.join('/'));
     } else {
       toast({
         title: "Error",
         description: "Failed to save file",
         variant: "destructive"
       });
-      console.error('Failed to save file. Path:', path.join('/'));
+      console.error('[TextEditor] Failed to save file. Path:', path.join('/'));
     }
   }
 
