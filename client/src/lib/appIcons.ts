@@ -1,3 +1,4 @@
+
 import {
   FileText,
   Calculator,
@@ -39,7 +40,7 @@ export const appIcons: Record<string, any> = {
   Games: Gamepad2,
   PDFViewer: FileText,
   PhotoViewer: ImageIcon,
-  "Xivi Music": Music,
+  MusicPlayer: Music,
 };
 
 export const getAppIcon = (component: string) => appIcons[component] || AppWindow;
