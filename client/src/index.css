@@ -68,11 +68,16 @@
 }
 
 .taskbar-content {
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .taskbar-button {
-  transition: transform 0.3s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.taskbar-button:hover {
+  transform: scale(1.1);
 }
  
 @layer base {
