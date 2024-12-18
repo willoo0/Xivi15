@@ -26,40 +26,39 @@ export function MusicPlayer() {
   };
 
   const playSong = async (song: any) => {
-    try {
-      if (currentSong?.videoId === song.videoId) {
-        if (isPlaying) {
-          audio.pause();
-        } else {
-          await audio.play();
-        }
-        setIsPlaying(!isPlaying);
-        return;
+    if (currentSong?.videoId === song.videoId) {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
       }
+      setIsPlaying(!isPlaying);
+      return;
+    }
 
+    try {
       const response = await fetch(`/api/music/stream?videoId=${song.videoId}`);
-      const data = await response.json();
-
       if (!response.ok) throw new Error('Failed to get stream URL');
-
-      audio.pause();
-      audio.src = data.url;
-      audio.load();
       
-      await audio.play();
-      setCurrentSong(song);
-      setIsPlaying(true);
+      const data = await response.json();
+      audio.src = data.url;
+      
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        await playPromise;
+        setCurrentSong(song);
+        setIsPlaying(true);
+      }
     } catch (error) {
       console.error('Error playing song:', error);
     }
   };
 
-  // Add event listeners for the audio element
   useEffect(() => {
     const handleEnded = () => setIsPlaying(false);
     const handlePause = () => setIsPlaying(false);
     const handlePlay = () => setIsPlaying(true);
-    
+
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('play', handlePlay);
@@ -69,7 +68,7 @@ export function MusicPlayer() {
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('play', handlePlay);
     };
-  }, []);
+  }, [audio]);
 
   return (
     <div className="p-4 h-full flex flex-col gap-4">
@@ -90,37 +89,33 @@ export function MusicPlayer() {
         {songs.map((song) => (
           <Card
             key={song.videoId}
-            className="p-3 mb-2 cursor-pointer hover:bg-accent flex justify-between items-center"
+            className="p-3 mb-2 cursor-pointer hover:bg-accent"
             onClick={() => playSong(song)}
           >
-            <div>
-              <div className="font-medium">{song.title}</div>
-              <div className="text-sm text-muted-foreground">{song.artist}</div>
+            <div className="flex justify-between items-center">
+              <div>
+                <div className="font-medium">{song.title}</div>
+                <div className="text-sm text-muted-foreground">{song.artist}</div>
+              </div>
+              {currentSong?.videoId === song.videoId && (
+                <div>{isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}</div>
+              )}
             </div>
-            {currentSong?.videoId === song.videoId && (
-              <div>{isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}</div>
-            )}
           </Card>
         ))}
       </div>
 
-      <Card className="p-3 mt-auto">
-        {currentSong ? (
-          <>
-            <div className="font-medium">{currentSong.title}</div>
-            <div className="text-sm text-muted-foreground">{currentSong.artist}</div>
-            <div className="flex justify-center gap-4 mt-2">
-              <Button variant="ghost" size="icon" onClick={() => playSong(currentSong)}>
-                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              </Button>
-            </div>
-          </>
-        ) : (
-          <div className="text-center text-muted-foreground">
-            Select a song to play
+      {currentSong && (
+        <Card className="p-3 mt-auto">
+          <div className="font-medium">{currentSong.title}</div>
+          <div className="text-sm text-muted-foreground">{currentSong.artist}</div>
+          <div className="flex justify-center gap-4 mt-2">
+            <Button variant="ghost" size="icon" onClick={() => playSong(currentSong)}>
+              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            </Button>
           </div>
-        )}
-      </Card>
+        </Card>
+      )}
     </div>
   );
 }
