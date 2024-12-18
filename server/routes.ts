@@ -1,9 +1,7 @@
-
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
-import { searchMusics, searchMusicsFromVideo } from 'node-youtube-music';
-import ytdl from 'ytdl-core';
+import play from 'play-dl';
 
 export function registerRoutes(app: Express): Server {
   app.get('/api/proxy', async (req: Request, res) => {
@@ -123,20 +121,12 @@ export function registerRoutes(app: Express): Server {
       if (!query) {
         return res.status(400).json({ error: 'Query parameter is required' });
       }
-      const songs = await searchMusics(query, {
-        lang: 'en',
-        country: 'US',
-        options: {
-          captureYtmPerformedSearch: true
-        }
-      });
-      if (!songs || songs.length === 0) {
-        return res.json([]);
-      }
+      
+      const songs = await play.search(query, { source: { youtube: 'video' }, limit: 10 });
       res.json(songs.map(song => ({
-        videoId: song.youtubeId,
-        title: song.title,
-        artist: song.artists?.[0]?.name || 'Unknown Artist'
+        videoId: song.id,
+        title: song.title || 'Unknown Title',
+        artist: song.channel?.name || 'Unknown Artist'
       })));
     } catch (error) {
       console.error('Search error:', error);
@@ -147,10 +137,12 @@ export function registerRoutes(app: Express): Server {
   app.get('/api/music/stream', async (req, res) => {
     try {
       const videoId = req.query.videoId as string;
-      const info = await ytdl.getInfo(`https://www.youtube.com/watch?v=${videoId}`);
-      const audioFormat = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
-      res.json({ url: audioFormat.url });
+      const stream = await play.stream(`https://www.youtube.com/watch?v=${videoId}`, {
+        quality: 140 // Audio quality
+      });
+      res.json({ url: stream.url });
     } catch (error) {
+      console.error('Stream error:', error);
       res.status(500).json({ error: 'Failed to get song URL' });
     }
   });
