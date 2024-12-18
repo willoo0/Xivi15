@@ -60,7 +60,17 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   }, [isDragging, dragOffset, id, updateWindowPosition, isMaximized])
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (windowRef.current && !isMaximized) {
+    if (windowRef.current) {
+      if (isMaximized) {
+        toggleMaximize(id)
+        const width = position?.width ?? 600
+        const x = e.clientX - (width / 2)
+        updateWindowPosition(id, {
+          ...position,
+          x: Math.max(0, Math.min(x, window.innerWidth - width)),
+          y: 0
+        })
+      }
       setIsDragging(true)
       const rect = windowRef.current.getBoundingClientRect()
       setDragOffset({
