@@ -13,12 +13,20 @@ export function MusicPlayer() {
   const [audio] = useState(new Audio());
 
   const searchSongs = async () => {
+    if (!query.trim()) return;
+    
     try {
-      const response = await fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=2d8ca50c&format=json&limit=10&search=${query}`);
+      const response = await fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=d5d26306&format=json&limit=10&search=${query}&include=musicinfo`);
       const data = await response.json();
-      setSongs(data.results);
+      if (data.results) {
+        setSongs(data.results);
+      } else {
+        setSongs([]);
+        console.error('No songs found');
+      }
     } catch (error) {
       console.error('Error searching songs:', error);
+      setSongs([]);
     }
   };
 
