@@ -105,7 +105,7 @@ export function MusicPlayer() {
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('play', handlePlay);
     };
-  }, [audio]);
+  }, [audio, isLooping]);
 
   return (
     <div className="p-4 h-full flex flex-col gap-4">
@@ -159,39 +159,43 @@ export function MusicPlayer() {
               <li>Navigate between songs with previous/next controls</li>
             </ul>
           </div>
+        ) : showLikedSongs && likedSongs.length === 0 ? (
+          <div className="text-center text-muted-foreground mt-4">
+            No liked songs ):
+          </div>
         ) : (
-        {(showLikedSongs ? likedSongs : songs).map((song) => (
-          <Card
-            key={song.videoId}
-            className="p-3 mb-2 cursor-pointer hover:bg-accent"
-            onClick={() => playSong(song)}
-          >
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="font-medium">{song.title}</div>
-                <div className="text-sm text-muted-foreground">{song.artist}</div>
+          (showLikedSongs ? likedSongs : songs).map((song) => (
+            <Card
+              key={song.videoId}
+              className="p-3 mb-2 cursor-pointer hover:bg-accent"
+              onClick={() => playSong(song)}
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="font-medium">{song.title}</div>
+                  <div className="text-sm text-muted-foreground">{song.artist}</div>
+                </div>
+                <div className="flex gap-2">
+                  {currentSong?.videoId === song.videoId && (
+                    <div>{isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}</div>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleLike(song);
+                    }}
+                  >
+                    <Heart
+                      className="h-4 w-4"
+                      fill={likedSongs.some(s => s.videoId === song.videoId) ? "currentColor" : "none"}
+                    />
+                  </Button>
+                </div>
               </div>
-              <div className="flex gap-2">
-                {currentSong?.videoId === song.videoId && (
-                  <div>{isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}</div>
-                )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleLike(song);
-                  }}
-                >
-                  <Heart
-                    className="h-4 w-4"
-                    fill={likedSongs.some(s => s.videoId === song.videoId) ? "currentColor" : "none"}
-                  />
-                </Button>
-              </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))
         )}
       </div>
 
