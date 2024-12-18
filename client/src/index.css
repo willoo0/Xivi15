@@ -56,18 +56,15 @@
 @tailwind utilities;
 
 * {
+  user-select: text;
+}
+
+/* Prevent text selection for specific UI elements */
+.window-titlebar, .taskbar {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-/* Allow text selection in specific elements */
-input, textarea, [data-vite-dev-id], .vite-error-overlay {
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
 }
  
 @layer base {
