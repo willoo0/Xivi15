@@ -46,6 +46,16 @@ const apps = [
     component: "PhotoViewer",
     icon: ImageIcon,
     category: "Media",
+    props: {
+      position: {
+        x: 50 + Math.random() * 100,
+        y: 50 + Math.random() * 100,
+        width: 600,
+        height: 400,
+      },
+      isMinimized: false,
+      isMaximized: false,
+    }
   },
   {
     id: "pdfviewer",
@@ -53,6 +63,16 @@ const apps = [
     component: "PDFViewer",
     icon: File,
     category: "Media",
+    props: {
+      position: {
+        x: 50 + Math.random() * 100,
+        y: 50 + Math.random() * 100,
+        width: 600,
+        height: 400,
+      },
+      isMinimized: false,
+      isMaximized: false,
+    }
   },
   {
     id: "systeminfo",
