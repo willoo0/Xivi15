@@ -62,8 +62,8 @@ export function MusicPlayer() {
 
     return () => {
       audio.removeEventListener('ended', () => setIsPlaying(false));
-      audio.addEventListener('pause', () => setIsPlaying(false));
-      audio.addEventListener('play', () => setIsPlaying(true));
+      audio.removeEventListener('pause', () => setIsPlaying(false));
+      audio.removeEventListener('play', () => setIsPlaying(true));
     };
   }, [audio]);
 
