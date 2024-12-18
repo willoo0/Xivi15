@@ -1,6 +1,9 @@
+
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
+import { searchMusics, searchMusicsFromVideo } from 'node-youtube-music';
+import ytdl from 'ytdl-core';
 
 export function registerRoutes(app: Express): Server {
   app.get('/api/proxy', async (req: Request, res) => {
@@ -114,30 +117,27 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  app.get('/api/music/search', async (req, res) => {
+    try {
+      const query = req.query.q as string;
+      const songs = await searchMusics(query);
+      res.json(songs);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to search songs' });
+    }
+  });
+
+  app.get('/api/music/stream', async (req, res) => {
+    try {
+      const videoId = req.query.videoId as string;
+      const info = await ytdl.getInfo(`https://www.youtube.com/watch?v=${videoId}`);
+      const audioFormat = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
+      res.json({ url: audioFormat.url });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get song URL' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
-import { searchMusics, searchMusicsFromVideo } from 'node-youtube-music';
-import ytdl from 'ytdl-core';
-
-// Add these routes to your existing Express app
-app.get('/api/music/search', async (req, res) => {
-  try {
-    const query = req.query.q as string;
-    const songs = await searchMusics(query);
-    res.json(songs);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to search songs' });
-  }
-});
-
-app.get('/api/music/stream', async (req, res) => {
-  try {
-    const videoId = req.query.videoId as string;
-    const info = await ytdl.getInfo(`https://www.youtube.com/watch?v=${videoId}`);
-    const audioFormat = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
-    res.json({ url: audioFormat.url });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to get song URL' });
-  }
-});
