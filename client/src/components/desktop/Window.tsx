@@ -64,13 +64,11 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       if (isMaximized) {
         toggleMaximize(id)
         const width = position?.width ?? 600
-        const height = position?.height ?? 400
         const x = e.clientX - (width / 2)
-        const y = e.clientY - 20 // Account for titlebar height
         updateWindowPosition(id, {
           ...position,
           x: Math.max(0, Math.min(x, window.innerWidth - width)),
-          y: Math.max(0, Math.min(y, window.innerHeight - height))
+          y: 0
         })
       }
       setIsDragging(true)
