@@ -99,6 +99,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       <div
         className="flex items-center justify-between px-4 py-2 bg-primary/10 cursor-move"
         onMouseDown={handleMouseDown}
+        onDoubleClick={() => toggleMinimize(id)}
         style={{ userSelect: 'none' }}
       >
         <div className="font-medium">{title}</div>
