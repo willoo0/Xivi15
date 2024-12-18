@@ -1,7 +1,6 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
-import play from 'play-dl';
 
 export function registerRoutes(app: Express): Server {
   app.get('/api/proxy', async (req: Request, res) => {
@@ -122,11 +121,14 @@ export function registerRoutes(app: Express): Server {
         return res.status(400).json({ error: 'Query parameter is required' });
       }
       
-      const songs = await play.search(query, { source: { youtube: 'video' }, limit: 10 });
-      res.json(songs.map(song => ({
-        videoId: song.id,
-        title: song.title || 'Unknown Title',
-        artist: song.channel?.name || 'Unknown Artist'
+      const response = await fetch(`https://api.jamendo.com/v3.0/tracks/?format=json&limit=10&search=${encodeURIComponent(query)}&client_id=2d8aeed8`);
+      const data = await response.json();
+      
+      res.json(data.results.map((track: any) => ({
+        videoId: track.id,
+        title: track.name,
+        artist: track.artist_name,
+        url: track.audio
       })));
     } catch (error) {
       console.error('Search error:', error);
@@ -137,10 +139,9 @@ export function registerRoutes(app: Express): Server {
   app.get('/api/music/stream', async (req, res) => {
     try {
       const videoId = req.query.videoId as string;
-      const stream = await play.stream(`https://www.youtube.com/watch?v=${videoId}`, {
-        quality: 140 // Audio quality
-      });
-      res.json({ url: stream.url });
+      const response = await fetch(`https://api.jamendo.com/v3.0/tracks/?format=json&id=${videoId}&client_id=2d8aeed8`);
+      const data = await response.json();
+      res.json({ url: data.results[0].audio });
     } catch (error) {
       console.error('Stream error:', error);
       res.status(500).json({ error: 'Failed to get song URL' });
