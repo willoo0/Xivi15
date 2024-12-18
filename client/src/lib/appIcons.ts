@@ -10,15 +10,13 @@ import {
   Scissors,
   Bomb,
   Calendar,
-  Image,
+  Image as ImageIcon,
   Monitor,
   Timer,
   Globe,
   Hammer,
   AppWindow,
-  Hand,
-  FileImage,
-  FileText
+  Hand
 } from 'lucide-react';
 
 export const appIcons: Record<string, any> = {
