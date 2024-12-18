@@ -18,7 +18,7 @@ export function MusicPlayer() {
     try {
       const response = await fetch(`/api/music/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
-      setSongs(data);
+      setSongs(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error searching songs:', error);
       setSongs([]);
