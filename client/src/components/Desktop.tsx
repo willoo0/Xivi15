@@ -22,8 +22,10 @@ import { Snake } from './apps/Snake';
 import { WhackAMole } from './apps/WhackAMole';
 import { Minecraft } from './apps/Minecraft';
 import { Games } from './apps/Games';
+import { PDFViewer } from './apps/PDFViewer'
+import { PhotoViewer } from './apps/PhotoViewer'
 
-const components: Record<string, React.ComponentType> = {
+const components: { [key: string]: React.ComponentType } = {
   TextEditor,
   Calculator,
   FileExplorer,
@@ -40,7 +42,9 @@ const components: Record<string, React.ComponentType> = {
   Snake,
   WhackAMole,
   Minecraft,
-  Games
+  Games,
+  PDFViewer,
+  PhotoViewer
 }
 
 // Use background images from public folder
