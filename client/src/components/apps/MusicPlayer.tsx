@@ -13,6 +13,7 @@ export function MusicPlayer() {
   const [audio] = useState(new Audio());
   const [likedSongs, setLikedSongs] = useState<any[]>([]);
   const [showLikedSongs, setShowLikedSongs] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [isLooping, setIsLooping] = useState(false);
 
   const searchSongs = async () => {
@@ -123,21 +124,58 @@ export function MusicPlayer() {
         </div>
         <div className="flex gap-2">
           <Button 
-            variant={showLikedSongs ? "outline" : "default"} 
-            onClick={() => setShowLikedSongs(false)}
+            variant={!showWelcome && !showLikedSongs ? "default" : "outline"} 
+            onClick={() => {
+              setShowWelcome(false);
+              setShowLikedSongs(false);
+            }}
           >
             All Songs
           </Button>
           <Button 
             variant={showLikedSongs ? "default" : "outline"} 
-            onClick={() => setShowLikedSongs(true)}
+            onClick={() => {
+              setShowWelcome(false);
+              setShowLikedSongs(true);
+            }}
           >
             Liked Songs ({likedSongs.length})
+          </Button>
+          <Button 
+            variant={showWelcome ? "default" : "outline"} 
+            onClick={() => {
+              setShowWelcome(true);
+              setShowLikedSongs(false);
+            }}
+          >
+            Welcome
           </Button>
         </div>
       </div>
 
       <div className="flex-1 overflow-auto">
+        {showWelcome ? (
+          <div className="p-6 max-w-2xl mx-auto space-y-4">
+            <h1 className="text-2xl font-bold">Welcome to Xivi Music! 🎵</h1>
+            <div className="space-y-4">
+              <p>Xivi Music is your personal music player with these great features:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Search and play your favorite songs</li>
+                <li>Like songs to add them to your personal playlist</li>
+                <li>Navigate between songs with previous/next controls</li>
+                <li>Loop your favorite tracks</li>
+                <li>Create your own collection of liked songs</li>
+              </ul>
+              <p>To get started:</p>
+              <ol className="list-decimal pl-6 space-y-2">
+                <li>Use the search bar to find songs</li>
+                <li>Click the heart icon to like songs</li>
+                <li>Access your liked songs in the "Liked Songs" tab</li>
+                <li>Use playback controls at the bottom to manage your music</li>
+              </ol>
+            </div>
+          </div>
+        ) : (
         {showLikedSongs && likedSongs.length === 0 ? (
           <div className="text-center text-muted-foreground mt-4">
             No liked songs ):
@@ -173,7 +211,7 @@ export function MusicPlayer() {
               </div>
             </div>
           </Card>
-        ))}
+        )))}
       </div>
 
       {currentSong && (
