@@ -94,6 +94,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         height: isMaximized ? 'calc(100% - 88px)' : (position?.height ?? 400), // Account for topbar and taskbar
         zIndex
       }}
+      onClick={() => setActiveWindow(id)}
     >
       <div
         className="flex items-center justify-between px-4 py-2 bg-primary/10 cursor-move"
