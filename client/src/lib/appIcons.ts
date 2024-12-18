@@ -16,7 +16,9 @@ import {
   Globe,
   Hammer,
   AppWindow,
-  Hand
+  Hand,
+  FileImage,
+  FilePdf
 } from 'lucide-react';
 
 export const appIcons: Record<string, any> = {
@@ -37,6 +39,8 @@ export const appIcons: Record<string, any> = {
   Welcome: Hand,
   Minecraft: Gamepad2,
   Games: Gamepad2,
+  PDFViewer: FilePdf,
+  PhotoViewer: FileImage,
 };
 
 export const getAppIcon = (component: string) => appIcons[component] || AppWindow;

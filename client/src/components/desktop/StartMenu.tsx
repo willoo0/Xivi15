@@ -41,6 +41,20 @@ const apps = [
     category: "Media",
   },
   {
+    id: "photoviewer",
+    title: "Photo Viewer",
+    component: "PhotoViewer",
+    icon: FileImage,
+    category: "Media",
+  },
+  {
+    id: "pdfviewer",
+    title: "PDF Viewer",
+    component: "PDFViewer",
+    icon: FilePdf,
+    category: "Media",
+  },
+  {
     id: "systeminfo",
     title: "System Info",
     component: "SystemInfo",
@@ -146,7 +160,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card className={`fixed bottom-12 w-[420px] h-[500px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
+      <Card className={`fixed bottom-12 w-[420px] h-[450px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
         useDesktopStore().taskbarMode === 'windows11' ? 'left-1/2 -translate-x-1/2' : 'left-2'
       }`}>
         <div className="mb-4">
