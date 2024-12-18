@@ -8,7 +8,7 @@ import { AppWindow, Layout } from 'lucide-react'
 import { appIcons, getAppIcon } from '@/lib/appIcons'
 
 export function Taskbar() {
-  const { windows, activeWindowId, pinnedApps, setActiveWindow, toggleMinimize, addWindow } = useDesktopStore()
+  const { windows, activeWindowId, pinnedApps, setActiveWindow, toggleMinimize, addWindow, taskbarMode } = useDesktopStore()
   const [showStartMenu, setShowStartMenu] = useState(false)
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -73,7 +73,7 @@ export function Taskbar() {
         </Button>
         
         <div className={`flex-1 flex items-center space-x-1 ${
-          useDesktopStore().taskbarMode === 'chrome' || useDesktopStore().taskbarMode === 'windows11' ? 'justify-center' : ''
+          taskbarMode === 'chrome' || taskbarMode === 'windows11' ? 'justify-center' : ''
         }`}>
           {/* Pinned Apps */}
           {pinnedApps.map((app) => {
