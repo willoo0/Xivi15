@@ -74,6 +74,26 @@ export function Settings() {
             </RadioGroup>
           </div>
           
+          <div className="space-y-2">
+            <Label>Taskbar Mode</Label>
+            <RadioGroup
+              value={useDesktopStore().taskbarMode}
+              onValueChange={(value) => 
+                updateSettings({ taskbarMode: value as 'normal' | 'middle' })
+              }
+              className="flex flex-col space-y-1"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="normal" id="normal" />
+                <Label htmlFor="normal">Normal (Left-aligned)</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="middle" id="middle" />
+                <Label htmlFor="middle">Middle (Windows 11 style)</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Blur Effects</Label>

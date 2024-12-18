@@ -29,6 +29,7 @@ interface DesktopState {
   maxZIndex: number
   pinnedApps: PinnedApp[]
   theme: 'light' | 'dark' | 'system'
+  taskbarMode: 'normal' | 'middle'
   blurEffects: boolean
   animations: boolean
   notifications: boolean
@@ -53,6 +54,7 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
     { title: 'Settings', component: 'Settings' }
   ],
   theme: 'dark',
+  taskbarMode: 'normal',
   blurEffects: true,
   animations: true,
   notifications: true,

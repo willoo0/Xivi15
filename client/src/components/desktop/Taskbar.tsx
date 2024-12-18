@@ -72,7 +72,7 @@ export function Taskbar() {
           <Layout className="h-5 w-5" />
         </Button>
         
-        <div className="flex-1 flex items-center space-x-1">
+        <div className={`flex-1 flex items-center space-x-1 ${useDesktopStore().taskbarMode === 'middle' ? 'justify-center' : ''}`}>
           {/* Pinned Apps */}
           {pinnedApps.map((app) => {
             const Icon = getAppIcon(app.component)
