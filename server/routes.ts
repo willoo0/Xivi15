@@ -117,7 +117,8 @@ export function registerRoutes(app: Express): Server {
   const httpServer = createServer(app);
   return httpServer;
 }
-import { searchMusics, getSong } from 'node-youtube-music';
+import { searchMusics, searchMusicsFromVideo } from 'node-youtube-music';
+import ytdl from 'ytdl-core';
 
 // Add these routes to your existing Express app
 app.get('/api/music/search', async (req, res) => {
@@ -133,8 +134,9 @@ app.get('/api/music/search', async (req, res) => {
 app.get('/api/music/stream', async (req, res) => {
   try {
     const videoId = req.query.videoId as string;
-    const song = await getSong(videoId);
-    res.json({ url: song.url });
+    const info = await ytdl.getInfo(`https://www.youtube.com/watch?v=${videoId}`);
+    const audioFormat = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
+    res.json({ url: audioFormat.url });
   } catch (error) {
     res.status(500).json({ error: 'Failed to get song URL' });
   }
