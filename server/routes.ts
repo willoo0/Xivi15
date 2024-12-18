@@ -121,14 +121,14 @@ export function registerRoutes(app: Express): Server {
         return res.status(400).json({ error: 'Query parameter is required' });
       }
       
-      const response = await fetch(`https://api.jamendo.com/v3.0/tracks/?format=json&limit=10&search=${encodeURIComponent(query)}&client_id=2d8aeed8`);
+      const response = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=10`);
       const data = await response.json();
       
-      res.json(data.results.map((track: any) => ({
+      res.json(data.data.map((track: any) => ({
         videoId: track.id,
-        title: track.name,
-        artist: track.artist_name,
-        url: track.audio
+        title: track.title,
+        artist: track.artist.name,
+        url: track.preview
       })));
     } catch (error) {
       console.error('Search error:', error);
@@ -139,9 +139,9 @@ export function registerRoutes(app: Express): Server {
   app.get('/api/music/stream', async (req, res) => {
     try {
       const videoId = req.query.videoId as string;
-      const response = await fetch(`https://api.jamendo.com/v3.0/tracks/?format=json&id=${videoId}&client_id=2d8aeed8`);
+      const response = await fetch(`https://api.deezer.com/track/${videoId}`);
       const data = await response.json();
-      res.json({ url: data.results[0].audio });
+      res.json({ url: data.preview });
     } catch (error) {
       console.error('Stream error:', error);
       res.status(500).json({ error: 'Failed to get song URL' });
