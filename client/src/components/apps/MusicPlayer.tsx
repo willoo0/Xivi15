@@ -175,8 +175,7 @@ export function MusicPlayer() {
               </ol>
             </div>
           </div>
-        ) : (
-        {showLikedSongs && likedSongs.length === 0 ? (
+        ) : showLikedSongs && likedSongs.length === 0 ? (
           <div className="text-center text-muted-foreground mt-4">
             No liked songs ):
           </div>
