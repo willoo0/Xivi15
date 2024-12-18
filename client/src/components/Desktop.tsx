@@ -24,6 +24,7 @@ import { Minecraft } from './apps/Minecraft';
 import { Games } from './apps/Games';
 import { PDFViewer } from './apps/PDFViewer'
 import { PhotoViewer } from './apps/PhotoViewer'
+import { MusicPlayer } from './apps/MusicPlayer'
 
 const components: { [key: string]: React.ComponentType } = {
   TextEditor,
@@ -44,7 +45,8 @@ const components: { [key: string]: React.ComponentType } = {
   Minecraft,
   Games,
   PDFViewer,
-  PhotoViewer
+  PhotoViewer,
+  MusicPlayer
 }
 
 // Use background images from public folder
