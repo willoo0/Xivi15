@@ -100,17 +100,23 @@ export function MusicPlayer() {
         ))}
       </div>
 
-      {currentSong && (
-        <Card className="p-3">
-          <div className="font-medium">{currentSong.title}</div>
-          <div className="text-sm text-muted-foreground">{currentSong.artist}</div>
-          <div className="flex justify-center gap-4 mt-2">
-            <Button variant="ghost" size="icon" onClick={() => playSong(currentSong)}>
-              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-            </Button>
+      <Card className="p-3 mt-auto">
+        {currentSong ? (
+          <>
+            <div className="font-medium">{currentSong.title}</div>
+            <div className="text-sm text-muted-foreground">{currentSong.artist}</div>
+            <div className="flex justify-center gap-4 mt-2">
+              <Button variant="ghost" size="icon" onClick={() => playSong(currentSong)}>
+                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div className="text-center text-muted-foreground">
+            Select a song to play
           </div>
-        </Card>
-      )}
+        )}
+      </Card>
     </div>
   );
 }
