@@ -120,9 +120,16 @@ export function registerRoutes(app: Express): Server {
   app.get('/api/music/search', async (req, res) => {
     try {
       const query = req.query.q as string;
+      if (!query) {
+        return res.status(400).json({ error: 'Query parameter is required' });
+      }
       const songs = await searchMusics(query);
+      if (!songs || songs.length === 0) {
+        return res.json([]);
+      }
       res.json(songs);
     } catch (error) {
+      console.error('Search error:', error);
       res.status(500).json({ error: 'Failed to search songs' });
     }
   });
