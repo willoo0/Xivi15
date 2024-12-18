@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
@@ -7,11 +8,13 @@ import { useToast } from '@/hooks/use-toast'
 import { useEffect } from 'react'
 
 export function Settings() {
-  const { theme, blurEffects, animations, notifications, updateSettings } = useDesktopStore();
+  const { theme, blurEffects, animations, notifications, taskbarMode, updateSettings } = useDesktopStore();
+  const { toast } = useToast();
 
   useEffect(() => {
     const root = document.documentElement;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const prefersDark = mediaQuery.matches;
     const shouldUseDark = theme === 'dark' || (theme === 'system' && prefersDark);
     
     if (shouldUseDark) {
@@ -22,34 +25,27 @@ export function Settings() {
       root.style.colorScheme = 'light';
     }
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
       if (theme === 'system') {
         const newPrefersDark = mediaQuery.matches;
-        if (newPrefersDark) {
-          root.classList.add('dark');
-          root.style.colorScheme = 'dark';
-        } else {
-          root.classList.remove('dark');
-          root.style.colorScheme = 'light';
-        }
+        root.classList.toggle('dark', newPrefersDark);
+        root.style.colorScheme = newPrefersDark ? 'dark' : 'light';
       }
     };
     
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme]);
-  const { toast } = useToast()
   
   const handleSave = () => {
     toast({
       title: "Settings saved",
       description: "Your changes have been applied successfully.",
-    })
-  }
+    });
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div>
         <h2 className="text-lg font-semibold mb-4">Appearance</h2>
         <div className="space-y-4">
@@ -80,9 +76,9 @@ export function Settings() {
           <div className="space-y-2">
             <Label>Taskbar Mode</Label>
             <RadioGroup
-              value={useDesktopStore().taskbarMode}
+              value={taskbarMode}
               onValueChange={(value) => 
-                updateSettings({ taskbarMode: value as 'normal' | 'middle' })
+                updateSettings({ taskbarMode: value as 'normal' | 'chrome' | 'windows11' })
               }
               className="flex flex-col space-y-1"
             >
@@ -92,11 +88,11 @@ export function Settings() {
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="chrome" id="chrome" />
-                <Label htmlFor="chrome">Middle (Chrome OS style)</Label>
+                <Label htmlFor="chrome">Chrome OS style</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="windows11" id="windows11" />
-                <Label htmlFor="windows11">Windows 11 (Start menu centered)</Label>
+                <Label htmlFor="windows11">Windows 11 style</Label>
               </div>
             </RadioGroup>
           </div>
@@ -151,5 +147,5 @@ export function Settings() {
         Save Changes
       </Button>
     </div>
-  )
+  );
 }
