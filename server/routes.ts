@@ -117,3 +117,25 @@ export function registerRoutes(app: Express): Server {
   const httpServer = createServer(app);
   return httpServer;
 }
+import { searchMusics, getSong } from 'node-youtube-music';
+
+// Add these routes to your existing Express app
+app.get('/api/music/search', async (req, res) => {
+  try {
+    const query = req.query.q as string;
+    const songs = await searchMusics(query);
+    res.json(songs);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to search songs' });
+  }
+});
+
+app.get('/api/music/stream', async (req, res) => {
+  try {
+    const videoId = req.query.videoId as string;
+    const song = await getSong(videoId);
+    res.json({ url: song.url });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get song URL' });
+  }
+});

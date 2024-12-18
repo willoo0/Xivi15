@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Search, Play, Pause, SkipForward, SkipBack } from 'lucide-react';
+import { Search, Play, Pause } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -16,22 +16,17 @@ export function MusicPlayer() {
     if (!query.trim()) return;
     
     try {
-      const response = await fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=d5d26306&format=json&limit=10&search=${query}&include=musicinfo`);
+      const response = await fetch(`/api/music/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
-      if (data.results) {
-        setSongs(data.results);
-      } else {
-        setSongs([]);
-        console.error('No songs found');
-      }
+      setSongs(data);
     } catch (error) {
       console.error('Error searching songs:', error);
       setSongs([]);
     }
   };
 
-  const playSong = (song: any) => {
-    if (currentSong?.id === song.id) {
+  const playSong = async (song: any) => {
+    if (currentSong?.videoId === song.videoId) {
       if (isPlaying) {
         audio.pause();
       } else {
@@ -39,10 +34,16 @@ export function MusicPlayer() {
       }
       setIsPlaying(!isPlaying);
     } else {
-      audio.src = song.audio;
-      audio.play();
-      setCurrentSong(song);
-      setIsPlaying(true);
+      try {
+        const response = await fetch(`/api/music/stream?videoId=${song.videoId}`);
+        const data = await response.json();
+        audio.src = data.url;
+        audio.play();
+        setCurrentSong(song);
+        setIsPlaying(true);
+      } catch (error) {
+        console.error('Error playing song:', error);
+      }
     }
   };
 
@@ -64,15 +65,15 @@ export function MusicPlayer() {
       <div className="flex-1 overflow-auto">
         {songs.map((song) => (
           <Card
-            key={song.id}
+            key={song.videoId}
             className="p-3 mb-2 cursor-pointer hover:bg-accent flex justify-between items-center"
             onClick={() => playSong(song)}
           >
             <div>
-              <div className="font-medium">{song.name}</div>
-              <div className="text-sm text-muted-foreground">{song.artist_name}</div>
+              <div className="font-medium">{song.title}</div>
+              <div className="text-sm text-muted-foreground">{song.artist}</div>
             </div>
-            {currentSong?.id === song.id && (
+            {currentSong?.videoId === song.videoId && (
               <div>{isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}</div>
             )}
           </Card>
@@ -81,17 +82,11 @@ export function MusicPlayer() {
 
       {currentSong && (
         <Card className="p-3">
-          <div className="font-medium">{currentSong.name}</div>
-          <div className="text-sm text-muted-foreground">{currentSong.artist_name}</div>
+          <div className="font-medium">{currentSong.title}</div>
+          <div className="text-sm text-muted-foreground">{currentSong.artist}</div>
           <div className="flex justify-center gap-4 mt-2">
-            <Button variant="ghost" size="icon">
-              <SkipBack className="h-4 w-4" />
-            </Button>
             <Button variant="ghost" size="icon" onClick={() => playSong(currentSong)}>
               {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-            </Button>
-            <Button variant="ghost" size="icon">
-              <SkipForward className="h-4 w-4" />
             </Button>
           </div>
         </Card>
