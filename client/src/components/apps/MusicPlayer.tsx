@@ -138,7 +138,11 @@ export function MusicPlayer() {
       </div>
 
       <div className="flex-1 overflow-auto">
-        {(showLikedSongs ? likedSongs : songs).map((song) => (
+        {showLikedSongs && likedSongs.length === 0 ? (
+          <div className="text-center text-muted-foreground mt-4">
+            No liked songs ):
+          </div>
+        ) : (showLikedSongs ? likedSongs : songs).map((song) => (
           <Card
             key={song.videoId}
             className="p-3 mb-2 cursor-pointer hover:bg-accent"
