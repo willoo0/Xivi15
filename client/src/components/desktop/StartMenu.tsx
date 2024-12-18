@@ -102,6 +102,7 @@ const categories = [
 
 export function StartMenu({ onClose }: StartMenuProps) {
   const { addWindow } = useDesktopStore();
+  const [searchQuery, setSearchQuery] = useState("");
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -109,6 +110,11 @@ export function StartMenu({ onClose }: StartMenuProps) {
     appComponent: string;
     appTitle: string;
   } | null>(null);
+
+  const filteredApps = apps.filter(app => 
+    app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleAppClick = (app: (typeof apps)[0]) => {
     addWindow({
@@ -143,9 +149,18 @@ export function StartMenu({ onClose }: StartMenuProps) {
       <Card className={`fixed bottom-12 w-[420px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
         useDesktopStore().taskbarMode === 'windows11' ? 'left-1/2 -translate-x-1/2' : 'left-2'
       }`}>
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search apps..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
         <div className="grid grid-cols-2 gap-6">
           {categories.map((category) => {
-            const categoryApps = apps.filter(
+            const categoryApps = filteredApps.filter(
               (app) => app.category === category,
             );
             if (categoryApps.length === 0) return null;
