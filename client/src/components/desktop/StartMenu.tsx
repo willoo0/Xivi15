@@ -146,7 +146,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card className={`fixed bottom-12 w-[420px] h-[600px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
+      <Card className={`fixed bottom-12 w-[420px] h-[500px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
         useDesktopStore().taskbarMode === 'windows11' ? 'left-1/2 -translate-x-1/2' : 'left-2'
       }`}>
         <div className="mb-4">
