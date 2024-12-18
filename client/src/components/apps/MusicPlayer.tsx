@@ -11,7 +11,10 @@ export function MusicPlayer() {
   const [currentSong, setCurrentSong] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audio] = useState(new Audio());
-  const [likedSongs, setLikedSongs] = useState<any[]>([]);
+  const [likedSongs, setLikedSongs] = useState<any[]>(() => {
+    const saved = document.cookie.split(';').find(c => c.trim().startsWith('likedSongs='));
+    return saved ? JSON.parse(decodeURIComponent(saved.split('=')[1])) : [];
+  });
   const [showLikedSongs, setShowLikedSongs] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [isLooping, setIsLooping] = useState(false);
@@ -30,11 +33,11 @@ export function MusicPlayer() {
   };
 
   const toggleLike = (song: any) => {
-    if (likedSongs.some(s => s.videoId === song.videoId)) {
-      setLikedSongs(likedSongs.filter(s => s.videoId !== song.videoId));
-    } else {
-      setLikedSongs([...likedSongs, song]);
-    }
+    const newLikedSongs = likedSongs.some(s => s.videoId === song.videoId)
+      ? likedSongs.filter(s => s.videoId !== song.videoId)
+      : [...likedSongs, song];
+    setLikedSongs(newLikedSongs);
+    document.cookie = `likedSongs=${encodeURIComponent(JSON.stringify(newLikedSongs))}; max-age=31536000; path=/`;
   };
 
   const playNext = () => {
