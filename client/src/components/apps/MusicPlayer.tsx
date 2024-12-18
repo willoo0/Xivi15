@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Search, Play, Pause, Heart, SkipBack, SkipForward } from 'lucide-react';
+import { Search, Play, Pause, Heart, SkipBack, SkipForward, Repeat, Music } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -156,7 +156,7 @@ export function MusicPlayer() {
       <div className="flex-1 overflow-auto">
         {showWelcome ? (
           <div className="p-6 max-w-2xl mx-auto space-y-4">
-            <h1 className="text-2xl font-bold">Welcome to Xivi Music! 🎵</h1>
+            <h1 className="text-2xl font-bold flex items-center gap-2">Welcome to Xivi Music! <Music className="h-6 w-6" /></h1>
             <div className="space-y-4">
               <p>Xivi Music is your personal music player with these great features:</p>
               <ul className="list-disc pl-6 space-y-2">
@@ -235,7 +235,7 @@ export function MusicPlayer() {
               onClick={() => setIsLooping(!isLooping)}
               className={isLooping ? "text-primary" : ""}
             >
-              🔁
+              <Repeat className="h-4 w-4" />
             </Button>
           </div>
         </Card>
