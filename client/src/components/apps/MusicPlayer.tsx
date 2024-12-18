@@ -13,6 +13,7 @@ export function MusicPlayer() {
   const [audio] = useState(new Audio());
   const [likedSongs, setLikedSongs] = useState<any[]>([]);
   const [showLikedSongs, setShowLikedSongs] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
 
   const searchSongs = async () => {
     if (!query.trim()) return;
@@ -85,10 +86,15 @@ export function MusicPlayer() {
   };
 
   useEffect(() => {
-    const handleEnded = () => setIsPlaying(false);
+    const handleEnded = () => {
+      if (!isLooping) {
+        setIsPlaying(false);
+      }
+    };
     const handlePause = () => setIsPlaying(false);
     const handlePlay = () => setIsPlaying(true);
 
+    audio.loop = isLooping;
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('play', handlePlay);
@@ -117,13 +123,13 @@ export function MusicPlayer() {
         </div>
         <div className="flex gap-2">
           <Button 
-            variant={showLikedSongs ? "default" : "outline"} 
+            variant={showLikedSongs ? "outline" : "default"} 
             onClick={() => setShowLikedSongs(false)}
           >
             All Songs
           </Button>
           <Button 
-            variant={showLikedSongs ? "outline" : "default"} 
+            variant={showLikedSongs ? "default" : "outline"} 
             onClick={() => setShowLikedSongs(true)}
           >
             Liked Songs ({likedSongs.length})
@@ -179,6 +185,14 @@ export function MusicPlayer() {
             </Button>
             <Button variant="ghost" size="icon" onClick={playNext}>
               <SkipForward className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsLooping(!isLooping)}
+              className={isLooping ? "text-primary" : ""}
+            >
+              🔁
             </Button>
           </div>
         </Card>
