@@ -88,8 +88,12 @@ export function Settings() {
                 <Label htmlFor="normal">Normal (Left-aligned)</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="middle" id="middle" />
-                <Label htmlFor="middle">Middle (Windows 11 style)</Label>
+                <RadioGroupItem value="chrome" id="chrome" />
+                <Label htmlFor="chrome">Middle (Chrome OS style)</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="windows11" id="windows11" />
+                <Label htmlFor="windows11">Windows 11 (Start menu centered)</Label>
               </div>
             </RadioGroup>
           </div>

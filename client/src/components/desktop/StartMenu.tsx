@@ -140,7 +140,9 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card className="fixed bottom-12 left-2 w-[420px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition">
+      <Card className={`fixed bottom-12 w-[420px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
+        useDesktopStore().taskbarMode === 'windows11' ? 'left-1/2 -translate-x-1/2' : 'left-2'
+      }`}>
         <div className="grid grid-cols-2 gap-6">
           {categories.map((category) => {
             const categoryApps = apps.filter(

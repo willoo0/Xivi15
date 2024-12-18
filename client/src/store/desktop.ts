@@ -29,7 +29,7 @@ interface DesktopState {
   maxZIndex: number
   pinnedApps: PinnedApp[]
   theme: 'light' | 'dark' | 'system'
-  taskbarMode: 'normal' | 'middle'
+  taskbarMode: 'normal' | 'chrome' | 'windows11'
   blurEffects: boolean
   animations: boolean
   notifications: boolean
