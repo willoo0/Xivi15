@@ -151,10 +151,9 @@ body {
 }
 
 .minimizing {
-  transform: translate(var(--window-minimize-x, 0), var(--window-minimize-y, 100vh)) scale(0.5);
+  transform: scale(0.2);
   opacity: 0;
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass {

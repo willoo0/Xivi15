@@ -74,21 +74,12 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   const [isMinimizing, setIsMinimizing] = useState(false);
 
   useEffect(() => {
-    if (isMinimized && windowRef.current) {
-      const taskbarButton = document.querySelector(`[data-window-id="${id}"]`);
-      if (taskbarButton) {
-        const windowRect = windowRef.current.getBoundingClientRect();
-        const buttonRect = taskbarButton.getBoundingClientRect();
-        const x = buttonRect.left - windowRect.left + (buttonRect.width / 2) - (windowRect.width / 2);
-        const y = buttonRect.top - windowRect.top;
-        windowRef.current.style.setProperty('--window-minimize-x', `${x}px`);
-        windowRef.current.style.setProperty('--window-minimize-y', `${y}px`);
-      }
+    if (isMinimized) {
       setIsMinimizing(true);
-      const timer = setTimeout(() => setIsMinimizing(false), 300);
+      const timer = setTimeout(() => setIsMinimizing(false), 200);
       return () => clearTimeout(timer);
     }
-  }, [isMinimized, id]);
+  }, [isMinimized]);
 
   if (isMinimized && !isMinimizing) {
     return null;
