@@ -40,7 +40,7 @@ export const appIcons: Record<string, any> = {
   Minecraft: Gamepad2,
   Games: Gamepad2,
   PDFViewer: FileText,
-  PhotoViewer: FileImage,
+  PhotoViewer: ImageIcon,
 };
 
 export const getAppIcon = (component: string) => appIcons[component] || AppWindow;
