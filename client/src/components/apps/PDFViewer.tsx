@@ -1,10 +1,12 @@
 
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 export function PDFViewer() {
   const [file, setFile] = useState<File | null>(null);
@@ -20,14 +22,25 @@ export function PDFViewer() {
 
   return (
     <div className="h-full flex flex-col p-4 space-y-4">
-      <Input type="file" accept=".pdf" onChange={onFileChange} />
+      <Input 
+        type="file" 
+        accept=".pdf" 
+        onChange={onFileChange} 
+        className="bg-background"
+      />
       {file && (
         <div className="flex-1 overflow-auto flex flex-col items-center">
           <Document
             file={file}
             onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+            className="max-w-full"
           >
-            <Page pageNumber={pageNumber} />
+            <Page 
+              pageNumber={pageNumber} 
+              className="max-w-full"
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+            />
           </Document>
           <div className="flex gap-2 mt-4">
             <Button 
@@ -36,7 +49,7 @@ export function PDFViewer() {
             >
               Previous
             </Button>
-            <span>Page {pageNumber} of {numPages}</span>
+            <span className="py-2">Page {pageNumber} of {numPages}</span>
             <Button 
               onClick={() => setPageNumber(p => Math.min(numPages || p, p + 1))}
               disabled={pageNumber >= (numPages || 1)}
