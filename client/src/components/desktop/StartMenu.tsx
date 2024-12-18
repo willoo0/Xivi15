@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDesktopStore } from "@/store/desktop";
 import { ContextMenu } from "./ContextMenu";
 import { nanoid } from "nanoid";
-import { AppWindow, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File } from "lucide-react";
+import { AppWindow, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File } from "lucide-react";
 import { getAppIcon } from "@/lib/appIcons";
 
 interface StartMenuProps {
@@ -37,14 +37,14 @@ const apps = [
     id: "paint",
     title: "Paint",
     component: "Paint",
-    icon: Image,
+    icon: ImageIcon,
     category: "Media",
   },
   {
     id: "photoviewer",
     title: "Photo Viewer",
     component: "PhotoViewer",
-    icon: Image,
+    icon: ImageIcon,
     category: "Media",
   },
   {
