@@ -38,19 +38,23 @@ export function MusicPlayer() {
 
     try {
       const response = await fetch(`/api/music/stream?videoId=${song.videoId}`);
-      if (!response.ok) throw new Error('Failed to get stream URL');
-      
       const data = await response.json();
-      audio.src = data.url;
       
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        await playPromise;
-        setCurrentSong(song);
-        setIsPlaying(true);
+      if (!response.ok) {
+        if (response.status === 429) {
+          alert('Too many requests. Please wait a moment before trying again.');
+          return;
+        }
+        throw new Error(data.error || 'Failed to get stream URL');
       }
+      
+      audio.src = data.url;
+      await audio.play();
+      setCurrentSong(song);
+      setIsPlaying(true);
     } catch (error) {
       console.error('Error playing song:', error);
+      alert('Failed to play song. Please try again in a moment.');
     }
   };
 
