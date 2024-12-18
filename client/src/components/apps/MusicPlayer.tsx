@@ -26,42 +26,46 @@ export function MusicPlayer() {
   };
 
   const playSong = async (song: any) => {
-    if (currentSong?.videoId === song.videoId) {
-      if (isPlaying) {
-        audio.pause();
-      } else {
-        audio.play();
-      }
-      setIsPlaying(!isPlaying);
-      return;
-    }
-
     try {
-      const response = await fetch(`/api/music/stream?videoId=${song.videoId}`);
-      if (!response.ok) {
-        throw new Error('Failed to get stream URL');
+      if (currentSong?.videoId === song.videoId) {
+        if (isPlaying) {
+          audio.pause();
+        } else {
+          await audio.play();
+        }
+        setIsPlaying(!isPlaying);
+        return;
       }
+
+      const response = await fetch(`/api/music/stream?videoId=${song.videoId}`);
       const data = await response.json();
-      
+
+      if (!response.ok) throw new Error('Failed to get stream URL');
+
       audio.pause();
       audio.src = data.url;
-      audio.crossOrigin = "anonymous";
+      audio.load();
       
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setCurrentSong(song);
-            setIsPlaying(true);
-          })
-          .catch(error => {
-            console.error('Playback failed:', error);
-          });
-      }
+      await audio.play();
+      setCurrentSong(song);
+      setIsPlaying(true);
     } catch (error) {
       console.error('Error playing song:', error);
     }
   };
+
+  // Add event listeners for the audio element
+  useEffect(() => {
+    audio.addEventListener('ended', () => setIsPlaying(false));
+    audio.addEventListener('pause', () => setIsPlaying(false));
+    audio.addEventListener('play', () => setIsPlaying(true));
+
+    return () => {
+      audio.removeEventListener('ended', () => setIsPlaying(false));
+      audio.addEventListener('pause', () => setIsPlaying(false));
+      audio.addEventListener('play', () => setIsPlaying(true));
+    };
+  }, [audio]);
 
   return (
     <div className="p-4 h-full flex flex-col gap-4">
