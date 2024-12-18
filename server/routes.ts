@@ -123,11 +123,21 @@ export function registerRoutes(app: Express): Server {
       if (!query) {
         return res.status(400).json({ error: 'Query parameter is required' });
       }
-      const songs = await searchMusics(query);
+      const songs = await searchMusics(query, {
+        lang: 'en',
+        country: 'US',
+        options: {
+          captureYtmPerformedSearch: true
+        }
+      });
       if (!songs || songs.length === 0) {
         return res.json([]);
       }
-      res.json(songs);
+      res.json(songs.map(song => ({
+        videoId: song.youtubeId,
+        title: song.title,
+        artist: song.artists?.[0]?.name || 'Unknown Artist'
+      })));
     } catch (error) {
       console.error('Search error:', error);
       res.status(500).json({ error: 'Failed to search songs' });
