@@ -62,8 +62,8 @@
   user-select: none;
 }
 
-/* Allow text selection in specific elements like inputs and textareas */
-input, textarea {
+/* Allow text selection in specific elements */
+input, textarea, [data-vite-dev-id], .vite-error-overlay {
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
