@@ -13,6 +13,7 @@ export function MusicPlayer() {
   const [audio] = useState(new Audio());
   const [likedSongs, setLikedSongs] = useState<any[]>([]);
   const [showLikedSongs, setShowLikedSongs] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [isLooping, setIsLooping] = useState(false);
 
   const searchSongs = async () => {
@@ -123,21 +124,42 @@ export function MusicPlayer() {
         </div>
         <div className="flex gap-2">
           <Button 
-            variant={showLikedSongs ? "outline" : "default"} 
-            onClick={() => setShowLikedSongs(false)}
+            variant={!showLikedSongs && !showWelcome ? "default" : "outline"} 
+            onClick={() => {setShowLikedSongs(false); setShowWelcome(false)}}
           >
             All Songs
           </Button>
           <Button 
             variant={showLikedSongs ? "default" : "outline"} 
-            onClick={() => setShowLikedSongs(true)}
+            onClick={() => {setShowLikedSongs(true); setShowWelcome(false)}}
           >
             Liked Songs ({likedSongs.length})
+          </Button>
+          <Button 
+            variant={showWelcome ? "default" : "outline"} 
+            onClick={() => {setShowWelcome(true); setShowLikedSongs(false)}}
+          >
+            Welcome
           </Button>
         </div>
       </div>
 
       <div className="flex-1 overflow-auto">
+        {showWelcome ? (
+          <div className="p-6 text-center space-y-4">
+            <h1 className="text-2xl font-bold">Welcome to Xivi Music!</h1>
+            <p className="text-muted-foreground">
+              Search for your favorite songs, create a collection of liked tracks, and enjoy music playback with features like:
+            </p>
+            <ul className="list-disc text-left ml-6 space-y-2">
+              <li>Search and play music</li>
+              <li>Like your favorite songs</li>
+              <li>Create a playlist of liked songs</li>
+              <li>Loop individual tracks</li>
+              <li>Navigate between songs with previous/next controls</li>
+            </ul>
+          </div>
+        ) : (
         {(showLikedSongs ? likedSongs : songs).map((song) => (
           <Card
             key={song.videoId}
@@ -170,6 +192,7 @@ export function MusicPlayer() {
             </div>
           </Card>
         ))}
+        )}
       </div>
 
       {currentSong && (
