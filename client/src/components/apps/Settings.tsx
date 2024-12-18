@@ -9,29 +9,24 @@ import { useEffect } from 'react'
 export function Settings() {
   const { theme, blurEffects, animations, notifications, updateSettings } = useDesktopStore();
 
+  const applyTheme = () => {
+    const root = document.documentElement;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const shouldUseDark = theme === 'dark' || (theme === 'system' && prefersDark);
+    
+    if (shouldUseDark) {
+      root.classList.add('dark');
+      root.style.colorScheme = 'dark';
+    } else {
+      root.classList.remove('dark');
+      root.style.colorScheme = 'light';
+    }
+  };
+
   useEffect(() => {
-    const applyTheme = () => {
-      const root = document.documentElement;
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const shouldUseDark = theme === 'dark' || (theme === 'system' && prefersDark);
-      
-      if (shouldUseDark) {
-        root.classList.add('dark');
-        root.style.colorScheme = 'dark';
-      } else {
-        root.classList.remove('dark');
-        root.style.colorScheme = 'light';
-      }
-    };
-
     applyTheme();
-
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => {
-      if (theme === 'system') {
-        applyTheme();
-      }
-    };
+    const handleChange = () => theme === 'system' && applyTheme();
     
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
