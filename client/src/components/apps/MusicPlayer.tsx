@@ -33,17 +33,33 @@ export function MusicPlayer() {
         audio.play();
       }
       setIsPlaying(!isPlaying);
-    } else {
-      try {
-        const response = await fetch(`/api/music/stream?videoId=${song.videoId}`);
-        const data = await response.json();
-        audio.src = data.url;
-        audio.play();
-        setCurrentSong(song);
-        setIsPlaying(true);
-      } catch (error) {
-        console.error('Error playing song:', error);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/music/stream?videoId=${song.videoId}`);
+      if (!response.ok) {
+        throw new Error('Failed to get stream URL');
       }
+      const data = await response.json();
+      
+      audio.pause();
+      audio.src = data.url;
+      audio.crossOrigin = "anonymous";
+      
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setCurrentSong(song);
+            setIsPlaying(true);
+          })
+          .catch(error => {
+            console.error('Playback failed:', error);
+          });
+      }
+    } catch (error) {
+      console.error('Error playing song:', error);
     }
   };
 
