@@ -44,7 +44,7 @@ const apps = [
     id: "photoviewer",
     title: "Photo Viewer",
     component: "PhotoViewer",
-    icon: ImageIcon,
+    icon: Image,
     category: "Media",
   },
   {
