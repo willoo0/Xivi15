@@ -74,7 +74,7 @@ export function Taskbar() {
           </Button>
         )}
         
-        <div className={`flex-1 flex items-center space-x-1 ${
+        <div className={`flex-1 flex items-center space-x-1 taskbar-content ${
           taskbarMode === 'chrome' || taskbarMode === 'windows11' ? 'justify-center' : ''
         }`}>
           {taskbarMode === 'windows11' && (
@@ -95,7 +95,7 @@ export function Taskbar() {
                 key={app.component}
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-8 w-8 taskbar-button"
                 onClick={() => handlePinnedAppClick(app)}
                 onContextMenu={(e) =>
                   handleRightClick(e, '', app.component, app.title)

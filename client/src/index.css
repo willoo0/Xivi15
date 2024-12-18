@@ -66,6 +66,14 @@
   -ms-user-select: none;
   user-select: none;
 }
+
+.taskbar-content {
+  transition: all 0.3s ease-in-out;
+}
+
+.taskbar-button {
+  transition: transform 0.3s ease-in-out;
+}
  
 @layer base {
   :root {
