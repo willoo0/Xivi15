@@ -71,18 +71,8 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     setActiveWindow(id)
   }
 
-  const [isMinimizing, setIsMinimizing] = useState(false);
-
-  useEffect(() => {
-    if (isMinimized) {
-      setIsMinimizing(true);
-      const timer = setTimeout(() => setIsMinimizing(false), 200);
-      return () => clearTimeout(timer);
-    }
-  }, [isMinimized]);
-
-  if (isMinimized && !isMinimizing) {
-    return null;
+  if (isMinimized) {
+    return null
   }
 
   const constrainedY = Math.min(
@@ -95,8 +85,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       ref={windowRef}
       className={cn(
         'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in window-transition',
-        isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12',
-        isMinimizing && 'minimizing'
+        isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
         left: position?.x ?? 100,
@@ -110,7 +99,6 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       <div
         className="flex items-center justify-between px-4 py-2 bg-primary/10 cursor-move"
         onMouseDown={handleMouseDown}
-        onDoubleClick={() => toggleMinimize(id)}
         style={{ userSelect: 'none' }}
       >
         <div className="font-medium">{title}</div>
