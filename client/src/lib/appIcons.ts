@@ -29,7 +29,7 @@ export const appIcons: Record<string, any> = {
   Snake: Scissors,
   Minesweeper: Bomb,
   Todo: Calendar,
-  Paint: Image,
+  Paint: ImageIcon,
   SystemInfo: Monitor,
   TimerClock: Timer,
   Browser: Globe,
