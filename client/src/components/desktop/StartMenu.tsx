@@ -82,6 +82,13 @@ const apps = [
     category: "System",
   },
   {
+    id: "musicplayer",
+    title: "Music Player",
+    component: "MusicPlayer",
+    icon: Music,
+    category: "Media",
+  },
+  {
     id: "timerclock",
     title: "Timer & Clock",
     component: "TimerClock",
