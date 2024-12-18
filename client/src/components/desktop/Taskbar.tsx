@@ -63,18 +63,30 @@ export function Taskbar() {
   return (
     <>
       <div className="fixed bottom-0 left-0 right-0 h-12 bg-background/80 backdrop-blur-md border-t flex items-center px-2 z-[9999]">
-        <Button
-          variant={showStartMenu ? "secondary" : "ghost"}
-          size="icon"
-          className="mr-2"
-          onClick={() => setShowStartMenu(!showStartMenu)}
-        >
-          <Layout className="h-5 w-5" />
-        </Button>
+        {taskbarMode !== 'windows11' && (
+          <Button
+            variant={showStartMenu ? "secondary" : "ghost"}
+            size="icon"
+            className="mr-2"
+            onClick={() => setShowStartMenu(!showStartMenu)}
+          >
+            <Layout className="h-5 w-5" />
+          </Button>
+        )}
         
         <div className={`flex-1 flex items-center space-x-1 ${
           taskbarMode === 'chrome' || taskbarMode === 'windows11' ? 'justify-center' : ''
         }`}>
+          {taskbarMode === 'windows11' && (
+            <Button
+              variant={showStartMenu ? "secondary" : "ghost"}
+              size="icon"
+              className="mr-2"
+              onClick={() => setShowStartMenu(!showStartMenu)}
+            >
+              <Layout className="h-5 w-5" />
+            </Button>
+          )}
           {/* Pinned Apps */}
           {pinnedApps.map((app) => {
             const Icon = getAppIcon(app.component)
