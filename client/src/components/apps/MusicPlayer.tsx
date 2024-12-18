@@ -56,16 +56,20 @@ export function MusicPlayer() {
 
   // Add event listeners for the audio element
   useEffect(() => {
-    audio.addEventListener('ended', () => setIsPlaying(false));
-    audio.addEventListener('pause', () => setIsPlaying(false));
-    audio.addEventListener('play', () => setIsPlaying(true));
+    const handleEnded = () => setIsPlaying(false);
+    const handlePause = () => setIsPlaying(false);
+    const handlePlay = () => setIsPlaying(true);
+    
+    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('play', handlePlay);
 
     return () => {
-      audio.removeEventListener('ended', () => setIsPlaying(false));
-      audio.removeEventListener('pause', () => setIsPlaying(false));
-      audio.removeEventListener('play', () => setIsPlaying(true));
+      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('play', handlePlay);
     };
-  }, [audio]);
+  }, []);
 
   return (
     <div className="p-4 h-full flex flex-col gap-4">
