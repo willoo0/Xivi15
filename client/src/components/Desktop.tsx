@@ -44,6 +44,13 @@ const components: { [key: string]: React.ComponentType } = {
   WhackAMole,
   Minecraft,
   Games,
+  BalloonsBullets,
+  DodgeBrawl,
+  DungeonFish,
+  Folkware,
+  SilentHeist,
+  Snow,
+  WorstCaseScenario,
   PDFViewer,
   PhotoViewer,
   MusicPlayer
