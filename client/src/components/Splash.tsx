@@ -3,18 +3,37 @@ import { useEffect, useRef, useState } from "react";
 
 function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: number; color?: string }) {
   const [visible, setVisible] = useState(false);
+  const [displayText, setDisplayText] = useState('');
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), delay);
-    return () => clearTimeout(timer);
+    const showTimer = setTimeout(() => setVisible(true), delay);
+    
+    return () => clearTimeout(showTimer);
   }, [delay]);
+
+  useEffect(() => {
+    if (!visible) return;
+    
+    let index = 0;
+    const typeTimer = setInterval(() => {
+      if (index < text.length) {
+        setDisplayText(prev => prev + text[index]);
+        index++;
+      } else {
+        clearInterval(typeTimer);
+      }
+    }, 30);
+
+    return () => clearInterval(typeTimer);
+  }, [visible, text]);
 
   if (!visible) return null;
 
   return (
     <div className="flex items-center gap-2">
       <span className="text-green-500">$</span>
-      <span className={`text-${color} opacity-80`}>{text}</span>
+      <span className={`text-${color} opacity-80`}>{displayText}</span>
+      {displayText.length < text.length && <span className="animate-pulse">_</span>}
     </div>
   );
 }
@@ -130,7 +149,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={handleClick}>
       <canvas ref={canvasRef} className="absolute inset-0" />
       <div className="relative z-10 flex h-full items-center justify-center backdrop-blur-sm">
-        <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px]">
+        <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px] transition-all duration-500 ease-in-out">
           <h1 className="text-4xl font-bold text-white mb-6 text-center">Xivi 15 Alpha</h1>
           <ConsoleText text="Initializing system components..." delay={500} />
           <ConsoleText text="Loading kernel modules..." delay={1000} />
@@ -139,10 +158,17 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
           <ConsoleText text="Starting window manager..." delay={2500} />
           <ConsoleText text="Configuring network interfaces..." delay={3000} />
           <ConsoleText text="System ready!" delay={3500} color="green" />
-          <p className="text-zinc-400 mt-6 text-center">Click anywhere to continue</p>
+          {setTimeout(() => {
+            return (
+              <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
+                Click anywhere to continue
+              </p>
+            );
+          }, 5000)}
           <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
         </div>
       </div>
+</old_str>
     </div>
   );
 }
