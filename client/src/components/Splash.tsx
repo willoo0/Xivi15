@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 
 export function Splash({ onFinish }: { onFinish: () => void }) {
@@ -22,7 +21,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center bg-zinc-950 cursor-pointer overflow-hidden backdrop-blur-xl"
+      className="fixed inset-0 z-[99999] flex items-center justify-center bg-zinc-950 cursor-pointer overflow-hidden backdrop-blur-2xl" //Increased blur
       style={{
         opacity,
         transition: "opacity 0.3s ease-in-out",
@@ -40,9 +39,9 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
             height: Math.random() * 2 + 1 + "px",
             top: Math.random() * 100 + "%",
             left: Math.random() * 100 + "%",
-            animation: `starMove ${Math.random() * 3 + 2}s linear infinite`,
+            animation: `starMove ${Math.random() * 8 + 4}s linear infinite`, //Slower animation
             transform: `translateX(${mousePosition.x}px) translateY(${mousePosition.y}px)`,
-            transition: "transform 0.1s ease-out",
+            transition: "transform 0.3s ease-out", //Slower transition
           }}
         />
       ))}
