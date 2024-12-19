@@ -28,7 +28,12 @@ export default defineConfig({
       '@radix-ui/react-tooltip',
       '@radix-ui/react-dialog',
       '@radix-ui/react-slot',
-      '@radix-ui/react-primitive'
+      '@radix-ui/react-primitive',
+      'framer-motion',
+      'recharts',
+      'vaul',
+      'cmdk',
+      '@replit/vite-plugin-runtime-error-modal'
     ]
   }
 });
