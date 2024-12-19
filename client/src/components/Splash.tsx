@@ -45,10 +45,13 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
       x += (mouseX.current - width/2) * this.speed * 0.1;
       y += (mouseY.current - height/2) * this.speed * 0.1;
 
+      const fadeInOpacity = Math.max(0, Math.min(1, (width - this.z) / 100));
       ctx.beginPath();
-      ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+      ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * fadeInOpacity})`;
       ctx.arc(x, y, s, 0, 2 * Math.PI);
+      ctx.filter = 'blur(1px)';
       ctx.fill();
+      ctx.filter = 'none';
     }
   }
 
@@ -83,8 +86,10 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     document.addEventListener('mousemove', handleMouseMove);
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.9)';
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.7)';
+      ctx.filter = 'blur(80px)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.filter = 'none';
       
       stars.forEach(star => {
         star.move(canvas.width, canvas.height);
