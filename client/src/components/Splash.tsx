@@ -1,5 +1,5 @@
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: number; color?: string }) {
   const [visible, setVisible] = useState(false);
