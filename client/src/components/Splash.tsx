@@ -4,7 +4,9 @@ import React, { useEffect, useRef, useState } from "react";
 function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: number; color?: string }) {
   const [visible, setVisible] = useState(false);
   const [currentText, setCurrentText] = useState('');
+  const [dots, setDots] = useState('');
   const intervalRef = useRef<NodeJS.Timeout>();
+  const dotsIntervalRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,6 +24,10 @@ function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: nu
       if (index <= text.length) {
         setCurrentText(text.slice(0, index));
         index++;
+      } else if (text.includes("Waiting for environment")) {
+        dotsIntervalRef.current = setInterval(() => {
+          setDots(prev => prev === '...' ? '' : prev + '.');
+        }, 500);
       } else {
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
@@ -30,9 +36,8 @@ function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: nu
     }, 50);
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (dotsIntervalRef.current) clearInterval(dotsIntervalRef.current);
     };
   }, [visible, text]);
 
@@ -42,9 +47,9 @@ function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: nu
     <div className="flex items-center gap-2 font-mono">
       <span className="text-green-500">$</span>
       <span style={{ color: color === 'green-500' ? '#22c55e' : 'white' }} className="opacity-80">
-        {currentText}
+        {currentText}{dots}
       </span>
-      {currentText.length < text.length && <span className="animate-pulse">_</span>}
+      {currentText.length < text.length && !dots && <span className="animate-pulse">_</span>}
     </div>
   );
 }
@@ -152,7 +157,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsSystemReady(true), 6000);
+    const timer = setTimeout(() => setIsSystemReady(true), 9000);
     return () => clearTimeout(timer);
   }, []);
 
