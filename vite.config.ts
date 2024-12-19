@@ -23,6 +23,12 @@ export default defineConfig({
     emptyOutDir: true,
   },
   optimizeDeps: {
-    exclude: ['@radix-ui/react-icons', '@radix-ui/react-tooltip']
+    exclude: [
+      '@radix-ui/react-icons', 
+      '@radix-ui/react-tooltip',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-primitive'
+    ]
   }
 });
