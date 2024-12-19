@@ -3,36 +3,48 @@ import React, { useEffect, useRef, useState } from "react";
 
 function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: number; color?: string }) {
   const [visible, setVisible] = useState(false);
-  const [displayText, setDisplayText] = useState('');
+  const [currentText, setCurrentText] = useState('');
+  const intervalRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    const showTimer = setTimeout(() => setVisible(true), delay);
-    return () => clearTimeout(showTimer);
+    const timer = setTimeout(() => {
+      setVisible(true);
+    }, delay);
+
+    return () => clearTimeout(timer);
   }, [delay]);
 
   useEffect(() => {
     if (!visible) return;
-    
+
     let index = 0;
-    const typeTimer = setInterval(() => {
-      if (index < text.length) {
-        setDisplayText(prev => prev + text[index]);
+    intervalRef.current = setInterval(() => {
+      if (index <= text.length) {
+        setCurrentText(text.slice(0, index));
         index++;
       } else {
-        clearInterval(typeTimer);
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
       }
-    }, 30);
+    }, 50);
 
-    return () => clearInterval(typeTimer);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, [visible, text]);
 
   if (!visible) return null;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 font-mono">
       <span className="text-green-500">$</span>
-      <span className={`text-${color} opacity-80`}>{displayText}</span>
-      {displayText.length < text.length && <span className="animate-pulse">_</span>}
+      <span style={{ color: color === 'green-500' ? '#22c55e' : 'white' }} className="opacity-80">
+        {currentText}
+      </span>
+      {currentText.length < text.length && <span className="animate-pulse">_</span>}
     </div>
   );
 }
