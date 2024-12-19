@@ -25,9 +25,17 @@ function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: nu
         setCurrentText(text.slice(0, index));
         index++;
       } else if (text.includes("Waiting for environment")) {
+        const startTime = Date.now();
         dotsIntervalRef.current = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          if (elapsed > 3000) {
+            if (dotsIntervalRef.current) {
+              clearInterval(dotsIntervalRef.current);
+            }
+            return;
+          }
           setDots(prev => prev === '...' ? '' : prev + '.');
-        }, 500);
+        }, 800);
       } else {
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
