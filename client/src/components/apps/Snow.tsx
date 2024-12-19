@@ -14,7 +14,7 @@ export function Snow() {
   return (
     <div className="w-full h-full">
       <iframe
-        src="/snow.html"
+        src="./snow.html"
         className="w-full h-full border-0"
         title="Snow"
       />

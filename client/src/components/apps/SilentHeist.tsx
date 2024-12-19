@@ -14,7 +14,7 @@ export function SilentHeist() {
   return (
     <div className="w-full h-full">
       <iframe
-        src="/silentheist.html"
+        src="./silentheist.html"
         className="w-full h-full border-0"
         title="Silent Heist"
       />

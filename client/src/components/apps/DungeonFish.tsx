@@ -14,7 +14,7 @@ export function DungeonFish() {
   return (
     <div className="w-full h-full">
       <iframe
-        src="/dungeonfish.html"
+        src="./dungeonfish.html"
         className="w-full h-full border-0"
         title="Dungeon Fish"
       />

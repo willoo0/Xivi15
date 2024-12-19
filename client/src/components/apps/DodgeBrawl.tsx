@@ -14,7 +14,7 @@ export function DodgeBrawl() {
   return (
     <div className="w-full h-full">
       <iframe
-        src="/dodgebrawl.html"
+        src="./dodgebrawl.html"
         className="w-full h-full border-0"
         title="Dodge Brawl"
       />

@@ -14,7 +14,7 @@ export function Folkware() {
   return (
     <div className="w-full h-full">
       <iframe
-        src="/folkware.html"
+        src="./folkware.html"
         className="w-full h-full border-0"
         title="Folkware"
       />

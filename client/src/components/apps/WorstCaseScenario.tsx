@@ -14,7 +14,7 @@ export function WorstCaseScenario() {
   return (
     <div className="w-full h-full">
       <iframe
-        src="/worstcasescenario.html"
+        src="./worstcasescenario.html"
         className="w-full h-full border-0"
         title="Worst Case Scenario"
       />
