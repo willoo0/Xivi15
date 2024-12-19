@@ -162,7 +162,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
           <ConsoleText text="Mounting virtual filesystem..." delay={2000} />
           <ConsoleText text="Starting window manager..." delay={2500} />
           <ConsoleText text="Configuring network interfaces..." delay={3000} />
-          <ConsoleText text="System ready!" delay={3500} color="green" />
+          <ConsoleText text="System ready!" delay={3500} color="green-500" />
           {isSystemReady && (
             <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
               Click anywhere to continue
