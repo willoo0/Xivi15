@@ -22,7 +22,14 @@ import { Snake } from './apps/Snake';
 import { WhackAMole } from './apps/WhackAMole';
 import { Minecraft } from './apps/Minecraft';
 import { Games } from './apps/Games';
-import { PDFViewer } from './apps/PDFViewer'
+import { PDFViewer } from './apps/PDFViewer';
+import { BalloonsBullets } from './apps/BalloonsBullets';
+import { DodgeBrawl } from './apps/DodgeBrawl';
+import { DungeonFish } from './apps/DungeonFish';
+import { Folkware } from './apps/Folkware';
+import { SilentHeist } from './apps/SilentHeist';
+import { Snow } from './apps/Snow';
+import { WorstCaseScenario } from './apps/WorstCaseScenario';
 import { PhotoViewer } from './apps/PhotoViewer'
 import { MusicPlayer } from './apps/MusicPlayer'
 
