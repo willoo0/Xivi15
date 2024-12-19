@@ -152,7 +152,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsSystemReady(true), 4000);
+    const timer = setTimeout(() => setIsSystemReady(true), 6000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -177,6 +177,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
           <ConsoleText text="Starting window manager..." delay={2500} />
           <ConsoleText text="Configuring network interfaces..." delay={3000} />
           <ConsoleText text="System ready!" delay={3500} color="green-500" />
+          <ConsoleText text="Waiting for environment..." delay={4000} />
           {isSystemReady && (
             <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
               Click anywhere to continue
