@@ -9,67 +9,67 @@ const games = [
     title: "Tetris", 
     component: "Tetris",
     icon: Layout,
-    description: "Classic block-stacking puzzle game"
+    description: "Block Stacking"
   },
   { 
     title: "Snake", 
     component: "Snake",
     icon: Scissors,
-    description: "Guide the snake to eat and grow, but don't hit the walls!"
+    description: "Growing Challenge"
   },
   { 
     title: "Whack-a-Mole", 
     component: "WhackAMole",
     icon: Hammer,
-    description: "Test your reflexes by whacking moles as they appear"
+    description: "Reflex Testing"
   },
   { 
     title: "Minecraft", 
     component: "Minecraft",
     icon: Gamepad2,
-    description: "Classic browser version of Minecraft"
+    description: "Block Building"
   },
   { 
     title: "Balloons & Bullets", 
     component: "BalloonsBullets",
     icon: Target,
-    description: "Action-packed balloon shooting game"
+    description: "Balloon Shooting"
   },
   { 
     title: "Dodge Brawl", 
     component: "DodgeBrawl",
     icon: Swords,
-    description: "Fast-paced dodging and fighting game"
+    description: "Combat Dodging"
   },
   { 
     title: "Dungeon Fish", 
     component: "DungeonFish",
     icon: Fish,
-    description: "Underwater dungeon adventure"
+    description: "Underwater Adventure"
   },
   { 
     title: "Folkware", 
     component: "Folkware",
     icon: Castle,
-    description: "Medieval folk adventure game"
+    description: "Medieval Quest"
   },
   { 
     title: "Silent Heist", 
     component: "SilentHeist",
     icon: Footprints,
-    description: "Stealth-based heist game"
+    description: "Stealth Mission"
   },
   { 
     title: "Snow", 
     component: "Snow",
     icon: Snowflake,
-    description: "Winter-themed adventure"
+    description: "Winter Adventure"
   },
   { 
     title: "Worst Case Scenario", 
     component: "WorstCaseScenario",
     icon: Shield,
-    description: "Survive the worst scenarios"
+    description: "Survival Challenge"
   }
 ];
 
