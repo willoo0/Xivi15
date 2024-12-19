@@ -1,0 +1,177 @@
+// Intersection Observer for animations
+const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, observerOptions);
+
+// Observe all elements with animation classes
+document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(element => {
+    observer.observe(element);
+});
+
+// Navbar background opacity on scroll
+const navbar = document.querySelector('.navbar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+    } else {
+        navbar.style.background = 'rgba(10, 10, 10, 0.8)';
+    }
+});
+
+// Initialize tooltips
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+});
+
+// Starfield effect
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
+
+const stars = [];
+const numStars = 200;
+let mouseX = 0;
+let mouseY = 0;
+let speed = 0.5;
+
+// Star object
+class Star {
+    constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.z = Math.random() * width;
+        this.size = 0.5 + Math.random();
+        this.speed = 0.2 + Math.random() * 0.5;
+        this.opacity = 0.5 + Math.random() * 0.5;
+    }
+
+    move() {
+        this.z = this.z - this.speed * speed;
+        if (this.z <= 0) {
+            this.z = width;
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+        }
+    }
+
+    show() {
+        let x, y, s;
+        x = (this.x - width/2) * (width/this.z);
+        x = x + width/2;
+        
+        y = (this.y - height/2) * (width/this.z);
+        y = y + height/2;
+        
+        s = this.size * (width/this.z);
+        
+        x += (mouseX - width/2) * this.speed * 0.1;
+        y += (mouseY - height/2) * this.speed * 0.1;
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.arc(x, y, s, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+}
+
+// Space Cat object
+class SpaceCat {
+    constructor() {
+        this.x = -100;
+        this.y = Math.random() * height * 0.6 + height * 0.2;
+        this.speed = 1;
+        this.size = 80;
+        this.img = new Image();
+        this.img.src = '/static/spacecat.svg';
+    }
+
+    move() {
+        this.x += this.speed;
+        if (this.x > width + 100) {
+            this.x = -100;
+            this.y = Math.random() * height * 0.6 + height * 0.2;
+        }
+        
+        // Add slight vertical movement
+        this.y += Math.sin(this.x * 0.02) * 0.5;
+    }
+
+    show() {
+        ctx.save();
+        ctx.filter = 'blur(1px) brightness(0.9)';
+        ctx.globalAlpha = 0.8;
+        ctx.drawImage(this.img, this.x - this.size/2, this.y - this.size/2, this.size, this.size);
+        ctx.restore();
+    }
+}
+
+// Create stars
+for(let i = 0; i < numStars; i++) {
+    stars.push(new Star());
+}
+
+// Create space cat
+const spaceCat = new SpaceCat();
+
+// Handle mouse movement
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    speed = 0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
+});
+
+// Animation loop
+function animate() {
+    ctx.fillStyle = 'rgba(10, 10, 10, 0.9)';
+    ctx.fillRect(0, 0, width, height);
+    
+    stars.forEach(star => {
+        star.move();
+        star.show();
+    });
+    
+    spaceCat.move();
+    spaceCat.show();
+    
+    requestAnimationFrame(animate);
+}
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+});
+
+// Start animation
+animate();
+
+// Add parallax effect to hero section
+window.addEventListener('scroll', () => {
+    const heroSection = document.querySelector('.hero-section');
+    const scrolled = window.pageYOffset;
+    heroSection.style.backgroundPositionY = scrolled * 0.5 + 'px';
+});
+
+// Project cards hover effect
+document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.02)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+    });
+});

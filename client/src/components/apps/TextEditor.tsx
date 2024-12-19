@@ -20,9 +20,14 @@ export function TextEditor({ path }: TextEditorProps) {
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-2 border-b">
-        <Button size="sm" className="w-full" onClick={handleSave}>
+    <div className="h-full flex flex-col bg-background">
+      <div className="p-3 border-b bg-muted/30 flex items-center justify-between">
+        <Button 
+          size="sm" 
+          variant="outline"
+          className="hover:bg-primary hover:text-primary-foreground transition-colors"
+          onClick={handleSave}
+        >
           <Save className="h-4 w-4 mr-2" />
           Save
         </Button>
@@ -31,7 +36,10 @@ export function TextEditor({ path }: TextEditorProps) {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Start typing..."
-        className="flex-1 resize-none rounded-none border-0"
+        className="flex-1 resize-none rounded-lg m-3 border border-input/30 bg-background font-mono text-sm leading-relaxed focus:ring-1 focus:ring-ring shadow-sm"
+        style={{
+          fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", monospace'
+        }}
       />
     </div>
   )
