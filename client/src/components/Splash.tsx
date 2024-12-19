@@ -1,6 +1,25 @@
 
 import { useEffect, useRef } from "react";
 
+function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: number; color?: string }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  if (!visible) return null;
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-green-500">$</span>
+      <span className={`text-${color} opacity-80`}>{text}</span>
+    </div>
+  );
+}
+
+
 export function Splash({ onFinish }: { onFinish: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseX = useRef(0);
@@ -110,11 +129,17 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   return (
     <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={handleClick}>
       <canvas ref={canvasRef} className="absolute inset-0" />
-      <div className="relative z-10 flex h-full items-center justify-center">
-        <div className="text-center space-y-6 backdrop-blur-sm bg-black/30 p-8 rounded-xl">
-          <h1 className="text-4xl font-bold text-white">Xivi 15 Alpha</h1>
-          <p className="text-zinc-400">You are first in Queue!</p>
-          <p className="text-zinc-400">Click anywhere to continue</p>
+      <div className="relative z-10 flex h-full items-center justify-center backdrop-blur-sm">
+        <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px]">
+          <h1 className="text-4xl font-bold text-white mb-6 text-center">Xivi 15 Alpha</h1>
+          <ConsoleText text="Initializing system components..." delay={500} />
+          <ConsoleText text="Loading kernel modules..." delay={1000} />
+          <ConsoleText text="Starting system services..." delay={1500} />
+          <ConsoleText text="Mounting virtual filesystem..." delay={2000} />
+          <ConsoleText text="Starting window manager..." delay={2500} />
+          <ConsoleText text="Configuring network interfaces..." delay={3000} />
+          <ConsoleText text="System ready!" delay={3500} color="green" />
+          <p className="text-zinc-400 mt-6 text-center">Click anywhere to continue</p>
           <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
         </div>
       </div>
