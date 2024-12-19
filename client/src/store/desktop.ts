@@ -66,9 +66,10 @@ export const useDesktopStore = create<DesktopState>()(
       ...initialState,
       
       addWindow: (window) => set((state) => {
-        const newZIndex = state.maxZIndex + 1
+        // Set highest z-index for new window
+        const newZIndex = Math.max(...state.windows.map(w => w.zIndex), 0) + 1
         return {
-          windows: [...state.windows, { ...window, zIndex: newZIndex }],
+          windows: [...state.windows.map(w => ({...w, zIndex: w.zIndex})), { ...window, zIndex: newZIndex }],
           activeWindowId: window.id,
           maxZIndex: newZIndex
         }
