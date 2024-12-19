@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import { createServer } from "http";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -56,10 +57,41 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client
-  const PORT = 5000;
-  server.listen(PORT, "0.0.0.0", () => {
-    log(`serving on port ${PORT}`);
-  });
+  // Try to find an available port starting from 5000
+  const findAvailablePort = (startPort: number, maxAttempts: number = 10): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      const tryPort = (port: number, attempts: number) => {
+        const testServer = createServer();
+        testServer.once('error', (err: any) => {
+          if (err.code === 'EADDRINUSE') {
+            if (attempts >= maxAttempts) {
+              reject(new Error(`Could not find an available port after ${maxAttempts} attempts`));
+            } else {
+              tryPort(port + 1, attempts + 1);
+            }
+          } else {
+            reject(err);
+          }
+        });
+        
+        testServer.once('listening', () => {
+          testServer.close(() => resolve(port));
+        });
+        
+        testServer.listen(port, '0.0.0.0');
+      };
+      
+      tryPort(startPort, 1);
+    });
+  };
+
+  try {
+    const port = await findAvailablePort(5000);
+    server.listen(port, "0.0.0.0", () => {
+      log(`Server running on port ${port}`);
+    });
+  } catch (error) {
+    log(`Failed to start server: ${error}`);
+    process.exit(1);
+  }
 })();

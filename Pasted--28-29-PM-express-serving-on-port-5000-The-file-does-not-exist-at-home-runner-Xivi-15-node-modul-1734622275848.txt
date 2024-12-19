@@ -1,0 +1,30 @@
+:28:29 PM [express] serving on port 5000
+The file does not exist at "/home/runner/Xivi-15/node_modules/.vite/deps/chunk-2HZISHOF.js?v=8a5c9158" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.
+3:29:46 PM [vite] hmr update /src/components/Splash.tsx, /src/index.css
+The file does not exist at "/home/runner/Xivi-15/node_modules/.vite/deps/chunk-2HZISHOF.js?v=8a5c9158" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.
+3:30:22 PM [vite] hmr update /src/components/Splash.tsx, /src/index.css
+The file does not exist at "/home/runner/Xivi-15/node_modules/.vite/deps/chunk-2HZISHOF.js?v=8a5c9158" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.
+The file does not exist at "/home/runner/Xivi-15/node_modules/.vite/deps/chunk-2HZISHOF.js?v=8a5c9158" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`. (x2)
+The file does not exist at "/home/runner/Xivi-15/node_modules/.vite/deps/chunk-2HZISHOF.js?v=8a5c9158" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`. (x3)
+The file does not exist at "/home/runner/Xivi-15/node_modules/.vite/deps/chunk-2HZISHOF.js?v=8a5c9158" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`. (x4)
+The file does not exist at "/home/runner/Xivi-15/node_modules/.vite/deps/chunk-2HZISHOF.js?v=8a5c9158" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`. (x5)
+The file does not exist at "/home/runner/Xivi-15/node_modules/.vite/deps/chunk-2HZISHOF.js?v=8a5c9158" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`. (x6)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
