@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 
 export function Splash({ onFinish }: { onFinish: () => void }) {
   const [opacity, setOpacity] = useState(1);
-  const [rocketPosition, setRocketPosition] = useState(-100);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
-    setRocketPosition(window.innerWidth / 2 - 50);
-  }, []);
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePosition({
+      x: (e.clientX / window.innerWidth) * 20,
+      y: (e.clientY / window.innerHeight) * 20
+    });
+  };
 
   const handleClick = () => {
     document.documentElement.requestFullscreen().catch((err) => {
@@ -19,43 +22,32 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center bg-zinc-950 cursor-pointer overflow-hidden"
+      className="fixed inset-0 z-[99999] flex items-center justify-center bg-zinc-950 cursor-pointer overflow-hidden backdrop-blur-xl"
       style={{
         opacity,
         transition: "opacity 0.3s ease-in-out",
       }}
       onClick={handleClick}
+      onMouseMove={handleMouseMove}
     >
       {/* Stars */}
-      {Array.from({ length: 100 }).map((_, i) => (
+      {Array.from({ length: 200 }).map((_, i) => (
         <div
           key={i}
           className="absolute bg-white rounded-full"
           style={{
-            width: Math.random() * 3 + "px",
-            height: Math.random() * 3 + "px",
+            width: Math.random() * 2 + 1 + "px",
+            height: Math.random() * 2 + 1 + "px",
             top: Math.random() * 100 + "%",
             left: Math.random() * 100 + "%",
-            animation: `twinkle ${Math.random() * 3 + 1}s infinite`,
+            animation: `starMove ${Math.random() * 3 + 2}s linear infinite`,
+            transform: `translateX(${mousePosition.x}px) translateY(${mousePosition.y}px)`,
+            transition: "transform 0.1s ease-out",
           }}
         />
       ))}
-      
-      {/* Rocket */}
-      <div
-        className="absolute"
-        style={{
-          transform: `translateX(${rocketPosition}px)`,
-          animation: "rocketFly 2s ease-out forwards",
-        }}
-      >
-        <div className="w-20 h-32 relative">
-          <div className="absolute inset-0 bg-red-500 rounded-t-3xl" />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-8 bg-orange-500 animate-pulse" style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }} />
-        </div>
-      </div>
 
-      <div className="text-center space-y-6 relative z-10">
+      <div className="text-center space-y-6 relative z-10 backdrop-blur-sm bg-black/30 p-8 rounded-xl">
         <h1
           className="text-4xl font-bold text-white"
           style={{
@@ -78,14 +70,13 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
 
       <style>
         {`
-          @keyframes twinkle {
-            0% { opacity: 0.2; }
-            50% { opacity: 1; }
-            100% { opacity: 0.2; }
-          }
-          @keyframes rocketFly {
-            0% { transform: translateY(100vh) translateX(-50vw) rotate(45deg); }
-            100% { transform: translateY(-20vh) translateX(50vw) rotate(45deg); }
+          @keyframes starMove {
+            from {
+              transform: translateZ(0) translateX(${mousePosition.x}px) translateY(${mousePosition.y}px);
+            }
+            to {
+              transform: translateZ(400px) translateX(${mousePosition.x}px) translateY(${mousePosition.y}px);
+            }
           }
         `}
       </style>
