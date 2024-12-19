@@ -7,7 +7,6 @@ function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: nu
 
   useEffect(() => {
     const showTimer = setTimeout(() => setVisible(true), delay);
-    
     return () => clearTimeout(showTimer);
   }, [delay]);
 
@@ -38,12 +37,12 @@ function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: nu
   );
 }
 
-
 export function Splash({ onFinish }: { onFinish: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseX = useRef(0);
   const mouseY = useRef(0);
   const speed = useRef(0.5);
+  const [isSystemReady, setIsSystemReady] = useState(false);
 
   class Star {
     x: number;
@@ -140,7 +139,13 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     };
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setIsSystemReady(true), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleClick = () => {
+    if (!isSystemReady) return;
     document.documentElement.requestFullscreen().catch(console.warn);
     setTimeout(onFinish, 500);
   };
@@ -158,17 +163,14 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
           <ConsoleText text="Starting window manager..." delay={2500} />
           <ConsoleText text="Configuring network interfaces..." delay={3000} />
           <ConsoleText text="System ready!" delay={3500} color="green" />
-          {setTimeout(() => {
-            return (
-              <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
-                Click anywhere to continue
-              </p>
-            );
-          }, 5000)}
+          {isSystemReady && (
+            <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
+              Click anywhere to continue
+            </p>
+          )}
           <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
         </div>
       </div>
-</old_str>
     </div>
   );
 }
