@@ -1,63 +1,64 @@
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Upload, Play } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DosPlayer } from 'js-dos';
 
 export function EmulatorApp() {
   const [gameFile, setGameFile] = useState<File | null>(null);
-  const [system, setSystem] = useState<string>('nes');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  const systemExtensions: { [key: string]: string[] } = {
-    nes: ['.nes'],
-    snes: ['.smc', '.sfc'],
-    n64: ['.n64', '.z64'],
-    gba: ['.gba'],
-    psx: ['.iso', '.bin'],
-    sega: ['.md', '.gen'],
-    dos: ['.exe', '.com']
-  };
+  const emulatorRef = useRef<HTMLDivElement>(null);
+  const dosPlayerRef = useRef<DosPlayer | null>(null);
 
-  const systemNames: { [key: string]: string } = {
-    nes: 'Nintendo (NES)',
-    snes: 'Super Nintendo',
-    n64: 'Nintendo 64',
-    gba: 'Game Boy Advance',
-    psx: 'PlayStation',
-    sega: 'Sega Genesis',
-    dos: 'DOS'
-  };
-  
+  useEffect(() => {
+    return () => {
+      if (dosPlayerRef.current) {
+        dosPlayerRef.current.exit();
+      }
+    };
+  }, []);
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    const validExtensions = systemExtensions[system];
-    if (file && validExtensions.some(ext => file.name.toLowerCase().endsWith(ext))) {
+    if (file) {
       setGameFile(file);
     }
   };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const validExtensions = systemExtensions[system];
-    if (file && validExtensions.some(ext => file.name.toLowerCase().endsWith(ext))) {
+    if (file) {
       setGameFile(file);
     }
   };
 
   const handlePlay = async () => {
-    if (!gameFile) return;
-    
-    // Create object URL for the ROM file
-    const gameUrl = URL.createObjectURL(gameFile);
+    if (!gameFile || !emulatorRef.current) return;
     
     try {
-      // Initialize appropriate emulator based on system
-      // This is where you'd integrate with actual emulator cores
-      console.log(`Playing ${system.toUpperCase()} game:`, gameFile.name);
-      console.log('Game URL:', gameUrl);
+      // Clear previous emulator
+      emulatorRef.current.innerHTML = '';
+      
+      // Create canvas
+      const canvas = document.createElement('canvas');
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
+      emulatorRef.current.appendChild(canvas);
+
+      // Initialize js-dos
+      const dos = require('js-dos');
+      const ci = await dos(canvas, { 
+        wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js" 
+      });
+      
+      // Load game file
+      const buffer = await gameFile.arrayBuffer();
+      await ci.loadFile(gameFile.name, new Uint8Array(buffer));
+      await ci.run();
+      
+      dosPlayerRef.current = ci;
     } catch (error) {
       console.error('Error loading game:', error);
     }
@@ -69,26 +70,14 @@ export function EmulatorApp() {
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
-      <h2 className="text-xl mb-4">Game Console Emulator</h2>
+      <h2 className="text-xl mb-4">Game Emulator</h2>
       <div className="flex flex-col items-center gap-4">
-        <Select value={system} onValueChange={setSystem}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Select system" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(systemNames).map(([key, name]) => (
-              <SelectItem key={key} value={key}>{name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
         <div className="text-center text-muted-foreground">
-          {gameFile ? `Loaded: ${gameFile.name}` : `Drop ${systemExtensions[system].join('/')} ROM file to play`}
+          {gameFile ? `Loaded: ${gameFile.name}` : 'Drop ROM file to play'}
         </div>
         
         <input
           type="file"
-          accept={systemExtensions[system].join(',')}
           className="hidden"
           ref={fileInputRef}
           onChange={handleUpload}
@@ -112,6 +101,11 @@ export function EmulatorApp() {
             </Button>
           )}
         </div>
+        
+        <div 
+          ref={emulatorRef}
+          className="w-full aspect-video bg-black/10 rounded-lg overflow-hidden"
+        />
       </div>
     </Card>
   );
