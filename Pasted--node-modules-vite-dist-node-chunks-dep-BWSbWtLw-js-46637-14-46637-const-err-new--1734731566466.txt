@@ -1,0 +1,54 @@
+
+    node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:46637:14:
+      46637 │   const err = new Error(
+            ╵               ^
+
+    at packageEntryFailure (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:46637:15)
+    at resolvePackageEntry (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:46634:3)
+    at tryNodeResolve (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:46450:16)
+    at ResolveIdContext.resolveId (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:46200:19)
+    at PluginContainer.resolveId (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:49015:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at resolve (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:49627:22)
+    at <anonymous> (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:49798:28)
+    at async requestCallbacks.on-resolve (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:1225:22)
+    at async handleRequest (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:647:11)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:49786:12:
+      49786 │       build.onResolve(
+            ╵             ~~~~~~~~~
+
+    at setup (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:49786:13)
+    at handlePlugins (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:1150:21)
+    at buildOrContextImpl (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:873:5)
+    at Object.buildOrContext (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:699:5)
+    at /home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:2032:68
+    at new Promise (<anonymous>)
+    at Object.context (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:2032:27)
+    at Object.context (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:1874:58)
+    at prepareEsbuildScanner (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:49573:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    client/src/components/apps/EmulatorApp.tsx:51:26:
+      51 │       const dos = require('js-dos');
+         ╵                           ~~~~~~~~
+
+
+    at failureErrorWithLog (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:945:25
+    at runOnEndCallbacks (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:1315:45)
+    at buildResponseToResult (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:943:7)
+    at /home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:955:9
+    at new Promise (<anonymous>)
+    at requestCallbacks.on-end (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:954:54)
+    at handleRequest (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:647:17)
+    at handleIncomingPacket (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:672:7)
+    at Socket.readFromStdout (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)

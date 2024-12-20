@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Upload, Play } from 'lucide-react';
-import { DosPlayer } from 'js-dos';
+import type { DosPlayer } from 'js-dos';
 
 export function EmulatorApp() {
   const [gameFile, setGameFile] = useState<File | null>(null);
@@ -48,9 +48,10 @@ export function EmulatorApp() {
       emulatorRef.current.appendChild(canvas);
 
       // Initialize js-dos
-      const dos = require('js-dos');
-      const ci = await dos(canvas, { 
-        wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js" 
+      const { DosFactory } = await import('js-dos');
+      const dosFactory = DosFactory();
+      const ci = await dosFactory(canvas, {
+        wdosboxUrl: "/wdosbox.js"
       });
       
       // Load game file
