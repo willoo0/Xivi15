@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./client/src"),
+      "@": path.resolve(__dirname, "client/src"),
       "js-dos": path.resolve(__dirname, "node_modules/js-dos/dist/js-dos.js")
     }
   },
@@ -20,5 +20,9 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5000
+  },
+  root: path.resolve(__dirname, 'client'),
+  build: {
+    outDir: path.resolve(__dirname, 'dist')
   }
 });
