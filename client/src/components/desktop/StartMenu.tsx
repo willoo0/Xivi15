@@ -1,10 +1,11 @@
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useDesktopStore } from "@/store/desktop";
 import { ContextMenu } from "./ContextMenu";
 import { nanoid } from "nanoid";
-import { AppWindow, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File, Music } from "lucide-react";
+import { AppWindow, Cloud, Layout, Game, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File, Music, Gamepad, PlaySquare, Laptop, MonitorPlay } from "lucide-react";
 import { getAppIcon } from "@/lib/appIcons";
 
 interface StartMenuProps {
@@ -138,7 +139,7 @@ const apps = [
     category: "Emulators",
   },
   {
-    id: "snes-emu", 
+    id: "snes-emu",
     title: "SNES Emulator",
     component: "SNESEmulator",
     icon: Gamepad,
@@ -147,7 +148,7 @@ const apps = [
   {
     id: "gba-emu",
     title: "GBA Emulator",
-    component: "GBAEmulator", 
+    component: "GBAEmulator",
     icon: Game,
     category: "Emulators",
   },
@@ -190,56 +191,6 @@ const categories = [
   "Applications",
   "Emulators",
 ];
-  // Existing apps...
-  {
-    id: "nes-emu",
-    title: "NES Emulator",
-    component: "NESEmulator",
-    icon: Gamepad,
-    category: "Emulators",
-  },
-  {
-    id: "snes-emu",
-    title: "SNES Emulator",
-    component: "SNESEmulator",
-    icon: Gamepad,
-    category: "Emulators",
-  },
-  {
-    id: "gba-emu",
-    title: "GBA Emulator",
-    component: "GBAEmulator",
-    icon: Game,
-    category: "Emulators",
-  },
-  {
-    id: "n64-emu",
-    title: "N64 Emulator",
-    component: "N64Emulator",
-    icon: Game,
-    category: "Emulators",
-  },
-  {
-    id: "psx-emu",
-    title: "PlayStation Emulator",
-    component: "PSXEmulator",
-    icon: PlaySquare,
-    category: "Emulators",
-  },
-  {
-    id: "sega-emu",
-    title: "Sega Genesis Emulator",
-    component: "SegaEmulator",
-    icon: MonitorPlay,
-    category: "Emulators",
-  },
-  {
-    id: "dos-emu",
-    title: "DOS Emulator",
-    component: "DOSEmulator",
-    icon: Laptop,
-    category: "Emulators",
-  },
 
 export function StartMenu({ onClose }: StartMenuProps) {
   const { addWindow } = useDesktopStore();
