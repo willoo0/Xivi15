@@ -22,7 +22,6 @@ import {
   Laptop,
   PlaySquare,
   MonitorPlay,
-  Game,
 } from 'lucide-react';
 
 export const appIcons: Record<string, any> = {
@@ -48,8 +47,8 @@ export const appIcons: Record<string, any> = {
   MusicPlayer: Music,
   NESEmulator: Gamepad,
   SNESEmulator: Gamepad,
-  GBAEmulator: Game,
-  N64Emulator: Game,
+  GBAEmulator: Gamepad2,
+  N64Emulator: Gamepad2,
   PSXEmulator: PlaySquare,
   SegaEmulator: MonitorPlay,
   DOSEmulator: Laptop,
