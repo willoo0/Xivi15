@@ -136,13 +136,6 @@ const apps = [
     component: "EmulatorApp",
     icon: Gamepad2,
     category: "Games",
-  },
-  {
-    id: "dos-emu",
-    title: "DOS Emulator",
-    component: "DOSEmulator",
-    icon: Laptop,
-    category: "Emulators",
   }
 ];
 

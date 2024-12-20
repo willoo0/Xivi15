@@ -33,7 +33,6 @@ import { WorstCaseScenario } from './apps/WorstCaseScenario';
 import { PhotoViewer } from './apps/PhotoViewer'
 import { MusicPlayer } from './apps/MusicPlayer'
 import { EmulatorApp } from './apps/EmulatorApp'
-import { DOSEmulator } from './apps/emulators/DOSEmulator'
 
 const components: { [key: string]: React.ComponentType } = {
   TextEditor,
