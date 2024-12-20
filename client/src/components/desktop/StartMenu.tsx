@@ -21,7 +21,7 @@ const apps = [
   },
   {
     id: "games",
-    title: "Games",
+    title: "Custom Apps",
     component: "Games",
     icon: Gamepad2,
     category: "Applications",
