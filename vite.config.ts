@@ -1,39 +1,28 @@
 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
-import path, { dirname } from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-import { fileURLToPath } from "url";
+import path from "path";
+import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [react(), runtimeErrorOverlay(), themePlugin()],
+  plugins: [react()],
   resolve: {
     alias: {
-      "@db": path.resolve(__dirname, "db"),
-      "@": path.resolve(__dirname, "client", "src"),
-    },
-  },
-  root: path.resolve(__dirname, "client"),
-  build: {
-    outDir: path.resolve(__dirname, "dist/public"),
-    emptyOutDir: true,
+      "@": path.resolve(__dirname, "client/src"),
+      "js-dos": path.resolve(__dirname, "node_modules/js-dos/dist/js-dos.js")
+    }
   },
   optimizeDeps: {
-    exclude: [
-      '@radix-ui/react-icons', 
-      '@radix-ui/react-tooltip',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-slot',
-      '@radix-ui/react-primitive',
-      'framer-motion',
-      'recharts',
-      'vaul',
-      'cmdk',
-      '@replit/vite-plugin-runtime-error-modal'
-    ]
+    include: ['js-dos']
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 5000
+  },
+  root: path.resolve(__dirname, 'client'),
+  build: {
+    outDir: path.resolve(__dirname, 'dist')
   }
 });

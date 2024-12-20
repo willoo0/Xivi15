@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Maximize2, Minimize2, X } from 'lucide-react'
@@ -25,14 +24,30 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && !isMaximized && windowRef.current) {
-        const newX = e.clientX - dragOffset.x
-        const newY = e.clientY - dragOffset.y
-        updateWindowPosition(id, { x: newX, y: newY })
+        const rect = windowRef.current.getBoundingClientRect();
+        const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
+        const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
+        
+        requestAnimationFrame(() => {
+          updateWindowPosition(id, {
+            x: newX,
+            y: newY
+          })
+        });
       }
     }
 
     const handleMouseUp = () => {
       setIsDragging(false)
+    }
+
+    const handleClose = () => {
+      if (windowRef.current) {
+        windowRef.current.classList.add('fade-out')
+        windowRef.current.addEventListener('animationend', () => {
+          removeWindow(id)
+        }, { once: true })
+      }
     }
 
     if (isDragging) {
@@ -62,19 +77,24 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     return null
   }
 
+  const constrainedY = Math.min(
+    Math.max(position?.y ?? 0, 8),
+    window.innerHeight - (position?.height ?? 400) - 48
+  )
+
   return (
     <Card
       ref={windowRef}
       className={cn(
-        'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in',
-        isMaximized && 'fixed inset-0 !w-full !h-full'
+        'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in window-transition',
+        isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
         left: position?.x ?? 100,
-        top: position?.y ?? 40,
+        top: position?.y ?? 40, // Start below topbar
         width: isMaximized ? '100%' : (position?.width ?? 600),
-        height: isMaximized ? '100%' : (position?.height ?? 400),
-        zIndex,
+        height: isMaximized ? 'calc(100% - 88px)' : (position?.height ?? 400), // Account for topbar and taskbar
+        zIndex
       }}
       onClick={() => setActiveWindow(id)}
     >
@@ -96,7 +116,15 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
           </Button>
         </div>
       </div>
-      <div className="flex-1 overflow-auto p-4">
+      <div 
+        className="flex-1 overflow-auto p-4" 
+        onWheel={(e) => {
+          // Stop propagation only for non-game windows
+          if (!['Tetris', 'Minesweeper'].includes(title)) {
+            e.stopPropagation();
+          }
+        }}
+      >
         {children}
       </div>
     </Card>

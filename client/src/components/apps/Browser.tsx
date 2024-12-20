@@ -18,14 +18,16 @@ export function Browser() {
     { id: 1, url: 'about:blank', title: 'New Tab' }
   ])
   const [activeTab, setActiveTab] = useState(1)
-  const [inputUrl, setInputUrl] = useState('')
-  const [history, setHistory] = useState<{ [key: number]: string[] }>({})
-  const [historyIndex, setHistoryIndex] = useState<{ [key: number]: number }>({})
+  const [inputUrl, setInputUrl] = useState('https://www.google.com')
+  const [history, setHistory] = useState<{ [key: number]: string[] }>({ 1: ['https://www.google.com'] })
+  const [historyIndex, setHistoryIndex] = useState<{ [key: number]: number }>({ 1: 0 })
   const [loading, setLoading] = useState(false)
 
   const navigate = useCallback((tabId: number, url: string, addToHistory = true) => {
     let finalUrl = url.trim()
-    if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+    try {
+      new URL(finalUrl)
+    } catch {
       finalUrl = `https://${finalUrl}`
     }
 
@@ -36,7 +38,8 @@ export function Browser() {
 
     if (addToHistory) {
       setHistory(prev => {
-        const tabHistory = [...(prev[tabId] || []), finalUrl]
+        const tabHistory = [...(prev[tabId] || []).slice(0, (historyIndex[tabId] || 0) + 1)]
+        tabHistory.push(finalUrl)
         return { ...prev, [tabId]: tabHistory }
       })
       setHistoryIndex(prev => ({
@@ -44,24 +47,34 @@ export function Browser() {
         [tabId]: (prev[tabId] || 0) + 1
       }))
     }
-  }, [])
+  }, [historyIndex])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const query = inputUrl.trim()
+    let finalUrl = inputUrl.trim()
     
     try {
-      new URL(query)
-      navigate(activeTab, query)
+      new URL(finalUrl)
+      if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+        finalUrl = `https://${finalUrl}`
+      }
     } catch {
-      navigate(activeTab, `https://www.google.com/search?q=${encodeURIComponent(query)}`)
+      finalUrl = `https://www.google.com/search?q=${encodeURIComponent(finalUrl)}`
     }
+    
+    navigate(activeTab, finalUrl)
   }
 
   const addTab = () => {
     const newId = Math.max(...tabs.map(t => t.id)) + 1
-    setTabs([...tabs, { id: newId, url: 'about:blank', title: 'New Tab' }])
+    setTabs([...tabs, { 
+      id: newId, 
+      url: 'about:blank', 
+      title: 'New Tab'
+    }])
     setActiveTab(newId)
+    setHistory(prev => ({ ...prev, [newId]: ['about:blank'] }))
+    setHistoryIndex(prev => ({ ...prev, [newId]: 0 }))
   }
 
   const closeTab = (id: number, e: React.MouseEvent) => {
@@ -75,6 +88,44 @@ export function Browser() {
     }
   }
 
+  const goBack = () => {
+    const currentIndex = historyIndex[activeTab] || 0
+    if (currentIndex > 0) {
+      const newIndex = currentIndex - 1
+      const url = history[activeTab][newIndex]
+      navigate(activeTab, url, false)
+      setHistoryIndex(prev => ({ ...prev, [activeTab]: newIndex }))
+    }
+  }
+
+  const goForward = () => {
+    const currentIndex = historyIndex[activeTab] || 0
+    const tabHistory = history[activeTab] || []
+    if (currentIndex < tabHistory.length - 1) {
+      const newIndex = currentIndex + 1
+      const url = tabHistory[newIndex]
+      navigate(activeTab, url, false)
+      setHistoryIndex(prev => ({ ...prev, [activeTab]: newIndex }))
+    }
+  }
+
+  const refresh = () => {
+    const tab = tabs.find(t => t.id === activeTab)
+    if (tab) {
+      navigate(activeTab, tab.url)
+    }
+  }
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'navigate' && event.data?.url) {
+        navigate(activeTab, event.data.url)
+      }
+    }
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [activeTab, navigate])
+
   const currentTab = tabs.find(t => t.id === activeTab)
 
   return (
@@ -84,24 +135,20 @@ export function Browser() {
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => history[activeTab]?.length > 1 && window.history.back()}
-            disabled={!history[activeTab] || (historyIndex[activeTab] || 0) <= 0}
+            onClick={goBack}
+            disabled={!history[activeTab] || (historyIndex[activeTab] || 0) === 0}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => window.history.forward()}
-            disabled={true}
+            onClick={goForward}
+            disabled={!history[activeTab] || (historyIndex[activeTab] || 0) >= (history[activeTab]?.length || 0) - 1}
           >
             <ArrowRight className="h-4 w-4" />
           </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => currentTab && navigate(activeTab, currentTab.url)}
-          >
+          <Button variant="ghost" size="icon" onClick={refresh}>
             <RotateCw className={cn("h-4 w-4", loading && "animate-spin")} />
           </Button>
           
@@ -113,7 +160,7 @@ export function Browser() {
                 value={inputUrl}
                 onChange={(e) => setInputUrl(e.target.value)}
                 className="pl-8"
-                placeholder="Search or enter website name"
+                placeholder="Enter URL"
               />
             </div>
           </form>
@@ -126,9 +173,14 @@ export function Browser() {
                 key={tab.id}
                 value={String(tab.id)}
                 onClick={() => setActiveTab(tab.id)}
-                className="flex items-center gap-2 px-4 data-[state=active]:bg-muted relative group"
+                className={cn(
+                  "flex items-center gap-2 px-4 data-[state=active]:bg-muted",
+                  "relative group"
+                )}
               >
-                {tab.icon && <img src={tab.icon} className="h-4 w-4" alt="" />}
+                {tab.icon && (
+                  <img src={tab.icon} className="h-4 w-4" alt="" />
+                )}
                 <span className="max-w-[120px] truncate">{tab.title}</span>
                 <X 
                   className="h-4 w-4 opacity-0 group-hover:opacity-100" 
@@ -149,7 +201,7 @@ export function Browser() {
       </div>
       
       <div className="flex-1 relative">
-        {currentTab?.url === 'about:blank' ? (
+        {currentTab && currentTab.url === 'about:blank' ? (
           <StartPage onNavigate={(url) => navigate(activeTab, url)} />
         ) : (
           currentTab && (
@@ -157,20 +209,8 @@ export function Browser() {
               key={`${currentTab.id}-${currentTab.url}`}
               src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
-              sandbox="allow-same-origin allow-scripts allow-forms"
-              onLoad={(e) => {
-                setLoading(false);
-                const frame = e.target as HTMLIFrameElement;
-                frame.contentWindow?.document.querySelectorAll('a').forEach(link => {
-                  link.onclick = (e) => {
-                    e.preventDefault();
-                    const href = link.getAttribute('href');
-                    if (href) {
-                      navigate(currentTab.id, href);
-                    }
-                  };
-                });
-              }}
+              sandbox="allow-same-origin allow-scripts"
+              onLoad={() => setLoading(false)}
               onLoadStart={() => setLoading(true)}
             />
           )

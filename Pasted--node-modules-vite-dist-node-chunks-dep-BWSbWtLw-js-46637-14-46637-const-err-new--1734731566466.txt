@@ -1,6 +1,4 @@
 
-  ✘ [ERROR] Failed to resolve entry for package "js-dos". The package may have incorrect main/module/exports specified in its package.json. [plugin vite:dep-scan]
-
     node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:46637:14:
       46637 │   const err = new Error(
             ╵               ^
@@ -34,9 +32,9 @@
 
   The plugin "vite:dep-scan" was triggered by this import
 
-    client/src/components/apps/EmulatorApp.tsx:51:42:
-      51 │       const { DosFactory } = await import('js-dos');
-         ╵                                           ~~~~~~~~
+    client/src/components/apps/EmulatorApp.tsx:51:26:
+      51 │       const dos = require('js-dos');
+         ╵                           ~~~~~~~~
 
 
     at failureErrorWithLog (/home/runner/Xivi-15/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)

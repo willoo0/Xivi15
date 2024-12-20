@@ -96,7 +96,7 @@ export function Games() {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
         <Gamepad2 className="h-6 w-6" />
-        Games Hub
+        Custom Apps
       </h2>
       <div className="grid grid-cols-2 gap-4">
         {games.map((game) => {
@@ -105,7 +105,7 @@ export function Games() {
             <Button
               key={game.component}
               variant="outline"
-              className="h-[160px] w-full text-lg flex flex-col items-center justify-center gap-3 p-6"
+              className="h-[160px] w-full text-lg flex flex-col items-center justify-center gap-3 p-6 hover:bg-accent"
               onClick={() => launchGame(game)}
             >
               <Icon className="h-8 w-8" />

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDesktopStore } from "@/store/desktop";
 import { ContextMenu } from "./ContextMenu";
 import { nanoid } from "nanoid";
-import { AppWindow, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File, Music } from "lucide-react";
+import { AppWindow, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File, Music, Gamepad, PlaySquare, Laptop, MonitorPlay } from "lucide-react";
 import { getAppIcon } from "@/lib/appIcons";
 
 interface StartMenuProps {
@@ -21,7 +21,7 @@ const apps = [
   },
   {
     id: "games",
-    title: "Games",
+    title: "Custom Apps",
     component: "Games",
     icon: Gamepad2,
     category: "Applications",
@@ -130,6 +130,13 @@ const apps = [
     icon: Settings,
     category: "System",
   },
+  {
+    id: "emulator",
+    title: "Game Console Emulator",
+    component: "EmulatorApp",
+    icon: Gamepad2,
+    category: "Games",
+  }
 ];
 
 const categories = [
@@ -139,6 +146,8 @@ const categories = [
   "System",
   "Accessories",
   "Applications",
+  "Emulators",
+  "Games"
 ];
 
 export function StartMenu({ onClose }: StartMenuProps) {
