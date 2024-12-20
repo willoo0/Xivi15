@@ -33,7 +33,6 @@ import { WorstCaseScenario } from './apps/WorstCaseScenario';
 import { PhotoViewer } from './apps/PhotoViewer'
 import { MusicPlayer } from './apps/MusicPlayer'
 
-
 const components: { [key: string]: React.ComponentType } = {
   TextEditor,
   Calculator,
@@ -61,8 +60,7 @@ const components: { [key: string]: React.ComponentType } = {
   WorstCaseScenario,
   PDFViewer,
   PhotoViewer,
-  MusicPlayer,
-  EmulatorApp,
+  MusicPlayer
 }
 
 // Use background images from public folder
