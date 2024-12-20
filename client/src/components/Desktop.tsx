@@ -102,7 +102,9 @@ export function Desktop() {
       onContextMenu={(e) => e.preventDefault()}
       style={{
         backgroundColor: theme === 'dark' ? 'hsl(222.2 84% 4.9%)' : 'hsl(0 0% 100%)',
-        backgroundImage: `url(${theme === 'dark' ? '/dark-theme.jpg' : '/light-theme.jpg'})`,
+        backgroundImage: theme === 'dark' 
+          ? 'linear-gradient(to bottom, hsl(222.2 84% 4.9%), hsl(222.2 47.4% 11.2%))'
+          : 'linear-gradient(to bottom, hsl(0 0% 100%), hsl(0 0% 96.1%))',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
