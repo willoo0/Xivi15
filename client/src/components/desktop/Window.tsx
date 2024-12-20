@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
-import { Maximize2, Minimize2, X } from 'lucide-react'
+import { Maximize2, Minus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useDesktopStore, type WindowPosition } from '@/store/desktop'
 import { cn } from '@/lib/utils'
@@ -104,7 +104,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         <div className="font-medium">{title}</div>
         <div className="flex items-center space-x-2">
           <Button variant="ghost" size="icon" onClick={() => toggleMinimize(id)}>
-            <Minimize2 className="h-4 w-4" />
+            <Minus className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
             <Maximize2 className="h-4 w-4" />
