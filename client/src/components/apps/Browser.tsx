@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -158,8 +157,20 @@ export function Browser() {
               key={`${currentTab.id}-${currentTab.url}`}
               src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
-              sandbox="allow-same-origin allow-scripts"
-              onLoad={() => setLoading(false)}
+              sandbox="allow-same-origin allow-scripts allow-forms"
+              onLoad={(e) => {
+                setLoading(false);
+                const frame = e.target as HTMLIFrameElement;
+                frame.contentWindow?.document.querySelectorAll('a').forEach(link => {
+                  link.onclick = (e) => {
+                    e.preventDefault();
+                    const href = link.getAttribute('href');
+                    if (href) {
+                      navigate(currentTab.id, href);
+                    }
+                  };
+                });
+              }}
               onLoadStart={() => setLoading(true)}
             />
           )

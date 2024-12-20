@@ -88,13 +88,14 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
-        left: 0,
-        top: 0,
-        transform: `translate3d(${position?.x ?? 100}px, ${position?.y ?? 40}px, 0)`,
+        left: isMaximized ? 0 : position?.x ?? 100,
+        top: isMaximized ? 8 : position?.y ?? 40,
+        transform: isMaximized ? 'none' : `translate3d(${position?.x ?? 100}px, ${position?.y ?? 40}px, 0)`,
         width: isMaximized ? '100%' : (position?.width ?? 600),
-        height: isMaximized ? 'calc(100% - 88px)' : (position?.height ?? 400), // Account for topbar and taskbar
+        height: isMaximized ? 'calc(100% - 48px)' : (position?.height ?? 400),
         zIndex,
-        willChange: 'transform'
+        willChange: 'transform',
+        transition: 'all 0.2s ease'
       }}
       onClick={() => setActiveWindow(id)}
     >
