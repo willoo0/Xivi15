@@ -63,7 +63,6 @@ const components: { [key: string]: React.ComponentType } = {
   PhotoViewer,
   MusicPlayer,
   EmulatorApp,
-  DOSEmulator
 }
 
 // Use background images from public folder
