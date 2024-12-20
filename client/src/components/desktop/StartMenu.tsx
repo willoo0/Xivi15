@@ -149,14 +149,14 @@ const apps = [
     id: "gba-emu",
     title: "GBA Emulator",
     component: "GBAEmulator",
-    icon: Game,
+    icon: Gamepad2,
     category: "Emulators",
   },
   {
     id: "n64-emu",
     title: "N64 Emulator",
     component: "N64Emulator",
-    icon: Game,
+    icon: Gamepad2,
     category: "Emulators",
   },
   {
