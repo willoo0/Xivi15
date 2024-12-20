@@ -44,3 +44,22 @@ export const appIcons: Record<string, any> = {
 };
 
 export const getAppIcon = (component: string) => appIcons[component] || AppWindow;
+import {
+  Gamepad,
+  Laptop,
+  PlaySquare,
+  MonitorPlay,
+  Game,
+} from 'lucide-react';
+
+// Add to existing appIcons
+export const appIcons = {
+  ...appIcons,
+  NESEmulator: Gamepad,
+  SNESEmulator: Gamepad,
+  GBAEmulator: Game,
+  N64Emulator: Game,
+  PSXEmulator: PlaySquare,
+  SegaEmulator: MonitorPlay,
+  DOSEmulator: Laptop,
+};

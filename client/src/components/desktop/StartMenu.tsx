@@ -139,7 +139,60 @@ const categories = [
   "System",
   "Accessories",
   "Applications",
+  "Emulators",
 ];
+
+const apps = [
+  // Existing apps...
+  {
+    id: "nes-emu",
+    title: "NES Emulator",
+    component: "NESEmulator",
+    icon: Gamepad,
+    category: "Emulators",
+  },
+  {
+    id: "snes-emu",
+    title: "SNES Emulator",
+    component: "SNESEmulator",
+    icon: Gamepad,
+    category: "Emulators",
+  },
+  {
+    id: "gba-emu",
+    title: "GBA Emulator",
+    component: "GBAEmulator",
+    icon: Game,
+    category: "Emulators",
+  },
+  {
+    id: "n64-emu",
+    title: "N64 Emulator",
+    component: "N64Emulator",
+    icon: Game,
+    category: "Emulators",
+  },
+  {
+    id: "psx-emu",
+    title: "PlayStation Emulator",
+    component: "PSXEmulator",
+    icon: PlaySquare,
+    category: "Emulators",
+  },
+  {
+    id: "sega-emu",
+    title: "Sega Genesis Emulator",
+    component: "SegaEmulator",
+    icon: MonitorPlay,
+    category: "Emulators",
+  },
+  {
+    id: "dos-emu",
+    title: "DOS Emulator",
+    component: "DOSEmulator",
+    icon: Laptop,
+    category: "Emulators",
+  },
 
 export function StartMenu({ onClose }: StartMenuProps) {
   const { addWindow } = useDesktopStore();
