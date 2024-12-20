@@ -17,7 +17,12 @@ import {
   Hammer,
   AppWindow,
   Hand,
-  Music
+  Music,
+  Gamepad,
+  Laptop,
+  PlaySquare,
+  MonitorPlay,
+  Game,
 } from 'lucide-react';
 
 export const appIcons: Record<string, any> = {
@@ -41,20 +46,6 @@ export const appIcons: Record<string, any> = {
   PDFViewer: FileText,
   PhotoViewer: ImageIcon,
   MusicPlayer: Music,
-};
-
-export const getAppIcon = (component: string) => appIcons[component] || AppWindow;
-import {
-  Gamepad,
-  Laptop,
-  PlaySquare,
-  MonitorPlay,
-  Game,
-} from 'lucide-react';
-
-// Add to existing appIcons
-export const appIcons = {
-  ...appIcons,
   NESEmulator: Gamepad,
   SNESEmulator: Gamepad,
   GBAEmulator: Game,
@@ -63,3 +54,5 @@ export const appIcons = {
   SegaEmulator: MonitorPlay,
   DOSEmulator: Laptop,
 };
+
+export const getAppIcon = (component: string) => appIcons[component] || AppWindow;
