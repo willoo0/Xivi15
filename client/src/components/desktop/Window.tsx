@@ -28,10 +28,12 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
         const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
         
-        updateWindowPosition(id, {
-          x: newX,
-          y: newY
-        })
+        requestAnimationFrame(() => {
+          updateWindowPosition(id, {
+            x: newX,
+            y: newY
+          })
+        });
       }
     }
 
