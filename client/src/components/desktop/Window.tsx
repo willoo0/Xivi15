@@ -24,14 +24,14 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && !isMaximized && windowRef.current) {
-        const rect = windowRef.current.getBoundingClientRect();
-        const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
-        const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
-        
-        updateWindowPosition(id, {
-          x: newX,
-          y: newY
-        })
+        requestAnimationFrame(() => {
+          if (!windowRef.current) return;
+          const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - windowRef.current.offsetWidth));
+          const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - windowRef.current.offsetHeight));
+          
+          windowRef.current.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
+          updateWindowPosition(id, { x: newX, y: newY });
+        });
       }
     }
 
@@ -88,11 +88,13 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
         isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
-        left: position?.x ?? 100,
-        top: position?.y ?? 40, // Start below topbar
+        left: 0,
+        top: 0,
+        transform: `translate3d(${position?.x ?? 100}px, ${position?.y ?? 40}px, 0)`,
         width: isMaximized ? '100%' : (position?.width ?? 600),
         height: isMaximized ? 'calc(100% - 88px)' : (position?.height ?? 400), // Account for topbar and taskbar
-        zIndex
+        zIndex,
+        willChange: 'transform'
       }}
       onClick={() => setActiveWindow(id)}
     >
