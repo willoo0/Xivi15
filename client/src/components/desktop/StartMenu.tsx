@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -132,46 +131,11 @@ const apps = [
     category: "System",
   },
   {
-    id: "nes-emu",
-    title: "NES Emulator",
-    component: "NESEmulator",
-    icon: Gamepad,
-    category: "Emulators",
-  },
-  {
-    id: "snes-emu",
-    title: "SNES Emulator",
-    component: "SNESEmulator",
-    icon: Gamepad,
-    category: "Emulators",
-  },
-  {
-    id: "gba-emu",
-    title: "GBA Emulator",
-    component: "GBAEmulator",
+    id: "emulator",
+    title: "Game Console Emulator",
+    component: "EmulatorApp",
     icon: Gamepad2,
-    category: "Emulators",
-  },
-  {
-    id: "n64-emu",
-    title: "N64 Emulator",
-    component: "N64Emulator",
-    icon: Gamepad2,
-    category: "Emulators",
-  },
-  {
-    id: "psx-emu",
-    title: "PlayStation Emulator",
-    component: "PSXEmulator",
-    icon: PlaySquare,
-    category: "Emulators",
-  },
-  {
-    id: "sega-emu",
-    title: "Sega Genesis Emulator",
-    component: "SegaEmulator",
-    icon: MonitorPlay,
-    category: "Emulators",
+    category: "Games",
   },
   {
     id: "dos-emu",
@@ -190,6 +154,7 @@ const categories = [
   "Accessories",
   "Applications",
   "Emulators",
+  "Games"
 ];
 
 export function StartMenu({ onClose }: StartMenuProps) {

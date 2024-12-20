@@ -32,12 +32,7 @@ import { Snow } from './apps/Snow';
 import { WorstCaseScenario } from './apps/WorstCaseScenario';
 import { PhotoViewer } from './apps/PhotoViewer'
 import { MusicPlayer } from './apps/MusicPlayer'
-import { NESEmulator } from './apps/emulators/NESEmulator'
-import { SNESEmulator } from './apps/emulators/SNESEmulator'
-import { GBAEmulator } from './apps/emulators/GBAEmulator'
-import { N64Emulator } from './apps/emulators/N64Emulator'
-import { PSXEmulator } from './apps/emulators/PSXEmulator'
-import { SegaEmulator } from './apps/emulators/SegaEmulator'
+import { EmulatorApp } from './apps/EmulatorApp'
 import { DOSEmulator } from './apps/emulators/DOSEmulator'
 
 const components: { [key: string]: React.ComponentType } = {
@@ -68,12 +63,7 @@ const components: { [key: string]: React.ComponentType } = {
   PDFViewer,
   PhotoViewer,
   MusicPlayer,
-  NESEmulator,
-  SNESEmulator,
-  GBAEmulator,
-  N64Emulator,
-  PSXEmulator,
-  SegaEmulator,
+  EmulatorApp,
   DOSEmulator
 }
 
