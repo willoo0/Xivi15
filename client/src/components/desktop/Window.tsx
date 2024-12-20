@@ -24,15 +24,13 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && !isMaximized && windowRef.current) {
-        const rect = windowRef.current.getBoundingClientRect();
-        const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
-        const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
-        
         requestAnimationFrame(() => {
-          updateWindowPosition(id, {
-            x: newX,
-            y: newY
-          })
+          if (!windowRef.current) return;
+          const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - windowRef.current.offsetWidth));
+          const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - windowRef.current.offsetHeight));
+          
+          windowRef.current.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
+          updateWindowPosition(id, { x: newX, y: newY });
         });
       }
     }
