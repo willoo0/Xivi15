@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -207,9 +208,8 @@ export function Browser() {
           currentTab && (
             <iframe
               key={`${currentTab.id}-${currentTab.url}`}
-              src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
+              src={`https://uv.${window.location.hostname}/${btoa(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
-              sandbox="allow-same-origin allow-scripts"
               onLoad={() => setLoading(false)}
               onLoadStart={() => setLoading(true)}
             />
