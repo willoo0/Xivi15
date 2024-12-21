@@ -213,7 +213,7 @@ export function Browser() {
           currentTab && (
             <iframe
               key={`${currentTab.id}-${currentTab.url}`}
-              src={`https://uv.${window.location.hostname}/${btoa(currentTab.url)}`}
+              src={`/uv/service/${currentTab.url}`}
               className="absolute inset-0 w-full h-full"
               onLoad={() => setLoading(false)}
               onLoadStart={() => setLoading(true)}
