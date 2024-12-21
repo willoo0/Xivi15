@@ -1,0 +1,47 @@
+
+> xivi@1.0.0 dev
+> tsx server/index.ts
+
+3:21:18 AM [express] Server running on port 5000
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    at ServerResponse.setHeader (node:_http_outgoing:655:11)
+    at ServerResponse.header (/home/runner/Xivi-15/node_modules/express/lib/response.js:794:10)
+    at ServerResponse.header (/home/runner/Xivi-15/node_modules/express/lib/response.js:797:12)
+    at <anonymous> (/home/runner/Xivi-15/server/vite.ts:64:23)
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    at ServerResponse.setHeader (node:_http_outgoing:655:11)
+    at ServerResponse.header (/home/runner/Xivi-15/node_modules/express/lib/response.js:794:10)
+    at ServerResponse.header (/home/runner/Xivi-15/node_modules/express/lib/response.js:797:12)
+    at <anonymous> (/home/runner/Xivi-15/server/vite.ts:64:23)
+3:21:19 AM [vite] Internal server error: Cannot set headers after they are sent to the client
+      at ServerResponse.setHeader (node:_http_outgoing:655:11)
+      at applyHeaders (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41800:15)
+      at applyHeaders (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41796:11)
+      at applyHeaders (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41796:11)
+      at cors (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41834:7)
+      at <anonymous> (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41871:17)
+      at originCallback (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41861:15)
+      at <anonymous> (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41866:13)
+      at optionsCallback (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41846:9)
+      at corsMiddleware (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41851:7)
+      at call (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41363:7)
+      at next (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41307:5)
+      at Function.handle (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41310:3)
+      at app (/home/runner/Xivi-15/node_modules/vite/dist/node/chunks/dep-BWSbWtLw.js:41175:37)
+      at Layer.handle [as handle_request] (/home/runner/Xivi-15/node_modules/express/lib/router/layer.js:95:5)
+      at trim_prefix (/home/runner/Xivi-15/node_modules/express/lib/router/index.js:328:13)
+      at /home/runner/Xivi-15/node_modules/express/lib/router/index.js:286:9
+      at Function.process_params (/home/runner/Xivi-15/node_modules/express/lib/router/index.js:346:12)
+      at next (/home/runner/Xivi-15/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle [as handle_request] (/home/runner/Xivi-15/node_modules/express/lib/router/layer.js:91:12)
+      at trim_prefix (/home/runner/Xivi-15/node_modules/express/lib/router/index.js:328:13)
+      at /home/runner/Xivi-15/node_modules/express/lib/router/index.js:286:9
+      at Function.process_params (/home/runner/Xivi-15/node_modules/express/lib/router/index.js:346:12)
+      at next (/home/runner/Xivi-15/node_modules/express/lib/router/index.js:280:10)
+      at SendStream.error (/home/runner/Xivi-15/node_modules/serve-static/index.js:121:7)
+      at SendStream.emit (node:events:518:28)
+      at SendStream.error (/home/runner/Xivi-15/node_modules/send/index.js:270:17)
+      at SendStream.onStatError (/home/runner/Xivi-15/node_modules/send/index.js:417:12)
+      at next (/home/runner/Xivi-15/node_modules/send/index.js:730:16)
+      at onstat (/home/runner/Xivi-15/node_modules/send/index.js:719:14)
+      at FSReqCallback.oncomplete (node:fs:197:21)
