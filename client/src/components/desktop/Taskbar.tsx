@@ -114,6 +114,7 @@ export function Taskbar() {
             return (
               <Button
                 key={window.id}
+                data-window-id={window.id}
                 variant={activeWindowId === window.id ? "secondary" : "ghost"}
                 className="h-8 px-2 text-sm"
                 onClick={() => {
