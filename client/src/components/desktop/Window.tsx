@@ -22,16 +22,24 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   const windowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let animationFrameId: number;
+    
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && !isMaximized && windowRef.current) {
-        const rect = windowRef.current.getBoundingClientRect();
-        const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
-        const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
+        cancelAnimationFrame(animationFrameId);
         
-        updateWindowPosition(id, {
-          x: newX,
-          y: newY
-        })
+        animationFrameId = requestAnimationFrame(() => {
+          const rect = windowRef.current?.getBoundingClientRect();
+          if (!rect) return;
+          
+          const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
+          const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
+          
+          updateWindowPosition(id, {
+            x: newX,
+            y: newY
+          });
+        });
       }
     }
 
