@@ -36,18 +36,18 @@
 }
 
 @keyframes minimize-to-taskbar {
-  from {
+  0% {
     opacity: 1;
     transform: scale(1) translate(0, 0);
   }
-  to {
-    opacity: 0;
-    transform: scale(var(--scale)) translate(var(--translate-x), var(--translate-y));
+  100% {
+    opacity: 0.3;
+    transform: scale(0.3) translate(calc(var(--translate-x) / 0.3), calc(var(--translate-y) / 0.3));
   }
 }
 
 .minimize-to-taskbar {
-  animation: minimize-to-taskbar 0.2s ease-out forwards;
+  animation: minimize-to-taskbar 0.15s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 .menu-transition {
