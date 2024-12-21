@@ -81,22 +81,11 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
 
   const handleMinimize = () => {
     if (windowRef.current && !isMinimized) {
-      const taskbarButton = document.querySelector(`[data-window-id="${id}"]`);
-      if (taskbarButton) {
-        const windowRect = windowRef.current.getBoundingClientRect();
-        const buttonRect = taskbarButton.getBoundingClientRect();
-        const translateX = buttonRect.left - windowRect.left;
-        const translateY = buttonRect.top - windowRect.top;
-        
-        windowRef.current.style.setProperty('--translate-x', `${translateX}px`);
-        windowRef.current.style.setProperty('--translate-y', `${translateY}px`);
-        windowRef.current.style.setProperty('--scale', `${buttonRect.width / windowRect.width}`);
-        windowRef.current.classList.add('minimize-to-taskbar');
-        windowRef.current.addEventListener('animationend', () => {
-          toggleMinimize(id);
-        }, { once: true });
-        return;
-      }
+      windowRef.current.classList.add('fade-out');
+      windowRef.current.addEventListener('animationend', () => {
+        toggleMinimize(id);
+      }, { once: true });
+      return;
     }
     toggleMinimize(id);
   }
