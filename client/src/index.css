@@ -22,6 +22,7 @@
 
 .fade-out {
   animation: fadeOut 0.15s ease-out forwards;
+  pointer-events: none;
 }
 
 @keyframes fadeOut {
