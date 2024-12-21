@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -26,7 +25,7 @@ export function Browser() {
 
   const encodeUrl = (url: string) => {
     if (url === 'about:blank') return url;
-    return `/service/uv/#${encodeURIComponent(url)}`;
+    return `/uv/service/${btoa(url)}`;
   };
 
   const navigate = useCallback((tabId: number, url: string, addToHistory = true) => {
