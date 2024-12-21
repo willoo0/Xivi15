@@ -26,7 +26,7 @@ export function Browser() {
 
   const encodeUrl = (url: string) => {
     if (url === 'about:blank') return url;
-    return `/uv/service/${btoa(url)}`;
+    return `/service/uv/#${encodeURIComponent(url)}`;
   };
 
   const navigate = useCallback((tabId: number, url: string, addToHistory = true) => {
