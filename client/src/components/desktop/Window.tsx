@@ -79,6 +79,17 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     setActiveWindow(id)
   }
 
+  const handleMinimize = () => {
+    if (windowRef.current && !isMinimized) {
+      windowRef.current.classList.add('minimize')
+      windowRef.current.addEventListener('animationend', () => {
+        toggleMinimize(id)
+      }, { once: true })
+      return
+    }
+    toggleMinimize(id)
+  }
+
   if (isMinimized) {
     return null
   }
@@ -111,7 +122,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       >
         <div className="font-medium">{title}</div>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" onClick={() => toggleMinimize(id)}>
+          <Button variant="ghost" size="icon" onClick={handleMinimize}>
             <Minus className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
