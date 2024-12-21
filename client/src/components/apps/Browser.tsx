@@ -211,7 +211,7 @@ export function Browser() {
           currentTab && (
             <iframe
               key={`${currentTab.id}-${currentTab.url}`}
-              src={`/uv/service/${encodeURIComponent(currentTab.url)}`}
+              src={`/__uv${currentTab.url.startsWith('http') ? `/${btoa(currentTab.url)}` : `/${btoa('https://' + currentTab.url)}`}`}
               className="absolute inset-0 w-full h-full"
               onLoad={() => setLoading(false)}
               onLoadStart={() => setLoading(true)}
