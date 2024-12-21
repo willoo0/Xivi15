@@ -28,13 +28,11 @@ export function Browser() {
     let finalUrl = url.trim()
     try {
       new URL(finalUrl)
-      // Add proxy prefix for external URLs
-      if (!finalUrl.startsWith('/service/')) {
-        finalUrl = `/service/${btoa(finalUrl)}`
+      if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+        finalUrl = `https://${finalUrl}`
       }
     } catch {
-      // Handle search queries
-      finalUrl = `/service/${btoa(`https://www.google.com/search?q=${encodeURIComponent(url)}`)}`
+      finalUrl = `https://www.google.com/search?q=${encodeURIComponent(url)}`
     }
 
     setTabs(tabs => tabs.map(tab =>
@@ -213,7 +211,7 @@ export function Browser() {
           currentTab && (
             <iframe
               key={`${currentTab.id}-${currentTab.url}`}
-              src={`/uv/service/${currentTab.url}`}
+              src={`/uv/service/${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
               onLoad={() => setLoading(false)}
               onLoadStart={() => setLoading(true)}
