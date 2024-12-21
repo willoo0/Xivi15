@@ -28,8 +28,13 @@ export function Browser() {
     let finalUrl = url.trim()
     try {
       new URL(finalUrl)
+      // Add proxy prefix for external URLs
+      if (!finalUrl.startsWith('/service/')) {
+        finalUrl = `/service/${btoa(finalUrl)}`
+      }
     } catch {
-      finalUrl = `https://${finalUrl}`
+      // Handle search queries
+      finalUrl = `/service/${btoa(`https://www.google.com/search?q=${encodeURIComponent(url)}`)}`
     }
 
     setTabs(tabs => tabs.map(tab =>

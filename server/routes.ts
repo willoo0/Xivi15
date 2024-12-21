@@ -12,6 +12,14 @@ export function registerRoutes(app: Express): Server {
 
   app.use(express.static(path.join(process.cwd(), "public")));
   app.use("/uv/", express.static(uvPath));
+  app.use("/service/", (req, res) => {
+    try {
+      const url = atob(req.path.slice(1));
+      res.redirect(307, `/uv/service/${url}`);
+    } catch {
+      res.status(400).send('Invalid URL');
+    }
+  });
 
   server.on("request", (req, res) => {
     if (bareServer.shouldRoute(req)) {
