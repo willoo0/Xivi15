@@ -21,6 +21,17 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const windowRef = useRef<HTMLDivElement>(null)
 
+  const handleClose = () => {
+    if (windowRef.current) {
+      windowRef.current.classList.add('fade-out');
+      windowRef.current.addEventListener('animationend', () => {
+        removeWindow(id);
+      }, { once: true });
+      return;
+    }
+    removeWindow(id);
+  }
+
   useEffect(() => {
     let animationFrameId: number;
     
@@ -45,17 +56,6 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
 
     const handleMouseUp = () => {
       setIsDragging(false)
-    }
-
-    const handleClose = () => {
-      if (windowRef.current) {
-        windowRef.current.classList.add('fade-out');
-        windowRef.current.addEventListener('animationend', () => {
-          removeWindow(id);
-        }, { once: true });
-        return;
-      }
-      removeWindow(id);
     }
 
     if (isDragging) {
