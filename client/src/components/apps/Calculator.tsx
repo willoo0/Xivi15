@@ -22,9 +22,15 @@ export function Calculator() {
     setNewNumber(true)
   }
 
+  const [bsod, setBsod] = useState(false)
+
   const calculate = () => {
     if (operation && prevValue !== null) {
       const current = parseFloat(display)
+      if (operation === '/' && current === 0) {
+        setBsod(true)
+        return
+      }
       let result = 0
       switch (operation) {
         case '+': result = prevValue + current; break
@@ -37,6 +43,21 @@ export function Calculator() {
       setPrevValue(null)
       setNewNumber(true)
     }
+  }
+
+  if (bsod) {
+    return (
+      <div className="h-full bg-blue-600 text-white p-4 font-mono">
+        <h1 className="text-xl mb-4">:(</h1>
+        <p>Your calculator ran into a problem and needs to restart.</p>
+        <p className="mt-4">Error: DIVIDE_BY_ZERO_EXCEPTION</p>
+        <p className="mt-4">* Press any key to restart</p>
+        <button 
+          className="absolute inset-0 w-full h-full opacity-0"
+          onClick={() => setBsod(false)}
+        />
+      </div>
+    )
   }
 
   const clear = () => {
