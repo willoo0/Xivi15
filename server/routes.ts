@@ -1,46 +1,32 @@
-
 import express from 'express';
-import axios from 'axios';
-import jsdom from 'jsdom';
-const { JSDOM } = jsdom;
+import { createBareServer } from '@tomphttp/bare-server-node';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const router = express.Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-router.get('/proxy', async (req, res) => {
-  try {
-    const url = req.query.url as string;
-    if (!url) {
-      return res.status(400).send('URL is required');
+export function registerRoutes(app: express.Express) {
+  // Create bare server instance
+  const bareServer = createBareServer('/bare/');
+
+  // Serve UV files from public directory
+  app.use('/uv/', express.static(path.join(__dirname, '../public/uv')));
+
+  // Handle bare server requests
+  app.use((req, res, next) => {
+    if (bareServer.shouldRoute(req)) {
+      bareServer.routeRequest(req, res);
+    } else {
+      next();
     }
+  });
 
-    const response = await axios.get(url);
-    const dom = new JSDOM(response.data);
-    const document = dom.window.document;
+  // Error handler
+  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('Proxy error:', err);
+    res.status(500).send('Proxy Error');
+  });
 
-    // Inject script to handle link clicks
-    const script = document.createElement('script');
-    script.textContent = `
-      window.addEventListener('message', function(event) {
-        if (event.data.type === 'INIT_PROXY') {
-          document.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-              e.preventDefault();
-              window.parent.postMessage({
-                type: 'PROXY_NAVIGATE',
-                url: e.target.href
-              }, '*');
-            }
-          });
-        }
-      });
-    `;
-    document.head.appendChild(script);
-
-    res.send(dom.serialize());
-  } catch (error) {
-    console.error('Proxy error:', error);
-    res.status(500).send('Error fetching URL');
-  }
-});
-
-export default router;
+  return app;
+}
