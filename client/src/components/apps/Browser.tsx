@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -11,6 +12,7 @@ interface Tab {
   url: string
   title: string
   icon?: string
+  loading?: boolean
 }
 
 export function Browser() {
@@ -18,21 +20,24 @@ export function Browser() {
     { id: 1, url: 'about:blank', title: 'New Tab' }
   ])
   const [activeTab, setActiveTab] = useState(1)
-  const [inputUrl, setInputUrl] = useState('https://www.google.com')
-  const [history, setHistory] = useState<{ [key: number]: string[] }>({ 1: ['https://www.google.com'] })
-  const [historyIndex, setHistoryIndex] = useState<{ [key: number]: number }>({ 1: 0 })
-  const [loading, setLoading] = useState(false)
+  const [inputUrl, setInputUrl] = useState('')
+  const [history, setHistory] = useState<{ [key: number]: string[] }>({})
+  const [historyIndex, setHistoryIndex] = useState<{ [key: number]: number }>({})
 
   const navigate = useCallback((tabId: number, url: string, addToHistory = true) => {
     let finalUrl = url.trim()
+    
     try {
       new URL(finalUrl)
+      if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+        finalUrl = `https://${finalUrl}`
+      }
     } catch {
-      finalUrl = `https://${finalUrl}`
+      finalUrl = `https://www.google.com/search?q=${encodeURIComponent(finalUrl)}`
     }
 
     setTabs(tabs => tabs.map(tab =>
-      tab.id === tabId ? { ...tab, url: finalUrl } : tab
+      tab.id === tabId ? { ...tab, url: finalUrl, loading: true } : tab
     ))
     setInputUrl(finalUrl)
 
@@ -51,30 +56,19 @@ export function Browser() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    let finalUrl = inputUrl.trim()
-    
-    try {
-      new URL(finalUrl)
-      if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
-        finalUrl = `https://${finalUrl}`
-      }
-    } catch {
-      finalUrl = `https://www.google.com/search?q=${encodeURIComponent(finalUrl)}`
+    const currentTab = tabs.find(t => t.id === activeTab)
+    if (currentTab) {
+      navigate(activeTab, inputUrl)
     }
-    
-    navigate(activeTab, finalUrl)
   }
 
   const addTab = () => {
     const newId = Math.max(...tabs.map(t => t.id)) + 1
-    setTabs([...tabs, { 
-      id: newId, 
-      url: 'about:blank', 
-      title: 'New Tab'
-    }])
+    setTabs([...tabs, { id: newId, url: 'about:blank', title: 'New Tab' }])
     setActiveTab(newId)
     setHistory(prev => ({ ...prev, [newId]: ['about:blank'] }))
     setHistoryIndex(prev => ({ ...prev, [newId]: 0 }))
+    setInputUrl('')
   }
 
   const closeTab = (id: number, e: React.MouseEvent) => {
@@ -84,6 +78,7 @@ export function Browser() {
       setTabs(newTabs)
       if (activeTab === id) {
         setActiveTab(newTabs[newTabs.length - 1].id)
+        setInputUrl(newTabs[newTabs.length - 1].url)
       }
     }
   }
@@ -111,15 +106,39 @@ export function Browser() {
 
   const refresh = () => {
     const tab = tabs.find(t => t.id === activeTab)
-    if (tab) {
+    if (tab && tab.url !== 'about:blank') {
       navigate(activeTab, tab.url)
     }
   }
 
   useEffect(() => {
+    const currentTab = tabs.find(t => t.id === activeTab)
+    if (currentTab && currentTab.url !== 'about:blank') {
+      setInputUrl(currentTab.url)
+    } else {
+      setInputUrl('')
+    }
+  }, [activeTab, tabs])
+
+  useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'navigate' && event.data?.url) {
         navigate(activeTab, event.data.url)
+      }
+      if (event.data?.type === 'title' && event.data?.title) {
+        setTabs(tabs => tabs.map(tab =>
+          tab.id === activeTab ? { ...tab, title: event.data.title } : tab
+        ))
+      }
+      if (event.data?.type === 'favicon' && event.data?.icon) {
+        setTabs(tabs => tabs.map(tab =>
+          tab.id === activeTab ? { ...tab, icon: event.data.icon } : tab
+        ))
+      }
+      if (event.data?.type === 'loaded') {
+        setTabs(tabs => tabs.map(tab =>
+          tab.id === activeTab ? { ...tab, loading: false } : tab
+        ))
       }
     }
     window.addEventListener('message', handleMessage)
@@ -148,8 +167,13 @@ export function Browser() {
           >
             <ArrowRight className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={refresh}>
-            <RotateCw className={cn("h-4 w-4", loading && "animate-spin")} />
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={refresh}
+            disabled={!currentTab || currentTab.url === 'about:blank'}
+          >
+            <RotateCw className={cn("h-4 w-4", currentTab?.loading && "animate-spin")} />
           </Button>
           
           <form onSubmit={handleSubmit} className="flex-1 flex gap-2">
@@ -160,7 +184,7 @@ export function Browser() {
                 value={inputUrl}
                 onChange={(e) => setInputUrl(e.target.value)}
                 className="pl-8"
-                placeholder="Enter URL"
+                placeholder="Search or enter URL"
               />
             </div>
           </form>
@@ -175,13 +199,13 @@ export function Browser() {
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   "flex items-center gap-2 px-4 data-[state=active]:bg-muted",
-                  "relative group"
+                  "relative group min-w-[140px] max-w-[200px]"
                 )}
               >
                 {tab.icon && (
                   <img src={tab.icon} className="h-4 w-4" alt="" />
                 )}
-                <span className="max-w-[120px] truncate">{tab.title}</span>
+                <span className="truncate">{tab.title}</span>
                 <X 
                   className="h-4 w-4 opacity-0 group-hover:opacity-100" 
                   onClick={(e) => closeTab(tab.id, e)}
@@ -209,9 +233,12 @@ export function Browser() {
               key={`${currentTab.id}-${currentTab.url}`}
               src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
-              sandbox="allow-same-origin allow-scripts"
-              onLoad={() => setLoading(false)}
-              onLoadStart={() => setLoading(true)}
+              sandbox="allow-same-origin allow-scripts allow-forms"
+              onLoad={() => {
+                setTabs(tabs => tabs.map(tab =>
+                  tab.id === activeTab ? { ...tab, loading: false } : tab
+                ))
+              }}
             />
           )
         )}

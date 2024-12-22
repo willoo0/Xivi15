@@ -1,40 +1,35 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+
+import { useState } from "react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Search } from "lucide-react"
 
 interface StartPageProps {
-  onNavigate: (url: string) => void;
+  onNavigate: (url: string) => void
 }
 
 export function StartPage({ onNavigate }: StartPageProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("")
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    let finalUrl = query.trim();
-
-    // Check if it's a valid URL
-    try {
-      new URL(finalUrl);
-      // If it doesn't have a protocol, add https://
-      if (!finalUrl.startsWith("http://") && !finalUrl.startsWith("https://")) {
-        finalUrl = `https://${finalUrl}`;
-      }
-    } catch {
-      // Not a valid URL, search on Google
-      finalUrl = `https://www.google.com/search?q=${encodeURIComponent(finalUrl)}`;
+    e.preventDefault()
+    if (query.trim()) {
+      onNavigate(query)
     }
+  }
 
-    onNavigate(finalUrl);
-  };
+  const quickLinks = [
+    { name: "Google", url: "https://google.com" },
+    { name: "YouTube", url: "https://youtube.com" },
+    { name: "GitHub", url: "https://github.com" },
+    { name: "Reddit", url: "https://reddit.com" },
+  ]
 
   return (
     <div className="h-full flex flex-col items-center justify-center p-6 bg-background/80">
-      <div className="w-full max-w-2xl space-y-6">
+      <div className="w-full max-w-2xl space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">🏄 Xivi Surf</h1>
+          <h1 className="text-4xl font-bold">🌐 Web Browser</h1>
           <p className="text-lg text-muted-foreground">
             Search or enter website name
           </p>
@@ -53,7 +48,19 @@ export function StartPage({ onNavigate }: StartPageProps) {
             Search
           </Button>
         </form>
+
+        <div className="grid grid-cols-4 gap-4">
+          {quickLinks.map((link) => (
+            <button
+              key={link.url}
+              onClick={() => onNavigate(link.url)}
+              className="p-4 rounded-lg hover:bg-muted transition-colors text-center"
+            >
+              {link.name}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
-  );
+  )
 }
