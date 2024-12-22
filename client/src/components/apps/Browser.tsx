@@ -71,16 +71,6 @@ export function Browser() {
     navigate(urlInput)
   }
 
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'PROXY_NAVIGATE') {
-        navigate(event.data.url)
-      }
-    }
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
-  }, [navigate])
-
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex items-center gap-2 p-2 border-b">
@@ -129,12 +119,7 @@ export function Browser() {
               </TabsTrigger>
             ))}
           </TabsList>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8 rounded-full hover:bg-accent mr-2" 
-            onClick={addTab}
-          >
+          <Button variant="ghost" size="icon" className="h-10 w-10" onClick={addTab}>
             <Plus className="h-4 w-4" />
           </Button>
         </div>
@@ -146,12 +131,10 @@ export function Browser() {
               src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
               sandbox="allow-same-origin allow-scripts allow-forms"
-              onLoad={(e) => {
+              onLoad={() => {
                 setTabs(tabs => tabs.map(tab =>
                   tab.id === activeTab ? { ...tab, loading: false } : tab
                 ))
-                const iframe = e.target as HTMLIFrameElement;
-                iframe.contentWindow?.postMessage({ type: 'INIT_PROXY' }, '*');
               }}
             />
           ) : (
