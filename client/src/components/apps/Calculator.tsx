@@ -76,10 +76,16 @@ export function Calculator() {
 
   if (show2048) {
     return (
-      <div>
-        <h1>2048 Game Placeholder</h1>
-        <p>A 2048 game would go here!</p>
-        <button onClick={() => setShow2048(false)}>Close Game</button>
+      <div className="h-full flex flex-col">
+        <div className="flex justify-between items-center p-2 bg-muted">
+          <h1 className="text-lg font-bold">2048</h1>
+          <Button variant="ghost" size="sm" onClick={() => setShow2048(false)}>
+            Back to Calculator
+          </Button>
+        </div>
+        <div className="flex-1 overflow-hidden">
+          <Game2048 />
+        </div>
       </div>
     );
   }
