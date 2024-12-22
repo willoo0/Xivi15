@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, X } from "lucide-react";
+import { useDesktopStore } from "@/store/desktop";
 
 interface TerminalTab {
   id: string;
@@ -48,8 +49,11 @@ export function Terminal() {
           tab.id === tabId ? { ...tab, history: [] } : tab
         ));
         return;
+      case "bsod":
+        useDesktopStore.getState().toggleBSOD();
+        return;
       case "help":
-        output = "\x1b[36mAvailable commands:\x1b[0m ls, echo, cat, sudo, apt, pwd, whoami, clear, help";
+        output = "\x1b[36mAvailable commands:\x1b[0m ls, echo, cat, sudo, apt, pwd, whoami, clear, help, bsod";
         break;
       default:
         output = `\x1b[31mCommand not found: ${command}\x1b[0m`;
@@ -57,7 +61,7 @@ export function Terminal() {
     
     setTabs(prev => prev.map(tab => 
       tab.id === tabId 
-        ? { ...tab, history: [...tab.history, `\x1b[90mxivi-15-user>\x1b[0m ${cmd}`, output] }
+        ? { ...tab, history: [...tab.history, `\x1b[90muser@xivi-15>\x1b[0m ${cmd}`, output] }
         : tab
     ));
   };
@@ -136,7 +140,7 @@ export function Terminal() {
           />
         ))}
         <div className="flex items-center mt-1">
-          <span className="text-zinc-500">xivi-15-user&gt;</span>
+          <span className="text-zinc-500">user@xivi-15&gt;</span>
           <input
             ref={inputRef}
             type="text"

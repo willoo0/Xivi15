@@ -61,7 +61,8 @@ const components: { [key: string]: React.ComponentType } = {
   WorstCaseScenario,
   PDFViewer,
   PhotoViewer,
-  MusicPlayer
+  MusicPlayer,
+  Terminal
 }
 
 // Use background images from public folder
@@ -69,7 +70,7 @@ const lightThemeBg = '/light-theme.jpg'
 const darkThemeBg = '/dark-theme.jpg'
 
 export function Desktop() {
-  const { windows, theme, updateSettings } = useDesktopStore()
+  const { windows, theme, updateSettings, isBSOD } = useDesktopStore()
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectionStart, setSelectionStart] = useState({ x: 0, y: 0 });
   const [selectionCurrent, setSelectionCurrent] = useState({ x: 0, y: 0 });
@@ -93,6 +94,21 @@ export function Desktop() {
       root.style.colorScheme = 'light'
     }
   }, [theme])
+
+  if (isBSOD) {
+    return (
+      <div className="fixed inset-0 bg-blue-600 text-white p-4 font-mono z-[99999]">
+        <h1 className="text-xl mb-4">):</h1>
+        <p>Your PC ran into a problem and needs to restart.</p>
+        <p className="mt-4">Error: TERMINAL_INITIATED_SHUTDOWN</p>
+        <p className="mt-4">* Press any key to restart</p>
+        <button
+          className="absolute inset-0 w-full h-full opacity-0"
+          onClick={() => useDesktopStore.getState().toggleBSOD()}
+        />
+      </div>
+    );
+  }
 
   return (
     <div 
