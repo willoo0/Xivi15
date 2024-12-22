@@ -14,6 +14,7 @@ interface TerminalTab {
 export function Terminal() {
   const [tabs, setTabs] = useState<TerminalTab[]>([{ id: '1', history: [], input: '' }]);
   const [activeTab, setActiveTab] = useState('1');
+  const [isBSOD, setIsBSOD] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -50,7 +51,7 @@ export function Terminal() {
         ));
         return;
       case "bsod":
-        useDesktopStore.getState().toggleBSOD();
+        setIsBSOD(true);
         return;
       case "help":
         output = "\x1b[36mAvailable commands:\x1b[0m ls, echo, cat, sudo, apt, pwd, whoami, clear, help, bsod";
@@ -90,6 +91,21 @@ export function Terminal() {
     }
     inputRef.current?.focus();
   }, [tabs, activeTerminal.history]);
+
+  if (isBSOD) {
+    return (
+      <div className="h-full bg-blue-600 text-white p-4 font-mono">
+        <h1 className="text-xl mb-4">):</h1>
+        <p>Terminal.exe ran into a problem and needs to restart.</p>
+        <p className="mt-4">Error: TERMINAL_INITIATED_SHUTDOWN</p>
+        <p className="mt-4">* Press any key to restart</p>
+        <button
+          className="absolute inset-0 w-full h-full opacity-0"
+          onClick={() => setIsBSOD(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col bg-zinc-900 text-zinc-100 font-mono">

@@ -33,7 +33,6 @@ interface DesktopState {
   blurEffects: boolean
   animations: boolean
   notifications: boolean
-  isBSOD: boolean;
   addWindow: (window: Omit<AppWindow, 'zIndex'>) => void
   removeWindow: (id: string) => void
   setActiveWindow: (id: string) => void
@@ -42,7 +41,6 @@ interface DesktopState {
   toggleMaximize: (id: string) => void
   togglePinApp: (app: PinnedApp) => void
   updateSettings: (settings: Partial<Pick<DesktopState, 'theme' | 'blurEffects' | 'animations' | 'notifications'>>) => void
-  toggleBSOD: () => void;
 }
 
 const initialState: Omit<DesktopState, keyof DesktopState> = {
@@ -60,7 +58,6 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
   blurEffects: true,
   animations: true,
   notifications: true,
-  isBSOD: false,
 }
 
 export const useDesktopStore = create<DesktopState>()(
@@ -129,9 +126,7 @@ export const useDesktopStore = create<DesktopState>()(
       updateSettings: (settings) => set((state) => ({
         ...state,
         ...settings
-      })),
-
-      toggleBSOD: () => set({ isBSOD: !get().isBSOD }),
+      }))
     }),
     {
       name: 'desktop-store',
