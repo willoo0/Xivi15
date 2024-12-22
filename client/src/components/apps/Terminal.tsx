@@ -15,6 +15,7 @@ export function Terminal() {
   const [tabs, setTabs] = useState<TerminalTab[]>([{ id: '1', history: [], input: '' }]);
   const [activeTab, setActiveTab] = useState('1');
   const [isBSOD, setIsBSOD] = useState(false);
+  const [isRainbow, setIsRainbow] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -53,8 +54,12 @@ export function Terminal() {
       case "bsod":
         setIsBSOD(true);
         return;
+      case "rainbow":
+        setIsRainbow(prev => !prev);
+        output = isRainbow ? "Rainbow mode disabled" : "🌈 Rainbow mode enabled";
+        break;
       case "help":
-        output = "\x1b[36mAvailable commands:\x1b[0m ls, echo, cat, sudo, apt, pwd, whoami, clear, help, bsod";
+        output = "\x1b[36mAvailable commands:\x1b[0m ls, echo, cat, sudo, apt, pwd, whoami, clear, help, bsod, rainbow";
         break;
       default:
         output = `\x1b[31mCommand not found: ${command}\x1b[0m`;
@@ -108,7 +113,7 @@ export function Terminal() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-zinc-900 text-zinc-100 font-mono">
+    <div className={`h-full flex flex-col bg-zinc-900 text-zinc-100 font-mono ${isRainbow ? 'animate-rainbow' : ''}`}>
       <div className="flex items-center gap-2 p-2 bg-zinc-800">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
           <TabsList className="bg-zinc-900">
