@@ -2,10 +2,19 @@ import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { setupBareServer } from "./bare";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Serve Ultraviolet files
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -40,7 +49,10 @@ app.use((req, res, next) => {
 (async () => {
   const server = createServer(app);
   
-  // Setup Vite or static serving first
+  // Setup bare server first
+  setupBareServer(server);
+  
+  // Setup Vite or static serving
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
