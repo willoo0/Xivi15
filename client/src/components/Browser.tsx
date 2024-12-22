@@ -70,9 +70,16 @@ export function Browser() {
         formattedUrl = `https://${url}`;
       }
 
-      // Create a new window with the proxied content
+      // Ensure UV is properly initialized before proxying
+      if (!window.__uv$config || !window.Ultraviolet) {
+        throw new Error("Ultraviolet not initialized. Please refresh the page.");
+      }
+      
+      // Use UV to encode and proxy the URL
       const encodedUrl = window.__uv$config.encodeUrl(formattedUrl);
       const proxiedUrl = window.__uv$config.prefix + encodedUrl;
+      
+      // Use the current window for navigation
       window.location.href = proxiedUrl;
     } catch (err) {
       console.error("Failed to load page:", err);
