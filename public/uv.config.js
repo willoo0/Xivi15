@@ -1,3 +1,4 @@
+// This file configures Ultraviolet's proxy settings
 self.__uv$config = {
   prefix: '/service/',
   bare: '/bare/',
@@ -6,8 +7,8 @@ self.__uv$config = {
   handler: '/uv/uv.handler.js',
   bundle: '/uv/uv.bundle.js',
   config: '/uv/uv.config.js',
-  sw: '/uv/uv.sw.js',
+  sw: '/uv/uv.sw.js'
 };
 
-// For debug purposes, log when UV config is loaded
-console.log('Ultraviolet config loaded:', self.__uv$config);
+// Log when config is loaded for debugging
+console.log('UV config loaded:', self.__uv$config);

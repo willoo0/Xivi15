@@ -33,7 +33,11 @@ export function Browser() {
 
   const registerSW = async () => {
     try {
-      // First check if service worker is already registered
+      if (!navigator.serviceWorker) {
+        throw new Error("Service workers are not supported");
+      }
+
+      // Check if service worker is already registered
       const registration = await navigator.serviceWorker.getRegistration("/service/");
       
       if (!registration) {
@@ -41,48 +45,63 @@ export function Browser() {
           scope: "/service/",
           updateViaCache: 'none'
         });
-        console.log("Service worker registered successfully");
+        console.log("UV service worker registered");
       } else {
-        console.log("Service worker already registered");
+        console.log("UV service worker already registered");
       }
     } catch (err) {
-      console.error("Failed to register service worker:", err);
-      throw new Error("Failed to initialize proxy service. Please refresh the page.");
+      console.error("Failed to register UV service worker:", err);
+      throw new Error("Failed to initialize proxy service");
     }
   };
 
   useEffect(() => {
-    registerSW().catch(console.error);
+    const initUV = async () => {
+      try {
+        await registerSW();
+        // Wait for service worker to be ready
+        if (!navigator.serviceWorker.controller) {
+          await new Promise<void>((resolve) => {
+            navigator.serviceWorker.addEventListener('controllerchange', () => resolve());
+          });
+        }
+        console.log("UV initialized successfully");
+      } catch (err) {
+        console.error("Failed to initialize UV:", err);
+      }
+    };
+
+    initUV();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!url.trim()) return;
+    
     setLoading(true);
 
     try {
+      // Ensure UV is initialized
       if (!window.__uv$config) {
-        throw new Error("Ultraviolet config not loaded");
-      }
-      
-      // Format URL if needed
-      let formattedUrl = url;
-      if (!/^https?:\/\//i.test(url)) {
-        formattedUrl = `https://${url}`;
+        throw new Error("UV config not found. Please refresh the page.");
       }
 
-      // Ensure UV is properly initialized before proxying
-      if (!window.__uv$config || !window.Ultraviolet) {
-        throw new Error("Ultraviolet not initialized. Please refresh the page.");
+      // Format URL if needed
+      let processedUrl = url.trim();
+      if (!/^https?:\/\//i.test(processedUrl)) {
+        processedUrl = `https://${processedUrl}`;
       }
-      
-      // Use UV to encode and proxy the URL
-      const encodedUrl = window.__uv$config.encodeUrl(formattedUrl);
+
+      // Use UV's encoding system to create the proxied URL
+      const encodedUrl = window.__uv$config.encodeUrl(processedUrl);
       const proxiedUrl = window.__uv$config.prefix + encodedUrl;
-      
-      // Use the current window for navigation
+
+      // Navigate to the proxied URL
       window.location.href = proxiedUrl;
     } catch (err) {
       console.error("Failed to load page:", err);
+      alert(err instanceof Error ? err.message : "Failed to load page");
     } finally {
       setLoading(false);
     }
@@ -96,6 +115,7 @@ export function Browser() {
             variant="ghost" 
             size="icon"
             onClick={() => window.history.back()}
+            disabled={loading}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -103,6 +123,7 @@ export function Browser() {
             variant="ghost" 
             size="icon"
             onClick={() => window.history.forward()}
+            disabled={loading}
           >
             <ArrowRight className="h-4 w-4" />
           </Button>
@@ -110,8 +131,9 @@ export function Browser() {
             variant="ghost" 
             size="icon"
             onClick={() => window.location.reload()}
+            disabled={loading}
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           </Button>
           <form onSubmit={handleSubmit} className="flex-1">
             <Input
@@ -120,6 +142,7 @@ export function Browser() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className="w-full"
+              disabled={loading}
               autoFocus
             />
           </form>
