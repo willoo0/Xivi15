@@ -68,7 +68,8 @@ export function registerRoutes(app: Express): Server {
                 const link = e.target.closest('a');
                 if (link && link.href) {
                   e.preventDefault();
-                  window.parent.postMessage({ type: 'navigate', url: link.href }, '*');
+                  const targetHref = link.href;
+                  window.location.href = '/api/proxy?url=' + encodeURIComponent(targetHref);
                 }
               });
 

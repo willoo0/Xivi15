@@ -130,7 +130,7 @@ export function Browser() {
               key={currentTab.url}
               src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
-              sandbox="allow-same-origin allow-scripts allow-forms"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
               onLoad={() => {
                 setTabs(tabs => tabs.map(tab =>
                   tab.id === activeTab ? { ...tab, loading: false } : tab
