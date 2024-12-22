@@ -82,9 +82,9 @@ export function Browser() {
     setLoading(true);
 
     try {
-      // Ensure UV is initialized
+      // Verify UV is properly initialized
       if (!window.__uv$config) {
-        throw new Error("UV config not found. Please refresh the page.");
+        throw new Error("UV proxy not initialized. Please refresh the page.");
       }
 
       // Format URL if needed
@@ -93,12 +93,24 @@ export function Browser() {
         processedUrl = `https://${processedUrl}`;
       }
 
-      // Use UV's encoding system to create the proxied URL
+      // Create the proxied URL using UV's encoding
       const encodedUrl = window.__uv$config.encodeUrl(processedUrl);
-      const proxiedUrl = window.__uv$config.prefix + encodedUrl;
-
-      // Navigate to the proxied URL
-      window.location.href = proxiedUrl;
+      
+      // Get the current origin for proper proxy routing
+      const currentOrigin = window.location.origin;
+      
+      // Construct the full proxied URL
+      const proxiedUrl = `${currentOrigin}${window.__uv$config.prefix}${encodedUrl}`;
+      
+      console.log('Navigating to proxied URL:', proxiedUrl);
+      
+      // Use window.location.href for full page navigation
+      if (window === window.top) {
+        window.location.href = proxiedUrl;
+      } else {
+        // If we're in a frame, try to break out
+        window.top.location.href = proxiedUrl;
+      }
     } catch (err) {
       console.error("Failed to load page:", err);
       alert(err instanceof Error ? err.message : "Failed to load page");

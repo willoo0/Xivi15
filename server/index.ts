@@ -28,44 +28,66 @@ const copyUVFiles = async () => {
     // Ensure the UV directory exists
     await fs.mkdir(publicUvPath, { recursive: true });
     
-    // Define files to copy
-    const files = ['uv.bundle.js', 'uv.handler.js', 'uv.sw.js'];
+    // Define files to copy with their source and destination
+    const files = [
+      { 
+        src: 'uv.bundle.js',
+        dest: 'uv.bundle.js',
+        required: true 
+      },
+      { 
+        src: 'uv.handler.js',
+        dest: 'uv.handler.js',
+        required: true 
+      },
+      { 
+        src: 'uv.sw.js',
+        dest: 'uv.sw.js',
+        required: true 
+      }
+    ];
     
-    // Copy each file, overwriting if it exists
+    // Copy each file
     for (const file of files) {
-      const sourcePath = path.join(uvPath, file);
-      const destPath = path.join(publicUvPath, file);
+      const sourcePath = path.join(uvPath, file.src);
+      const destPath = path.join(publicUvPath, file.dest);
       
       try {
-        // Check if source file exists
         await fs.access(sourcePath);
-        
-        // Copy file, overwriting if it exists
         await fs.copyFile(sourcePath, destPath);
-        log(`Copied ${file} successfully`);
+        log(`Copied ${file.src} to ${file.dest}`);
       } catch (err: any) {
-        if (err.code === 'ENOENT') {
-          throw new Error(`Source file ${file} not found in ${uvPath}`);
+        if (err.code === 'ENOENT' && file.required) {
+          throw new Error(`Required UV file ${file.src} not found in ${uvPath}`);
         }
-        throw err;
+        console.error(`Warning: Could not copy ${file.src}:`, err);
       }
     }
     
-    // Copy config file if it doesn't exist
-    const configPath = path.join(publicUvPath, 'uv.config.js');
-    try {
-      await fs.access(configPath);
-    } catch {
-      await fs.copyFile(
-        path.join(__dirname, '../public/uv.config.js'),
-        configPath
-      );
-      log('Created UV config file');
-    }
+    // Create UV config if it doesn't exist
+    const configContent = `// This file configures Ultraviolet's proxy settings
+self.__uv$config = {
+  prefix: '/service/',
+  bare: '/bare/',
+  encodeUrl: Ultraviolet.codec.xor.encode,
+  decodeUrl: Ultraviolet.codec.xor.decode,
+  handler: '/uv/uv.handler.js',
+  bundle: '/uv/uv.bundle.js',
+  config: '/uv/uv.config.js',
+  sw: '/uv/uv.sw.js'
+};
+
+// Log when config is loaded for debugging
+console.log('UV config loaded:', self.__uv$config);
+`;
     
-    log('Ultraviolet files copied successfully');
+    const configPath = path.join(publicUvPath, 'uv.config.js');
+    await fs.writeFile(configPath, configContent, 'utf-8');
+    log('UV config file created/updated');
+    
+    log('Ultraviolet files setup completed');
   } catch (err) {
-    console.error('Error copying Ultraviolet files:', err);
+    console.error('Error setting up Ultraviolet files:', err);
     throw err;
   }
 };
