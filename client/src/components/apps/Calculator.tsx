@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Game2048 } from "./Game2048";
 
 export function Calculator() {
   const [display, setDisplay] = useState("0");
