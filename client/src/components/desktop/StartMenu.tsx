@@ -117,6 +117,13 @@ const apps = [
     category: "Accessories",
   },
   {
+    id: "terminal",
+    title: "Terminal",
+    component: "Terminal",
+    icon: Terminal,
+    category: "System",
+  },
+  {
     id: "file-explorer",
     title: "Files",
     component: "FileExplorer",

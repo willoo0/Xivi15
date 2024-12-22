@@ -3,6 +3,7 @@ import {
   FileText,
   Calculator,
   Folder,
+  Terminal,
   Gamepad2,
   Settings,
   Cloud,
@@ -41,6 +42,7 @@ export const appIcons: Record<string, any> = {
   PDFViewer: FileText,
   PhotoViewer: ImageIcon,
   MusicPlayer: Music,
+  Terminal: Terminal,
 };
 
 export const getAppIcon = (component: string) => appIcons[component] || AppWindow;

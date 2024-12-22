@@ -32,6 +32,7 @@ import { Snow } from './apps/Snow';
 import { WorstCaseScenario } from './apps/WorstCaseScenario';
 import { PhotoViewer } from './apps/PhotoViewer'
 import { MusicPlayer } from './apps/MusicPlayer'
+import { Terminal } from './apps/Terminal'
 
 const components: { [key: string]: React.ComponentType } = {
   TextEditor,
