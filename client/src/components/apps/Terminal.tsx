@@ -78,14 +78,14 @@ export function Terminal() {
     }
   };
 
+  const activeTerminal = tabs.find(tab => tab.id === activeTab) || tabs[0];
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
     inputRef.current?.focus();
   }, [tabs, activeTerminal.history]);
-
-  const activeTerminal = tabs.find(tab => tab.id === activeTab) || tabs[0];
 
   return (
     <div className="h-full flex flex-col bg-zinc-900 text-zinc-100 font-mono">
