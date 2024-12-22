@@ -2,95 +2,10 @@ import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { setupBareServer } from "./bare";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// Serve static files including Ultraviolet files
-app.use(express.static(path.join(__dirname, "../public")));
-
-// Set up paths for Ultraviolet files
-const uvPath = path.join(__dirname, "../node_modules/@titaniumnetwork-dev/ultraviolet/dist");
-const publicUvPath = path.join(__dirname, "../public/uv");
-
-// Function to copy UV files
-const copyUVFiles = async () => {
-  try {
-    const fs = await import('fs/promises');
-    
-    // Ensure the UV directory exists
-    await fs.mkdir(publicUvPath, { recursive: true });
-    
-    // Define files to copy with their source and destination
-    const files = [
-      { 
-        src: 'uv.bundle.js',
-        dest: 'uv.bundle.js',
-        required: true 
-      },
-      { 
-        src: 'uv.handler.js',
-        dest: 'uv.handler.js',
-        required: true 
-      },
-      { 
-        src: 'uv.sw.js',
-        dest: 'uv.sw.js',
-        required: true 
-      }
-    ];
-    
-    // Copy each file
-    for (const file of files) {
-      const sourcePath = path.join(uvPath, file.src);
-      const destPath = path.join(publicUvPath, file.dest);
-      
-      try {
-        await fs.access(sourcePath);
-        await fs.copyFile(sourcePath, destPath);
-        log(`Copied ${file.src} to ${file.dest}`);
-      } catch (err: any) {
-        if (err.code === 'ENOENT' && file.required) {
-          throw new Error(`Required UV file ${file.src} not found in ${uvPath}`);
-        }
-        console.error(`Warning: Could not copy ${file.src}:`, err);
-      }
-    }
-    
-    // Create UV config if it doesn't exist
-    const configContent = `// This file configures Ultraviolet's proxy settings
-self.__uv$config = {
-  prefix: '/service/',
-  bare: '/bare/',
-  encodeUrl: Ultraviolet.codec.xor.encode,
-  decodeUrl: Ultraviolet.codec.xor.decode,
-  handler: '/uv/uv.handler.js',
-  bundle: '/uv/uv.bundle.js',
-  config: '/uv/uv.config.js',
-  sw: '/uv/uv.sw.js'
-};
-
-// Log when config is loaded for debugging
-console.log('UV config loaded:', self.__uv$config);
-`;
-    
-    const configPath = path.join(publicUvPath, 'uv.config.js');
-    await fs.writeFile(configPath, configContent, 'utf-8');
-    log('UV config file created/updated');
-    
-    log('Ultraviolet files setup completed');
-  } catch (err) {
-    console.error('Error setting up Ultraviolet files:', err);
-    throw err;
-  }
-};
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -123,46 +38,60 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  const server = registerRoutes(app);
+
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+
+    res.status(status).json({ message });
+    throw err;
+  });
+
+  // importantly only setup vite in development and after
+  // setting up all the other routes so the catch-all route
+  // doesn't interfere with the other routes
+  if (app.get("env") === "development") {
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
+  }
+
+  // Try to find an available port starting from 5000
+  const findAvailablePort = (startPort: number, maxAttempts: number = 10): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      const tryPort = (port: number, attempts: number) => {
+        const testServer = createServer();
+        testServer.once('error', (err: any) => {
+          if (err.code === 'EADDRINUSE') {
+            if (attempts >= maxAttempts) {
+              reject(new Error(`Could not find an available port after ${maxAttempts} attempts`));
+            } else {
+              tryPort(port + 1, attempts + 1);
+            }
+          } else {
+            reject(err);
+          }
+        });
+        
+        testServer.once('listening', () => {
+          testServer.close(() => resolve(port));
+        });
+        
+        testServer.listen(port, '0.0.0.0');
+      };
+      
+      tryPort(startPort, 1);
+    });
+  };
+
   try {
-    // Copy UV files first
-    await copyUVFiles();
-
-    const server = createServer(app);
-    
-    // Setup bare server first
-    setupBareServer(server);
-    
-    // Setup Vite or static serving
-    if (app.get("env") === "development") {
-      await setupVite(app, server);
-    } else {
-      serveStatic(app);
-    }
-
-    // Register API routes after vite setup
-    registerRoutes(app);
-
-    // Error handling middleware should be last
-    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-      const status = err.status || err.statusCode || 500;
-      const message = err.message || "Internal Server Error";
-
-      if (!res.headersSent) {
-        res.status(status).json({ message });
-      }
-      console.error(err);
+    const port = await findAvailablePort(5000);
+    server.listen(port, "0.0.0.0", () => {
+      log(`Server running on port ${port}`);
     });
-
-    // Start the server on port 5000
-    server.listen(5000, "0.0.0.0", () => {
-      log(`Server running on port 5000`);
-    });
-
   } catch (error) {
-    console.error('Failed to initialize server:', error);
+    log(`Failed to start server: ${error}`);
     process.exit(1);
   }
-})().catch(err => {
-  console.error('Unhandled error during server initialization:', err);
-  process.exit(1);
-});
+})();
