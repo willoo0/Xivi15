@@ -1,38 +1,38 @@
-
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
 interface StartPageProps {
-  onNavigate: (url: string) => void
+  onNavigate: (url: string) => void;
 }
 
 export function StartPage({ onNavigate }: StartPageProps) {
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (query.trim()) {
-      onNavigate(query)
+      onNavigate(query);
     }
-  }
+  };
 
   const quickLinks = [
     { name: "Google", url: "https://google.com" },
     { name: "YouTube", url: "https://youtube.com" },
     { name: "GitHub", url: "https://github.com" },
     { name: "Reddit", url: "https://reddit.com" },
-  ]
+  ];
 
   return (
     <div className="h-full flex flex-col items-center justify-center p-6 bg-background/80">
       <div className="w-full max-w-2xl space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">🌐 Web Browser</h1>
+          <h1 className="text-4xl font-bold">Xivi Surf 🏄</h1>
           <p className="text-lg text-muted-foreground">
-            Search or enter website name
+            Search or enter a url to start surfing!
           </p>
+          <p>Redirects have been disabled by your admin.</p>
         </div>
 
         <form onSubmit={handleSearch} className="flex gap-2">
@@ -62,5 +62,5 @@ export function StartPage({ onNavigate }: StartPageProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

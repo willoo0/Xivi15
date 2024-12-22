@@ -181,9 +181,9 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
       <div className="relative z-10 flex h-full items-center justify-center backdrop-blur-sm">
         <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px] transition-all duration-500 ease-in-out">
           <div className="flex justify-center">
-            <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans">Xivi 15 Alpha</h1>
+            <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans">Xivi 15 Pre-Release</h1>
           </div>
-          <ConsoleText text="Initializing system components..." delay={500} />
+          <ConsoleText text="Initializing Xivi Linux 14.9 Kylo" delay={500} />
           <ConsoleText text="Loading kernel modules..." delay={1000} />
           <ConsoleText text="Starting system services..." delay={1500} />
           <ConsoleText text="Mounting virtual filesystem..." delay={2000} />
@@ -193,7 +193,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
           <ConsoleText text="Waiting for environment..." delay={4000} />
           {isSystemReady && (
             <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
-              Click anywhere to continue
+              Click anywhere to start
             </p>
           )}
           <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />

@@ -9,13 +9,13 @@ interface TextEditorProps {
 }
 
 export function TextEditor({ path }: TextEditorProps) {
-  const [content, setContent] = useState('Welcome to Notepad!\nFile system is currently in demo mode.')
+  const [content, setContent] = useState('Welcome to Notepad!\nThe File system is currently disabled due to security reasons.')
   const { toast } = useToast()
 
   const handleSave = () => {
     toast({
-      title: "Demo Mode",
-      description: "File system is currently in demo mode. Changes won't be saved.",
+      title: "Feature Disabled",
+      description: "File system is disabled by your admin. Changes won't be saved.",
     });
   }
 
