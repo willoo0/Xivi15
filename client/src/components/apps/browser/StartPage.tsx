@@ -64,3 +64,40 @@ export function StartPage({ onNavigate }: StartPageProps) {
     </div>
   )
 }
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Globe } from 'lucide-react'
+
+interface StartPageProps {
+  onNavigate: (url: string) => void
+}
+
+export function StartPage({ onNavigate }: StartPageProps) {
+  const popularSites = [
+    { name: 'Google', url: 'google.com' },
+    { name: 'YouTube', url: 'youtube.com' },
+    { name: 'Wikipedia', url: 'wikipedia.org' },
+    { name: 'Reddit', url: 'reddit.com' },
+  ]
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full p-8 space-y-8">
+      <h1 className="text-4xl font-bold flex items-center gap-2">
+        <Globe className="h-8 w-8" />
+        Browser
+      </h1>
+      <div className="flex flex-wrap justify-center gap-4 max-w-2xl">
+        {popularSites.map(site => (
+          <Button
+            key={site.url}
+            variant="outline"
+            className="h-24 w-24"
+            onClick={() => onNavigate(site.url)}
+          >
+            {site.name}
+          </Button>
+        ))}
+      </div>
+    </div>
+  )
+}
