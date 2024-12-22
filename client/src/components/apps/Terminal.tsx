@@ -54,12 +54,12 @@ export function Terminal() {
       case "bsod":
         setIsBSOD(true);
         return;
-      case "rainbow":
+      case "gay":
         setIsRainbow(prev => !prev);
-        output = isRainbow ? "Rainbow mode disabled" : "🌈 Rainbow mode enabled";
+        output = isRainbow ? "Gay mode disabled" : "Gay mode enabled";
         break;
       case "help":
-        output = "\x1b[36mAvailable commands:\x1b[0m ls, echo, cat, sudo, apt, pwd, whoami, clear, help, bsod, rainbow";
+        output = "\x1b[36mAvailable commands:\x1b[0m ls, echo, cat, sudo, apt, pwd, whoami, clear, help";
         break;
       default:
         output = `\x1b[31mCommand not found: ${command}\x1b[0m`;
