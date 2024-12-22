@@ -83,7 +83,7 @@ export function Terminal() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
     inputRef.current?.focus();
-  }, [tabs]);
+  }, [tabs, activeTerminal.history]);
 
   const activeTerminal = tabs.find(tab => tab.id === activeTab) || tabs[0];
 
