@@ -37,19 +37,25 @@ export function Browser() {
     e.stopPropagation()
     const newTabs = tabs.filter(tab => tab.id !== tabId)
     if (newTabs.length === 0) {
-      addTab()
+      const newTab = { id: Math.random().toString(36).substr(2, 9), url: '', title: 'New Tab', loading: false }
+      setTabs([newTab])
+      setActiveTab(newTab.id)
     } else if (activeTab === tabId) {
       setActiveTab(newTabs[newTabs.length - 1].id)
     }
-    setTabs(newTabs)
+    setTabs(newTabs.length === 0 ? [{ id: '1', url: '', title: 'New Tab', loading: false }] : newTabs)
   }
 
   const navigate = useCallback((url: string) => {
     if (!url) return
 
     let processedUrl = url
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      processedUrl = `https://${url}`
+    if (!url.match(/^https?:\/\//)) {
+      if (url.includes('.') && !url.includes(' ')) {
+        processedUrl = `https://${url}`
+      } else {
+        processedUrl = `https://www.google.com/search?q=${encodeURIComponent(url)}`
+      }
     }
 
     setTabs(tabs => tabs.map(tab =>
@@ -64,16 +70,6 @@ export function Browser() {
     e.preventDefault()
     navigate(urlInput)
   }
-
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'navigate') {
-        navigate(event.data.url)
-      }
-    }
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
-  }, [navigate])
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -131,7 +127,7 @@ export function Browser() {
         <div className="flex-1 relative">
           {currentTab?.url ? (
             <iframe
-              key={`${currentTab.id}-${currentTab.url}`}
+              key={currentTab.url}
               src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
               sandbox="allow-same-origin allow-scripts allow-forms"
