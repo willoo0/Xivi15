@@ -1,7 +1,8 @@
 
 import express from 'express';
 import axios from 'axios';
-import { JSDOM } from 'jsdom';
+import jsdom from 'jsdom';
+const { JSDOM } = jsdom;
 
 const router = express.Router();
 
