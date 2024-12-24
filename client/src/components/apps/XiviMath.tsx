@@ -34,9 +34,6 @@ export function XiviMath() {
           throw new Error(`Wolfram Alpha API error: ${wolframRes.status}`);
         }
       
-      if (!wolframRes.ok) {
-        throw new Error(`Wolfram Alpha API error: ${wolframRes.status}`);
-      }
       const wolframData = await wolframRes.json();
       
       if (wolframData.queryresult?.success) {
@@ -76,13 +73,44 @@ export function XiviMath() {
       const aiData = await aiRes.json();
       setSolution(aiData.choices[0].message.content);
     } catch (error) {
+      console.error("API Error:", error);
       retryCount++;
       if (retryCount === maxRetries) {
         let errorMessage = "An error occurred while solving the equation:\n\n";
         
         if (error instanceof Error) {
-          if (error.message.includes('Failed to fetch')) {
-            errorMessage += "- Network error: Please check your internet connection and try again\n";
+          if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            errorMessage += "- Network error: Please check your internet connection and try again\n- Attempting AI fallback...\n";
+            // Try AI fallback even after network error
+            try {
+              const aiRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer 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",
+                },
+                body: JSON.stringify({
+                  model: "llama3-8b-8192",
+                  messages: [
+                    {
+                      role: "system",
+                      content: "You are a math expert. Provide step-by-step solutions to mathematical problems. Be clear and concise."
+                    },
+                    {
+                      role: "user",
+                      content: `Please solve this math problem step by step: ${equation}`
+                    }
+                  ]
+                })
+              });
+              const aiData = await aiRes.json();
+              if (aiData?.choices?.[0]?.message?.content) {
+                setSolution(aiData.choices[0].message.content);
+                return;
+              }
+            } catch (aiError) {
+              errorMessage += "- AI fallback also failed. Please try again later.\n";
+            }
         } else if (error.message.includes('api.wolframalpha.com')) {
           errorMessage += "- Wolfram Alpha API error: Check if the equation format is valid\n";
         } else if (error.message.includes('groq.com')) {
