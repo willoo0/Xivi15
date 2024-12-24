@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { useDesktopStore } from "@/store/desktop";
 
 interface Message {
-  role: "user" | "friendly assistant. Use emojis.";
+  role: "user" | "assistant";
   content: string;
 }
 
@@ -19,7 +19,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      role: "friendly assistant. Use emojis.",
+      role: "assistant",
       content:
         "Hello! I'm Xivi, your virtual assistant. How can I help you today? 😊",
     },
