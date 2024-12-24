@@ -22,10 +22,10 @@ export function XiviAgent({ query, triggerAsk }: XiviAgentProps = {}) {
   }]);
 
   useEffect(() => {
-    if (query && triggerAsk) {
+    if (query) {
       handleQuery(query);
     }
-  }, [query, triggerAsk]);
+  }, [query]);
 
   const handleQuery = async (questionToAsk?: string) => {
     const queryToSend = questionToAsk || inputQuery;

@@ -33,8 +33,8 @@ export function Spotlight() {
         w.id === existingWindow.id ? {
           ...w,
           props: {
-            query: questionToAsk,
-            triggerAsk: Date.now()
+            ...w.props,
+            query: questionToAsk
           }
         } : w
       );
