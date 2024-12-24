@@ -20,13 +20,14 @@ export function Welcome() {
 
   return (
     <div className="flex flex-col items-center justify-center p-6 max-w-md mx-auto space-y-4 text-center">
-      <h1 className="text-2xl font-bold animate-fade-in">Welcome to Xivi Spaces</h1>
+      <h1 className="text-2xl font-bold animate-fade-in">👋 Welcome to Xivi Spaces</h1>
       <h2 className="animate-slide-up">We are so glad to have you has a beta tester!</h2>
       <h2 className="animate-slide-up">Released: Dec 25, 2024</h2>
 
       <div className="space-y-2 text-muted-foreground">
         <p className="font-medium">Here's some cool stuff you can do:</p>
         <ul className="list-none space-y-2 animate-fade-in">
+          <li>- Use [ctrl + space] to ask the agent anything</li>
           <li>- Click the power icon in the top-left to access system options</li>
           <li>- Use the taskbar at the bottom to launch apps</li>
           <li>- Drag windows to move them around</li>
