@@ -63,15 +63,11 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      if (!import.meta.env.VITE_GROQ_API_KEY) {
-        throw new Error('GROQ API key not found. Please add it to your Replit Secrets.');
-      }
-      
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY || ''}`
+          'Authorization': 'Bearer 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'
         },
         body: JSON.stringify({
           model: 'llama3-8b-8192',
@@ -83,10 +79,6 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
       });
       
       const data = await res.json();
-      if (!data.choices?.[0]?.message?.content) {
-        console.error('Unexpected API response:', data);
-        throw new Error('Invalid API response');
-      }
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: data.choices[0].message.content
