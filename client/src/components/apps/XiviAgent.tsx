@@ -17,13 +17,16 @@ interface XiviAgentProps {
 export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
   const [inputQuery, setInputQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content:
-        "Hello! I'm Xivi, your virtual assistant. How can I help you today? 😊",
-    },
-  ]);
+  const initialMessage = {
+    role: "assistant" as const,
+    content: "Hello! I'm Xivi, your virtual assistant. How can I help you today? 😊",
+  };
+  const [messages, setMessages] = useState<Message[]>([initialMessage]);
+
+  const clearChat = () => {
+    setMessages([initialMessage]);
+    setInputQuery("");
+  };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -172,6 +175,11 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
 
   return (
     <div className="h-full flex flex-col">
+      <div className="p-2 border-b">
+        <Button variant="outline" size="sm" onClick={clearChat}>
+          Clear Chat
+        </Button>
+      </div>
       <div className="flex-1 overflow-auto p-4 space-y-4">
         {messages.map((message, i) => (
           <div
