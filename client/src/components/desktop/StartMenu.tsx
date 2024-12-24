@@ -13,6 +13,13 @@ interface StartMenuProps {
 
 const apps = [
   {
+    id: "xiviagent",
+    title: "Xivi Agent",
+    component: "XiviAgent",
+    icon: Bot,
+    category: "System",
+  },
+  {
     id: "weather",
     title: "Weather",
     component: "Weather",

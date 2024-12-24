@@ -1,5 +1,6 @@
 
 import {
+  Bot,
   FileText,
   Calculator,
   Folder,
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 
 export const appIcons: Record<string, any> = {
+  XiviAgent: Bot,
   TextEditor: FileText,
   Calculator: Calculator,
   FileExplorer: Folder,
