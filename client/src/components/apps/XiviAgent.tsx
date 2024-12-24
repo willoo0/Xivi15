@@ -21,24 +21,26 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
   }]);
 
   useEffect(() => {
-    let cleanup: () => void;
-    
     if (initialQuery?.trim()) {
       handleQuery(initialQuery);
     }
-    
-    import('@/lib/eventBus').then(({ eventBus }) => {
+  }, []);
+
+  useEffect(() => {
+    const setupEventBus = async () => {
+      const { eventBus } = await import('@/lib/eventBus');
       const handler = (question: string) => {
         handleQuery(question);
       };
       eventBus.on('newQuestion', handler);
-      cleanup = () => {
-        eventBus.off('newQuestion', handler);
-      };
-    });
-
-    return () => cleanup?.();
-  }, []); // Empty dependency array since we only want to set up the listener once
+      return () => eventBus.off('newQuestion', handler);
+    };
+    
+    const cleanupPromise = setupEventBus();
+    return () => {
+      cleanupPromise.then(cleanup => cleanup());
+    };
+  }, []);
 
   const handleQuery = async (questionToAsk?: string) => {
     const queryToSend = questionToAsk || inputQuery;

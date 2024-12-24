@@ -32,9 +32,8 @@ export function Spotlight() {
       if (existingWindow.isMinimized) {
         store.toggleMinimize(existingWindow.id);
       }
-      import('@/lib/eventBus').then(({ eventBus }) => {
-        eventBus.emit('newQuestion', questionToAsk);
-      });
+      const { eventBus } = await import('@/lib/eventBus');
+      eventBus.emit('newQuestion', questionToAsk);
     } else {
       const windowId = nanoid();
       store.addWindow({
