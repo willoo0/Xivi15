@@ -33,8 +33,10 @@ import { WorstCaseScenario } from './apps/WorstCaseScenario';
 import { PhotoViewer } from './apps/PhotoViewer'
 import { MusicPlayer } from './apps/MusicPlayer'
 import { Terminal } from './apps/Terminal'
+import { XiviAgent } from './apps/XiviAgent'
 
 const components: { [key: string]: React.ComponentType } = {
+  XiviAgent,
   TextEditor,
   Calculator,
   FileExplorer,
