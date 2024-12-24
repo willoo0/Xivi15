@@ -27,15 +27,9 @@ export function Spotlight() {
     const existingWindow = store.windows.find(w => w.component === 'XiviAgent');
     const questionToAsk = query.trim();
     
-    if (existingWindow) {
-      store.setActiveWindow(existingWindow.id);
-      if (existingWindow.isMinimized) {
-        store.toggleMinimize(existingWindow.id);
-      }
-      const { eventBus } = await import('@/lib/eventBus');
-      eventBus.emit('newQuestion', questionToAsk);
-    } else {
-      const windowId = nanoid();
+    const windowId = existingWindow?.id || nanoid();
+    
+    if (!existingWindow) {
       store.addWindow({
         id: windowId,
         title: 'Xivi Agent',
@@ -46,13 +40,22 @@ export function Spotlight() {
           width: 600,
           height: 400,
         },
-        initialQuery: questionToAsk,
+        initialQuery: '',
         timestamp: Date.now(),
         isMinimized: false,
         isMaximized: false,
       });
-      store.setActiveWindow(windowId);
+    } else if (existingWindow.isMinimized) {
+      store.toggleMinimize(windowId);
     }
+    
+    store.setActiveWindow(windowId);
+    
+    // Small delay to ensure component is mounted
+    setTimeout(async () => {
+      const { eventBus } = await import('@/lib/eventBus');
+      eventBus.emit('newQuestion', questionToAsk);
+    }, 100);
     
     setQuery('');
     setOpen(false);
