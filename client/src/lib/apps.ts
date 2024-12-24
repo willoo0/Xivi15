@@ -1,4 +1,3 @@
-
 import {
   Bot,
   FileText,
@@ -18,223 +17,227 @@ import {
   Globe,
   Hammer,
   Hand,
-  Music
-} from 'lucide-react';
+  Music,
+} from "lucide-react";
 
 export const apps = {
-  'xiviagent': {
-    id: 'xiviagent',
-    title: 'Xivi Agent',
-    component: 'XiviAgent',
+  xiviagent: {
+    id: "xiviagent",
+    title: "Xivi Agent",
+    component: "XiviAgent",
     icon: Bot,
-    category: 'Communication'
+    category: "Communication",
   },
-  'photoviewer': {
-    id: 'photoviewer',
-    title: 'Photo Viewer',
-    component: 'PhotoViewer',
+  photoviewer: {
+    id: "photoviewer",
+    title: "Photo Viewer",
+    component: "PhotoViewer",
     icon: ImageIcon,
-    category: 'Entertainment'
+    category: "Entertainment",
   },
-  'pdfviewer': {
-    id: 'pdfviewer',
-    title: 'PDF Viewer',
-    component: 'PDFViewer',
+  pdfviewer: {
+    id: "pdfviewer",
+    title: "PDF Viewer",
+    component: "PDFViewer",
     icon: FileText,
-    category: 'Media'
+    category: "Media",
   },
-  'balloonsbullets': {
-    id: 'balloonsbullets',
-    title: 'Balloons & Bullets',
-    component: 'BalloonsBullets',
+  balloonsbullets: {
+    id: "balloonsbullets",
+    title: "Balloons & Bullets",
+    component: "BalloonsBullets",
     icon: Gamepad2,
-    category: 'Games',
-    hideFromStartMenu: true
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'dodgebrawl': {
-    id: 'dodgebrawl',
-    title: 'Dodge Brawl',
-    component: 'DodgeBrawl',
+  dodgebrawl: {
+    id: "dodgebrawl",
+    title: "Dodge Brawl",
+    component: "DodgeBrawl",
     icon: Gamepad2,
-    category: 'Games',
-    hideFromStartMenu: true
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'dungeonfish': {
-    id: 'dungeonfish',
-    title: 'Dungeon Fish',
-    component: 'DungeonFish',
+  dungeonfish: {
+    id: "dungeonfish",
+    title: "Dungeon Fish",
+    component: "DungeonFish",
     icon: Gamepad2,
-    category: 'Games',
-    hideFromStartMenu: true
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'folkware': {
-    id: 'folkware',
-    title: 'Folkware',
-    component: 'Folkware',
+  folkware: {
+    id: "folkware",
+    title: "Folkware",
+    component: "Folkware",
     icon: Gamepad2,
-    category: 'Games',
-    hideFromStartMenu: true
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'silentheist': {
-    id: 'silentheist',
-    title: 'Silent Heist',
-    component: 'SilentHeist',
+  silentheist: {
+    id: "silentheist",
+    title: "Silent Heist",
+    component: "SilentHeist",
     icon: Gamepad2,
-    category: 'Games',
-    hideFromStartMenu: true
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'snow': {
-    id: 'snow',
-    title: 'Snow',
-    component: 'Snow',
+  snow: {
+    id: "snow",
+    title: "Snow",
+    component: "Snow",
     icon: Gamepad2,
-    category: 'Games',
-    hideFromStartMenu: true
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'worstcasescenario': {
-    id: 'worstcasescenario',
-    title: 'Worst Case Scenario',
-    component: 'WorstCaseScenario',
+  worstcasescenario: {
+    id: "worstcasescenario",
+    title: "Worst Case Scenario",
+    component: "WorstCaseScenario",
     icon: Gamepad2,
-    category: 'Games',
-    hideFromStartMenu: true
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'browser': {
-    id: 'browser',
-    title: 'Web Browser',
-    component: 'Browser',
+  browser: {
+    id: "browser",
+    title: "Web Browser",
+    component: "Browser",
     icon: Globe,
-    category: 'Internet'
+    category: "Internet",
   },
-  'notepad': {
-    id: 'notepad',
-    title: 'Text Editor',
-    component: 'TextEditor',
+  notepad: {
+    id: "notepad",
+    title: "Text Editor",
+    component: "TextEditor",
     icon: FileText,
-    category: 'Productivity'
+    category: "Productivity",
   },
-  'calculator': {
-    id: 'calculator',
-    title: 'Calculator',
-    component: 'Calculator',
+  calculator: {
+    id: "calculator",
+    title: "Calculator",
+    component: "Calculator",
     icon: Calculator,
-    category: 'Utilities'
+    category: "Utilities",
   },
-  'settings': {
-    id: 'settings',
-    title: 'Settings',
-    component: 'Settings',
+  settings: {
+    id: "settings",
+    title: "Settings",
+    component: "Settings",
     icon: Settings,
-    category: 'System'
+    category: "System",
   },
-  'music': {
-    id: 'music',
-    title: 'Music Player',
-    component: 'MusicPlayer',
+  music: {
+    id: "music",
+    title: "Music Player",
+    component: "MusicPlayer",
     icon: Music,
-    category: 'Media'
+    category: "Media",
   },
-  'paint': {
-    id: 'paint',
-    title: 'Paint',
-    component: 'Paint',
+  paint: {
+    id: "paint",
+    title: "Paint",
+    component: "Paint",
     icon: ImageIcon,
-    category: 'Media'
+    category: "Media",
   },
-  'games': {
-    id: 'games',
-    title: 'Games',
-    component: 'Games',
+  games: {
+    id: "games",
+    title: "Games",
+    component: "Games",
     icon: Gamepad2,
-    category: 'Games'
+    category: "Games",
   },
-  'terminal': {
-    id: 'terminal',
-    title: 'Terminal',
-    component: 'Terminal',
+  terminal: {
+    id: "terminal",
+    title: "Terminal",
+    component: "Terminal",
     icon: Terminal,
-    category: 'System'
+    category: "System",
   },
-  'weather': {
-    id: 'weather',
-    title: 'Weather',
-    component: 'Weather',
+  weather: {
+    id: "weather",
+    title: "Weather",
+    component: "Weather",
     icon: Cloud,
-    category: 'Internet'
+    category: "Internet",
   },
-  'fileexplorer': {
-    id: 'fileexplorer',
-    title: 'File Explorer',
-    component: 'FileExplorer',
+  fileexplorer: {
+    id: "fileexplorer",
+    title: "File Explorer",
+    component: "FileExplorer",
     icon: Folder,
-    category: 'System'
+    category: "System",
   },
-  'systeminfo': {
-    id: 'systeminfo',
-    title: 'System Info',
-    component: 'SystemInfo',
+  systeminfo: {
+    id: "systeminfo",
+    title: "System Info",
+    component: "SystemInfo",
     icon: Monitor,
-    category: 'System'
+    category: "System",
   },
-  'timerclock': {
-    id: 'timerclock',
-    title: 'Timer Clock',
-    component: 'TimerClock',
+  timerclock: {
+    id: "timerclock",
+    title: "Timer Clock",
+    component: "TimerClock",
     icon: Timer,
-    category: 'Utilities'
+    category: "Utilities",
   },
-  'todo': {
-    id: 'todo',
-    title: 'Todo List',
-    component: 'Todo',
+  todo: {
+    id: "todo",
+    title: "Todo List",
+    component: "Todo",
     icon: Calendar,
-    category: 'Productivity'
+    category: "Productivity",
   },
-  'minesweeper': {
-    id: 'minesweeper',
-    title: 'Minesweeper',
-    component: 'Minesweeper',
+  minesweeper: {
+    id: "minesweeper",
+    title: "Minesweeper",
+    component: "Minesweeper",
     icon: Bomb,
-    category: 'Games'
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'snake': {
-    id: 'snake',
-    title: 'Snake',
-    component: 'Snake',
+  snake: {
+    id: "snake",
+    title: "Snake",
+    component: "Snake",
     icon: Scissors,
-    category: 'Games'
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'tetris': {
-    id: 'tetris',
-    title: 'Tetris',
-    component: 'Tetris',
+  tetris: {
+    id: "tetris",
+    title: "Tetris",
+    component: "Tetris",
     icon: Layout,
-    category: 'Games'
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'whackamole': {
-    id: 'whackamole',
-    title: 'Whack A Mole',
-    component: 'WhackAMole',
+  whackamole: {
+    id: "whackamole",
+    title: "Whack A Mole",
+    component: "WhackAMole",
     icon: Hammer,
-    category: 'Games'
+    category: "Games",
+    hideFromStartMenu: true,
   },
-  'welcome': {
-    id: 'welcome',
-    title: 'Welcome',
-    component: 'Welcome',
+  welcome: {
+    id: "welcome",
+    title: "Welcome",
+    component: "Welcome",
     icon: Hand,
-    category: 'System'
-  }
+    category: "System",
+  },
 } as const;
 
 export type AppId = keyof typeof apps;
-export type AppComponent = typeof apps[AppId]['component'];
+export type AppComponent = (typeof apps)[AppId]["component"];
 
 export const getAppIcon = (component: string) => {
-  const app = Object.values(apps).find(app => app.component === component);
+  const app = Object.values(apps).find((app) => app.component === component);
   return app?.icon;
 };
 
 export const getAppByComponent = (component: string) => {
-  return Object.values(apps).find(app => app.component === component);
+  return Object.values(apps).find((app) => app.component === component);
 };
