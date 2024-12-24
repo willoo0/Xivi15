@@ -109,16 +109,20 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
       }
     }
 
-    try {
-      const res = await fetch(
-        "https://api.groq.com/openai/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization:
-              "Bearer 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",
-          },
+    const maxRetries = 3;
+    let attempt = 0;
+    
+    while (attempt < maxRetries) {
+      try {
+        const res = await fetch(
+          "https://api.groq.com/openai/v1/chat/completions",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization:
+                "Bearer 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",
+            },
           body: JSON.stringify({
             model: "llama3-8b-8192",
             messages: [
@@ -160,17 +164,26 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
         ]);
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: `❌ Error: ${errorMessage}. Please try again or contact support if the issue persists.`,
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
+      attempt++;
+      if (attempt === maxRetries) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: `❌ Connection Error: Unable to reach AI service after ${maxRetries} attempts. This might be a temporary issue. Please wait a moment and try again. Error details: ${errorMessage}`,
+          },
+        ]);
+        setIsLoading(false);
+        return;
+      }
+      // Wait for 1 second before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      continue;
     }
+    break;
+    }
+    setIsLoading(false);
   };
 
   return (
