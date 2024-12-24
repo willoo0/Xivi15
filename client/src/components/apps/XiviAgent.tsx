@@ -62,30 +62,9 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     };
   }, []);
 
-  const executeJsCommand = (command: string) => {
-    try {
-      // Use a sandboxed environment for security if needed.
-      return eval(command); 
-    } catch (error) {
-      return `Error executing command: ${error}`;
-    }
-  };
-
   const handleQuery = async (questionToAsk?: string) => {
     const queryToSend = questionToAsk || inputQuery;
     if (!queryToSend.trim()) return;
-
-    // Check for JavaScript command execution
-    if (queryToSend.startsWith('execute:')) {
-      const command = queryToSend.substring(8);
-      const result = executeJsCommand(command);
-      setMessages(prev => [...prev, 
-        { role: "user", content: queryToSend },
-        { role: "assistant", content: `Command executed: ${result}` }
-      ]);
-      setInputQuery('');
-      return;
-    }
 
     setInputQuery("");
     setIsLoading(true);
