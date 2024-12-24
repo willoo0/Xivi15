@@ -29,6 +29,69 @@ export const apps = {
     icon: Bot,
     category: 'System'
   },
+  'photoviewer': {
+    id: 'photoviewer',
+    title: 'Photo Viewer',
+    component: 'PhotoViewer',
+    icon: ImageIcon,
+    category: 'Media'
+  },
+  'pdfviewer': {
+    id: 'pdfviewer',
+    title: 'PDF Viewer',
+    component: 'PDFViewer',
+    icon: FileText,
+    category: 'Media'
+  },
+  'balloonsbullets': {
+    id: 'balloonsbullets',
+    title: 'Balloons & Bullets',
+    component: 'BalloonsBullets',
+    icon: Gamepad2,
+    category: 'Games'
+  },
+  'dodgebrawl': {
+    id: 'dodgebrawl',
+    title: 'Dodge Brawl',
+    component: 'DodgeBrawl',
+    icon: Gamepad2,
+    category: 'Games'
+  },
+  'dungeonfish': {
+    id: 'dungeonfish',
+    title: 'Dungeon Fish',
+    component: 'DungeonFish',
+    icon: Gamepad2,
+    category: 'Games'
+  },
+  'folkware': {
+    id: 'folkware',
+    title: 'Folkware',
+    component: 'Folkware',
+    icon: Gamepad2,
+    category: 'Games'
+  },
+  'silentheist': {
+    id: 'silentheist',
+    title: 'Silent Heist',
+    component: 'SilentHeist',
+    icon: Gamepad2,
+    category: 'Games'
+  },
+  'snow': {
+    id: 'snow',
+    title: 'Snow',
+    component: 'Snow',
+    icon: Gamepad2,
+    category: 'Games'
+  },
+  'worstcasescenario': {
+    id: 'worstcasescenario',
+    title: 'Worst Case Scenario',
+    component: 'WorstCaseScenario',
+    icon: Gamepad2,
+    category: 'Games'
+  },
   'browser': {
     id: 'browser',
     title: 'Web Browser',
