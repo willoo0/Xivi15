@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xivi Spaces Lite</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #000;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .desktop {
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(to bottom right, #1a1a1a, #0a0a0a);
+        }
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+        .window {
+            position: absolute;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            min-width: 300px;
+            min-height: 200px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .window-header {
+            padding: 8px;
+            background: #252525;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .window-content {
+            padding: 16px;
+            height: calc(100% - 35px);
+        }
+        .clock { margin-left: auto; }
+        .start-btn {
+            background: #333;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .start-btn:hover { background: #444; }
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+        .close-btn:hover { background: #ff4444; }
+    </style>
+</head>
+<body>
+    <div class="desktop" id="desktop">
+        <div class="taskbar">
+            <button class="start-btn">✨ Xivi</button>
+            <div class="clock" id="clock"></div>
+        </div>
+    </div>
+
+    <script>
+        class Window {
+            constructor(title, content) {
+                this.element = document.createElement('div');
+                this.element.className = 'window';
+                this.element.style.left = '50px';
+                this.element.style.top = '50px';
+                
+                const header = document.createElement('div');
+                header.className = 'window-header';
+                header.innerHTML = `
+                    <span>${title}</span>
+                    <button class="close-btn">×</button>
+                `;
+                
+                const windowContent = document.createElement('div');
+                windowContent.className = 'window-content';
+                windowContent.innerHTML = content;
+                
+                this.element.appendChild(header);
+                this.element.appendChild(windowContent);
+                
+                this.setupDragging(header);
+                header.querySelector('.close-btn').onclick = () => this.element.remove();
+                
+                document.getElementById('desktop').appendChild(this.element);
+            }
+            
+            setupDragging(header) {
+                let isDragging = false;
+                let currentX;
+                let currentY;
+                let initialX;
+                let initialY;
+                
+                header.onmousedown = (e) => {
+                    isDragging = true;
+                    initialX = e.clientX - this.element.offsetLeft;
+                    initialY = e.clientY - this.element.offsetTop;
+                };
+                
+                document.onmousemove = (e) => {
+                    if (!isDragging) return;
+                    
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                    
+                    this.element.style.left = currentX + 'px';
+                    this.element.style.top = currentY + 'px';
+                };
+                
+                document.onmouseup = () => {
+                    isDragging = false;
+                };
+            }
+        }
+
+        // Clock
+        function updateClock() {
+            const clock = document.getElementById('clock');
+            clock.textContent = new Date().toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Welcome Window
+        new Window('Welcome to Xivi Spaces Lite', `
+            <h2>👋 Welcome!</h2>
+            <p style="margin-top: 16px">This is a lightweight version of Xivi Spaces.</p>
+            <p style="margin-top: 8px">Features:</p>
+            <ul style="margin: 8px 0 0 20px">
+                <li>Draggable windows</li>
+                <li>Taskbar with clock</li>
+                <li>Simple and fast</li>
+            </ul>
+        `);
+
+        // Start button functionality
+        document.querySelector('.start-btn').onclick = () => {
+            new Window('About', `
+                <h3>✨ Xivi Spaces Lite</h3>
+                <p style="margin-top: 16px">Version: 1.0.0</p>
+                <p style="margin-top: 8px">A minimalist desktop environment</p>
+            `);
+        };
+    </script>
+</body>
+</html>
