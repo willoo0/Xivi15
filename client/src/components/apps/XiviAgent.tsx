@@ -145,6 +145,14 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
             else if (unit.startsWith('s')) seconds = parseInt(value);
           });
 
+          // Emit timer command event
+          eventBus.emit('timerCommand', { 
+            type: 'timer',
+            hours,
+            minutes,
+            seconds
+          });
+
           store.addWindow({
             id: windowId,
             title: app.title,

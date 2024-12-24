@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+import { eventBus } from '@/lib/eventBus';
+
 interface TimerClockProps {
   initialTimer?: {
     hours: number;
@@ -14,6 +16,21 @@ interface TimerClockProps {
 }
 
 export function TimerClock({ initialTimer, startStopwatch }: TimerClockProps) {
+  useEffect(() => {
+    const handleTimerCommand = (data: { hours?: number; minutes?: number; seconds?: number; type: 'timer' | 'stopwatch' }) => {
+      if (data.type === 'timer' && data.hours !== undefined && data.minutes !== undefined && data.seconds !== undefined) {
+        setHours(data.hours.toString());
+        setMinutes(data.minutes.toString());
+        setSeconds(data.seconds.toString());
+        handleStart();
+      } else if (data.type === 'stopwatch') {
+        setIsStopwatchActive(true);
+      }
+    };
+
+    eventBus.on('timerCommand', handleTimerCommand);
+    return () => eventBus.off('timerCommand', handleTimerCommand);
+  }, []);
   // Timer state
   const [hours, setHours] = useState<string>(initialTimer?.hours.toString() || '');
   const [minutes, setMinutes] = useState<string>(initialTimer?.minutes.toString() || '');
