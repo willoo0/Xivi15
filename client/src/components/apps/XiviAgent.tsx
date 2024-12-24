@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ReactMarkdown from "react-markdown";
 import { nanoid } from "nanoid";
 import { useDesktopStore } from "@/store/desktop";
 import { eventBus } from "@/lib/eventBus";
@@ -344,9 +343,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
                   : "bg-muted mr-4"
               }`}
             >
-              <ReactMarkdown className="prose prose-invert whitespace-pre-wrap max-w-none">
-                {message.content}
-              </ReactMarkdown>
+              <p className="whitespace-pre-wrap">{message.content}</p>
             </div>
           </div>
         ))}
