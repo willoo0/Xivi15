@@ -31,10 +31,10 @@ export const apps = {
   },
   xivimath: {
     id: "xivimath",
-    title: "XiviMath",
+    title: "Xivi Math",
     component: "XiviMath",
     icon: Calculator,
-    category: "Education",
+    category: "Productivity",
   },
   photoviewer: {
     id: "photoviewer",
