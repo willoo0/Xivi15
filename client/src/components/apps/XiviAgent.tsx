@@ -125,6 +125,35 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
       }
     }
 
+    // Handle timer and stopwatch commands
+    if (query.includes("timer") || query.includes("stopwatch")) {
+      const store = useDesktopStore.getState();
+      const { apps } = await import("@/lib/apps");
+      const app = apps.timerclock;
+      
+      const windowId = nanoid();
+      store.addWindow({
+        id: windowId,
+        title: app.title,
+        component: app.component,
+        position: {
+          x: 50 + Math.random() * 100,
+          y: 50 + Math.random() * 100,
+          width: 400,
+          height: 500,
+        },
+        isMinimized: false,
+        isMaximized: false,
+      });
+
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: `I've opened the ${app.title} app for you! You can ${query.includes("timer") ? "set a timer" : "use the stopwatch"} there! ⏱️`
+      }]);
+      setIsLoading(false);
+      return;
+    }
+
     // Handle closing apps
     if (query.includes("close")) {
       const windowToClose = store.windows.find(w => 
