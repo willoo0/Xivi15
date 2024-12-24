@@ -6,145 +6,13 @@ import { ContextMenu } from "./ContextMenu";
 import { nanoid } from "nanoid";
 import { AppWindow, Bot, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File, Music, Terminal } from "lucide-react";
 import { getAppIcon } from "@/lib/appIcons";
+import { apps } from '@/lib/apps';
 
 interface StartMenuProps {
   onClose: () => void;
 }
 
-const apps = [
-  {
-    id: "xiviagent",
-    title: "Xivi Agent",
-    component: "XiviAgent",
-    icon: Bot,
-    category: "System",
-  },
-  {
-    id: "weather",
-    title: "Weather",
-    component: "Weather",
-    icon: Cloud,
-    category: "Internet",
-  },
-  {
-    id: "games",
-    title: "Games",
-    component: "Games",
-    icon: Gamepad2,
-    category: "Applications",
-  },
-  {
-    id: "todo",
-    title: "Todo List",
-    component: "Todo",
-    icon: Calendar,
-    category: "Productivity",
-  },
-  {
-    id: "paint",
-    title: "Paint",
-    component: "Paint",
-    icon: ImageIcon,
-    category: "Media",
-  },
-  {
-    id: "photoviewer",
-    title: "Photo Viewer",
-    component: "PhotoViewer",
-    icon: ImageIcon,
-    category: "Media",
-    props: {
-      position: {
-        x: 50 + Math.random() * 100,
-        y: 50 + Math.random() * 100,
-        width: 600,
-        height: 400,
-      },
-      isMinimized: false,
-      isMaximized: false,
-    }
-  },
-  {
-    id: "pdfviewer",
-    title: "PDF Viewer",
-    component: "PDFViewer",
-    icon: File,
-    category: "Media",
-    props: {
-      position: {
-        x: 50 + Math.random() * 100,
-        y: 50 + Math.random() * 100,
-        width: 600,
-        height: 400,
-      },
-      isMinimized: false,
-      isMaximized: false,
-    }
-  },
-  {
-    id: "systeminfo",
-    title: "System Info",
-    component: "SystemInfo",
-    icon: Monitor,
-    category: "System",
-  },
-  {
-    id: "musicplayer",
-    title: "Music Player",
-    component: "MusicPlayer",
-    icon: Music,
-    category: "Media",
-  },
-  {
-    id: "timerclock",
-    title: "Timer & Clock",
-    component: "TimerClock",
-    icon: Timer,
-    category: "Accessories",
-  },
-  {
-    id: "browser",
-    title: "Web Browser",
-    component: "Browser",
-    icon: Globe,
-    category: "Internet",
-  },
-  {
-    id: "text-editor",
-    title: "Text Editor",
-    component: "TextEditor",
-    icon: FileText,
-    category: "Productivity",
-  },
-  {
-    id: "calculator",
-    title: "Calculator",
-    component: "Calculator",
-    icon: Calculator,
-    category: "Accessories",
-  },
-  {
-    id: "terminal",
-    title: "Terminal",
-    component: "Terminal",
-    icon: Terminal,
-    category: "System",
-  },
-  {
-    id: "file-explorer",
-    title: "Files",
-    component: "FileExplorer",
-    icon: Folder,
-    category: "System",
-  },
-  {
-    id: "settings",
-    title: "Settings",
-    component: "Settings",
-    icon: Settings,
-    category: "System",
-  },
-];
+const appsList = Object.values(apps);
 
 const categories = [
   "Internet",
@@ -166,12 +34,12 @@ export function StartMenu({ onClose }: StartMenuProps) {
     appTitle: string;
   } | null>(null);
 
-  const filteredApps = apps.filter(app => 
+  const filteredApps = appsList.filter(app => 
     app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     app.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleAppClick = (app: (typeof apps)[0]) => {
+  const handleAppClick = (app: (typeof appsList)[0]) => {
     addWindow({
       id: nanoid(),
       title: app.title,
@@ -188,7 +56,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
     onClose();
   };
 
-  const handleRightClick = (e: React.MouseEvent, app: (typeof apps)[0]) => {
+  const handleRightClick = (e: React.MouseEvent, app: (typeof appsList)[0]) => {
     e.preventDefault();
     setContextMenu({
       x: e.clientX,
