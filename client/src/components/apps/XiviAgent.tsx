@@ -175,11 +175,6 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-2 border-b">
-        <Button variant="outline" size="sm" onClick={clearChat}>
-          Clear Chat
-        </Button>
-      </div>
       <div className="flex-1 overflow-auto p-4 space-y-4">
         {messages.map((message, i) => (
           <div
@@ -221,6 +216,9 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
             placeholder="Type your message..."
             className="flex-1 bg-muted p-2 rounded-md"
           />
+          <Button variant="outline" onClick={clearChat} disabled={isLoading}>
+            Clear
+          </Button>
           <Button onClick={() => handleQuery()} disabled={isLoading}>
             Send
           </Button>
