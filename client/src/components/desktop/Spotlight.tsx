@@ -7,7 +7,6 @@ import { nanoid } from 'nanoid';
 export function Spotlight() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const { addWindow } = useDesktopStore();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -16,7 +15,6 @@ export function Spotlight() {
         setOpen((open) => !open);
       }
     };
-
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
   }, []);
@@ -25,27 +23,27 @@ export function Spotlight() {
     e.preventDefault();
     if (!query.trim()) return;
 
-    const existingWindow = useDesktopStore.getState().windows.find(w => w.component === 'XiviAgent');
+    const store = useDesktopStore.getState();
+    const existingWindow = store.windows.find(w => w.component === 'XiviAgent');
     const questionToAsk = query.trim();
     
     if (existingWindow) {
-      const updatedWindows = useDesktopStore.getState().windows.map(w => 
-        w.id === existingWindow.id ? {
-          ...w,
-          props: {
-            query: questionToAsk,
-            triggerAsk: Date.now()
-          }
-        } : w
-      );
-      useDesktopStore.setState({ windows: updatedWindows });
-      useDesktopStore.getState().setActiveWindow(existingWindow.id);
+      store.setActiveWindow(existingWindow.id);
       if (existingWindow.isMinimized) {
-        useDesktopStore.getState().toggleMinimize(existingWindow.id);
+        store.toggleMinimize(existingWindow.id);
       }
+      store.setState({
+        windows: store.windows.map(w => 
+          w.id === existingWindow.id ? {
+            ...w,
+            initialQuery: questionToAsk,
+            timestamp: Date.now()
+          } : w
+        )
+      });
     } else {
       const windowId = nanoid();
-      addWindow({
+      store.addWindow({
         id: windowId,
         title: 'Xivi Agent',
         component: 'XiviAgent',
@@ -55,14 +53,12 @@ export function Spotlight() {
           width: 600,
           height: 400,
         },
-        props: {
-          query: questionToAsk,
-          triggerAsk: Date.now()
-        },
+        initialQuery: questionToAsk,
+        timestamp: Date.now(),
         isMinimized: false,
         isMaximized: false,
       });
-      useDesktopStore.getState().setActiveWindow(windowId);
+      store.setActiveWindow(windowId);
     }
     
     setQuery('');

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -9,25 +9,23 @@ interface Message {
 }
 
 interface XiviAgentProps {
-  query?: string;
-  triggerAsk?: number;
+  initialQuery?: string;
+  timestamp?: number;
 }
 
-export function XiviAgent({ query, triggerAsk }: XiviAgentProps = {}) {
+export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
   const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: 'Hello! I\'m Xivi, your virtual assistant. How can I help you today?'
   }]);
-  const lastQuery = useRef('');
 
   useEffect(() => {
-    if (query && query !== lastQuery.current) {
-      lastQuery.current = query;
-      handleQuery(query);
+    if (initialQuery?.trim()) {
+      handleQuery(initialQuery);
     }
-  }, [query, triggerAsk]);
+  }, [initialQuery, timestamp]);
 
   const handleQuery = async (questionToAsk?: string) => {
     const queryToSend = questionToAsk || inputQuery;
@@ -56,11 +54,10 @@ export function XiviAgent({ query, triggerAsk }: XiviAgentProps = {}) {
       });
       
       const data = await res.json();
-      const assistantMessage = {
-        role: 'assistant' as const,
+      setMessages(prev => [...prev, {
+        role: 'assistant',
         content: data.choices[0].message.content
-      };
-      setMessages(prev => [...prev, assistantMessage]);
+      }]);
     } catch (error) {
       setMessages(prev => [...prev, {
         role: 'assistant',
