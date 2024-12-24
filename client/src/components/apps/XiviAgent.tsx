@@ -77,22 +77,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     const store = useDesktopStore.getState();
 
     // Handle troubleshooting and problem-related queries
-    const troubleshootingPhrases = [
-      'not working properly',
-      'having issues with',
-      'need to troubleshoot',
-      'system is broken',
-      'help fix',
-      'need to reset',
-      'clear my cache',
-      'clear cookies'
-    ];
-    
-    const hasTroubleshootingRequest = troubleshootingPhrases.some(phrase => 
-      query.toLowerCase().includes(phrase.toLowerCase())
-    );
-
-    if (hasTroubleshootingRequest) {
+    if (query.includes("troubleshoot") || query.includes("fix") || (query.includes("not") && query.includes("working"))) {
       setMessages(prev => [...prev, {
         role: "assistant",
         content: "I can help you troubleshoot by clearing cookies and reloading the page. Would you like me to do this? Please respond with 'yes' to confirm."
