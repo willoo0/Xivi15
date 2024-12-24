@@ -55,7 +55,24 @@ export function XiviMath() {
       const aiData = await aiRes.json();
       setSolution(aiData.choices[0].message.content);
     } catch (error) {
-      setSolution("Error solving equation. Please try again.");
+      let errorMessage = "An error occurred while solving the equation:\n\n";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage += "- Network error: Unable to reach Wolfram Alpha or AI service\n";
+        } else if (error.message.includes('api.wolframalpha.com')) {
+          errorMessage += "- Wolfram Alpha API error: Check if the equation format is valid\n";
+        } else if (error.message.includes('groq.com')) {
+          errorMessage += "- AI Service error: Unable to process the equation\n";
+        } else {
+          errorMessage += `- ${error.message}\n`;
+        }
+      } else {
+        errorMessage += "- Unknown error occurred. Please check your equation format and try again\n";
+      }
+      
+      errorMessage += "\nTip: Make sure your equation is properly formatted (e.g., 'solve 2x + 5 = 13' or '∫x^2dx')";
+      setSolution(errorMessage);
     }
     setLoading(false);
   };
