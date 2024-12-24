@@ -79,6 +79,10 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
       });
       
       const data = await res.json();
+      if (!data.choices?.[0]?.message?.content) {
+        console.error('Unexpected API response:', data);
+        throw new Error('Invalid API response');
+      }
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: data.choices[0].message.content
