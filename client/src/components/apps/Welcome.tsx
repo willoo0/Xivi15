@@ -20,15 +20,18 @@ export function Welcome() {
 
   return (
     <div className="p-6 max-w-md space-y-4">
-      <h1 className="text-2xl font-bold">👋 Welcome to Xivi!</h1>
+      <h1 className="text-2xl font-bold">👋 Welcome to Xivi Spaces</h1>
+      <h2>We are so glad to have you has a beta tester!</h2>
+      <h2>Released: Dec 25, 2024</h2>
 
       <div className="space-y-2 text-muted-foreground">
-        <p>Here's how to get started:</p>
+        <p>Here's some cool stuff you can do:</p>
         <ul className="list-disc pl-4 space-y-1">
           <li>Click the power icon in the top-left to access system options</li>
           <li>Use the taskbar at the bottom to launch apps</li>
           <li>Drag windows to move them around</li>
-          <li>Right-click on the desktop for more options</li>
+          <li>Customize the UI to your liking in settings</li>
+          <li>Use the music app to play ad-free tunes!</li>
         </ul>
         <p style={{ color: 'yellow' }}>
           We are aware of a recent File System issue and are working on it! This

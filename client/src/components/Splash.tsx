@@ -1,10 +1,17 @@
-
 import React, { useEffect, useRef, useState } from "react";
 
-function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: number; color?: string }) {
+function ConsoleText({
+  text,
+  delay,
+  color = "white",
+}: {
+  text: string;
+  delay: number;
+  color?: string;
+}) {
   const [visible, setVisible] = useState(false);
-  const [currentText, setCurrentText] = useState('');
-  const [dots, setDots] = useState('');
+  const [currentText, setCurrentText] = useState("");
+  const [dots, setDots] = useState("");
   const intervalRef = useRef<NodeJS.Timeout>();
   const dotsIntervalRef = useRef<NodeJS.Timeout>();
 
@@ -34,7 +41,7 @@ function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: nu
             }
             return;
           }
-          setDots(prev => prev === '...' ? '' : prev + '.');
+          setDots((prev) => (prev === "..." ? "" : prev + "."));
         }, 800);
       } else {
         if (intervalRef.current) {
@@ -54,10 +61,16 @@ function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: nu
   return (
     <div className="flex items-center gap-2 font-mono">
       <span className="text-green-500">$</span>
-      <span style={{ color: color === 'green-500' ? '#22c55e' : 'white' }} className="opacity-80">
-        {currentText}{dots}
+      <span
+        style={{ color: color === "green-500" ? "#22c55e" : "white" }}
+        className="opacity-80"
+      >
+        {currentText}
+        {dots}
       </span>
-      {currentText.length < text.length && !dots && <span className="animate-pulse">_</span>}
+      {currentText.length < text.length && !dots && (
+        <span className="animate-pulse">_</span>
+      )}
     </div>
   );
 }
@@ -96,16 +109,16 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     }
 
     show(ctx: CanvasRenderingContext2D, width: number, height: number) {
-      let x = (this.x - width/2) * (width/this.z);
-      x = x + width/2;
-      
-      let y = (this.y - height/2) * (width/this.z);
-      y = y + height/2;
-      
-      const s = this.size * (width/this.z);
-      
-      x += (mouseX.current - width/2) * this.speed * 0.1;
-      y += (mouseY.current - height/2) * this.speed * 0.1;
+      let x = (this.x - width / 2) * (width / this.z);
+      x = x + width / 2;
+
+      let y = (this.y - height / 2) * (width / this.z);
+      y = y + height / 2;
+
+      const s = this.size * (width / this.z);
+
+      x += (mouseX.current - width / 2) * this.speed * 0.1;
+      y += (mouseY.current - height / 2) * this.speed * 0.1;
 
       ctx.beginPath();
       ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
@@ -118,7 +131,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const stars: Star[] = [];
@@ -130,37 +143,38 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
 
-    for(let i = 0; i < numStars; i++) {
+    for (let i = 0; i < numStars; i++) {
       stars.push(new Star(canvas.width, canvas.height));
     }
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.current = e.clientX;
       mouseY.current = e.clientY;
-      speed.current = 0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
+      speed.current =
+        0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener("mousemove", handleMouseMove);
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.9)';
+      ctx.fillStyle = "rgba(10, 10, 10, 0.9)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      stars.forEach(star => {
+
+      stars.forEach((star) => {
         star.move(canvas.width, canvas.height);
         star.show(ctx, canvas.width, canvas.height);
       });
-      
+
       requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      document.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("resize", resizeCanvas);
+      document.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
@@ -176,12 +190,17 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={handleClick}>
+    <div
+      className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950"
+      onClick={handleClick}
+    >
       <canvas ref={canvasRef} className="absolute inset-0" />
       <div className="relative z-10 flex h-full items-center justify-center backdrop-blur-sm">
         <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px] transition-all duration-500 ease-in-out">
           <div className="flex justify-center">
-            <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans">Xivi 15 Pre-Release</h1>
+            <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans">
+              Xivi 15 Spaces Pre-Release
+            </h1>
           </div>
           <ConsoleText text="Initializing Xivi Linux 14.9 Kylo" delay={500} />
           <ConsoleText text="Loading kernel modules..." delay={1000} />
