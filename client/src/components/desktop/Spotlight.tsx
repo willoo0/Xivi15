@@ -37,6 +37,7 @@ export function Spotlight() {
         height: 400,
       },
       props: {
+        key: Date.now(),
         initialQuery: query
       },
       isMinimized: false,

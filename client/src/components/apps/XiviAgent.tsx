@@ -22,9 +22,40 @@ export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
 
   useEffect(() => {
     if (initialQuery && initialQuery.trim()) {
-      handleQuery(initialQuery);
+      const userMessage = { role: 'user' as const, content: initialQuery };
+      setMessages(prev => [...prev, userMessage]);
+      setIsLoading(true);
+
+      fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer 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'
+        },
+        body: JSON.stringify({
+          model: 'llama3-8b-8192',
+          messages: [userMessage]
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const assistantMessage = {
+          role: 'assistant' as const,
+          content: data.choices[0].message.content
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      })
+      .catch(() => {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: 'Sorry, I encountered an error.'
+        }]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
     }
-  }, []);
+  }, [initialQuery]);
 
   const handleQuery = async (inputQuery?: string) => {
     const queryToSend = inputQuery || query;
