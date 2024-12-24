@@ -200,8 +200,8 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
         <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px] transition-all duration-500 ease-in-out">
           <div className="flex justify-center">
             <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans flex items-center justify-center gap-2">
-              ✨✨✨
-              Xivi Spaces 15
+              {" "}
+              Xivi Spaces 15.1 (Pre)
             </h1>
           </div>
           <ConsoleText text="Initializing Xivi Linux 15.1 Allium" delay={500} />
