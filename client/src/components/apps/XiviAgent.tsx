@@ -63,11 +63,15 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     setMessages(prev => [...prev, userMessage]);
 
     try {
+      if (!import.meta.env.VITE_GROQ_API_KEY) {
+        throw new Error('GROQ API key not found. Please add it to your Replit Secrets.');
+      }
+      
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
+          'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY || ''}`
         },
         body: JSON.stringify({
           model: 'llama3-8b-8192',
