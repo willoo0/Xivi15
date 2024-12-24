@@ -118,7 +118,14 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
           },
           body: JSON.stringify({
             model: "llama3-8b-8192",
-            messages: [...messages, userMessage].map((m) => ({
+            messages: [
+              {
+                role: "system",
+                content: "You are a friendly and helpful assistant. Use emojis in your responses to make them more engaging and fun. Be concise but warm in your communication."
+              },
+              ...messages, 
+              userMessage
+            ].map((m) => ({
               role: m.role,
               content: m.content,
             })),
