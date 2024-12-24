@@ -4,18 +4,27 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export function TimerClock() {
+interface TimerClockProps {
+  initialTimer?: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+  };
+  startStopwatch?: boolean;
+}
+
+export function TimerClock({ initialTimer, startStopwatch }: TimerClockProps) {
   // Timer state
-  const [hours, setHours] = useState<string>('');
-  const [minutes, setMinutes] = useState<string>('');
-  const [seconds, setSeconds] = useState<string>('');
+  const [hours, setHours] = useState<string>(initialTimer?.hours.toString() || '');
+  const [minutes, setMinutes] = useState<string>(initialTimer?.minutes.toString() || '');
+  const [seconds, setSeconds] = useState<string>(initialTimer?.seconds.toString() || '');
   const [totalSeconds, setTotalSeconds] = useState<number>(0);
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(!!initialTimer);
 
   // Stopwatch state
   const [stopwatchTime, setStopwatchTime] = useState<number>(0);
   const [stopwatchMs, setStopwatchMs] = useState<number>(0);
-  const [isStopwatchActive, setIsStopwatchActive] = useState<boolean>(false);
+  const [isStopwatchActive, setIsStopwatchActive] = useState<boolean>(!!startStopwatch);
 
   // Clock state
   const [time, setTime] = useState<string>('');
