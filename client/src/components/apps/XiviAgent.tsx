@@ -21,9 +21,19 @@ export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
   }]);
 
   useEffect(() => {
-    if (initialQuery) {
-      setQuery(initialQuery);
-      const submitQuery = async () => {
+    if (initialQuery && initialQuery.trim()) {
+      handleQuery(initialQuery);
+    }
+  }, []);
+
+  const handleQuery = async (inputQuery?: string) => {
+    const queryToSend = inputQuery || query;
+    if (!queryToSend.trim()) return;
+
+    const userMessage = { role: 'user' as const, content: queryToSend };
+    setMessages(prev => [...prev, userMessage]);
+    if (!inputQuery) setQuery('');
+    setIsLoading(true);
         const userMessage = { role: 'user' as const, content: initialQuery };
         setMessages(prev => [...prev, userMessage]);
         setIsLoading(true);

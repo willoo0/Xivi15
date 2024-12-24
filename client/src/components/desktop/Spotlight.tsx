@@ -36,7 +36,9 @@ export function Spotlight() {
         width: 600,
         height: 400,
       },
-      initialQuery: query,
+      props: {
+        initialQuery: query
+      },
       isMinimized: false,
       isMaximized: false,
     });
