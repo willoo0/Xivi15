@@ -35,9 +35,11 @@ import { PhotoViewer } from './apps/PhotoViewer'
 import { MusicPlayer } from './apps/MusicPlayer'
 import { Terminal } from './apps/Terminal'
 import { XiviAgent } from './apps/XiviAgent'
+import { XiviMath } from './apps/XiviMath'; // Import XiviMath
 
 const components: { [key: string]: React.ComponentType } = {
   XiviAgent,
+  XiviMath, // Add XiviMath to components
   TextEditor,
   Calculator,
   FileExplorer,
