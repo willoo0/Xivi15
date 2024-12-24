@@ -2,14 +2,28 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Palette, Eraser, Download } from 'lucide-react';
+import { Select } from '@/components/ui/select';
+import { 
+  Palette, 
+  Eraser, 
+  Download, 
+  Square, 
+  Circle, 
+  Line, 
+  Image as ImageIcon,
+  Pencil 
+} from 'lucide-react';
+
+type Shape = 'pencil' | 'line' | 'rectangle' | 'circle' | 'eraser';
 
 export function Paint() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState('#000000');
   const [brushSize, setBrushSize] = useState(5);
-  const [isEraser, setIsEraser] = useState(false);
+  const [shape, setShape] = useState<Shape>('pencil');
+  const startPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [snapshot, setSnapshot] = useState<ImageData | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -23,6 +37,14 @@ export function Paint() {
     ctx.lineJoin = 'round';
   }, []);
 
+  const saveSnapshot = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (canvas && ctx) {
+      setSnapshot(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    }
+  };
+
   const startDrawing = (e: React.MouseEvent) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -33,9 +55,11 @@ export function Paint() {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
+    startPos.current = { x, y };
+    saveSnapshot();
+
     ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.strokeStyle = isEraser ? '#ffffff' : color;
+    ctx.strokeStyle = shape === 'eraser' ? '#ffffff' : color;
     ctx.lineWidth = brushSize;
     setIsDrawing(true);
   };
@@ -51,8 +75,39 @@ export function Paint() {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    ctx.lineTo(x, y);
-    ctx.stroke();
+    if (snapshot) {
+      ctx.putImageData(snapshot, 0, 0);
+    }
+
+    ctx.strokeStyle = shape === 'eraser' ? '#ffffff' : color;
+    ctx.fillStyle = color;
+
+    switch (shape) {
+      case 'pencil':
+      case 'eraser':
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        break;
+      case 'line':
+        ctx.beginPath();
+        ctx.moveTo(startPos.current.x, startPos.current.y);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        break;
+      case 'rectangle':
+        const width = x - startPos.current.x;
+        const height = y - startPos.current.y;
+        ctx.strokeRect(startPos.current.x, startPos.current.y, width, height);
+        break;
+      case 'circle':
+        ctx.beginPath();
+        const radius = Math.sqrt(
+          Math.pow(x - startPos.current.x, 2) + Math.pow(y - startPos.current.y, 2)
+        );
+        ctx.arc(startPos.current.x, startPos.current.y, radius, 0, 2 * Math.PI);
+        ctx.stroke();
+        break;
+    }
   };
 
   const stopDrawing = () => {
@@ -69,9 +124,24 @@ export function Paint() {
     link.click();
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.src = URL.createObjectURL(file);
+  };
+
   return (
     <div className="h-full flex flex-col p-2">
-      <div className="flex gap-2 mb-2">
+      <div className="flex gap-2 mb-2 flex-wrap">
         <Input
           type="color"
           value={color}
@@ -87,11 +157,46 @@ export function Paint() {
           className="w-20"
         />
         <Button
-          variant={isEraser ? "secondary" : "ghost"}
-          onClick={() => setIsEraser(!isEraser)}
+          variant={shape === 'pencil' ? "secondary" : "ghost"}
+          onClick={() => setShape('pencil')}
+        >
+          <Pencil className="h-4 w-4" />
+        </Button>
+        <Button
+          variant={shape === 'eraser' ? "secondary" : "ghost"}
+          onClick={() => setShape('eraser')}
         >
           <Eraser className="h-4 w-4" />
         </Button>
+        <Button
+          variant={shape === 'line' ? "secondary" : "ghost"}
+          onClick={() => setShape('line')}
+        >
+          <Line className="h-4 w-4" />
+        </Button>
+        <Button
+          variant={shape === 'rectangle' ? "secondary" : "ghost"}
+          onClick={() => setShape('rectangle')}
+        >
+          <Square className="h-4 w-4" />
+        </Button>
+        <Button
+          variant={shape === 'circle' ? "secondary" : "ghost"}
+          onClick={() => setShape('circle')}
+        >
+          <Circle className="h-4 w-4" />
+        </Button>
+        <label className="cursor-pointer">
+          <Button variant="ghost" onClick={() => {}}>
+            <ImageIcon className="h-4 w-4" />
+          </Button>
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+        </label>
         <Button variant="ghost" onClick={downloadCanvas}>
           <Download className="h-4 w-4" />
         </Button>
