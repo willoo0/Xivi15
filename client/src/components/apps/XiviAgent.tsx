@@ -127,13 +127,23 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
       );
 
       const data = await res.json();
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: data.choices[0].message.content,
-        },
-      ]);
+      if (data?.choices?.[0]?.message?.content) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: data.choices[0].message.content,
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "Sorry, I encountered an error processing your request. Please try again.",
+          },
+        ]);
+      }
     } catch (error) {
       setMessages((prev) => [
         ...prev,
