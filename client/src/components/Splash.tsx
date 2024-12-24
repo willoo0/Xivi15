@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Bot } from "lucide-react";
 
 function ConsoleText({
   text,
@@ -198,7 +199,8 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
       <div className="relative z-10 flex h-full items-center justify-center backdrop-blur-sm">
         <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px] transition-all duration-500 ease-in-out">
           <div className="flex justify-center">
-            <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans">
+            <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans flex items-center justify-center gap-2">
+              <Bot className="w-6 h-6" />
               Xivi Spaces 15
             </h1>
           </div>
