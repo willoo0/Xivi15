@@ -3,6 +3,7 @@ import { Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { nanoid } from "nanoid";
 import { useDesktopStore } from "@/store/desktop";
+import { eventBus } from "@/lib/eventBus";
 
 interface Message {
   role: "user" | "assistant";
