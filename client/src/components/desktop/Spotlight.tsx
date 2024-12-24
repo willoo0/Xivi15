@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-import { Command } from '@/components/ui/command';
 import { Bot } from 'lucide-react';
 import { useDesktopStore } from '@/store/desktop';
 import { nanoid } from 'nanoid';
@@ -27,16 +26,23 @@ export function Spotlight() {
     if (!query.trim()) return;
 
     const existingWindow = useDesktopStore.getState().windows.find(w => w.component === 'XiviAgent');
+    const questionToAsk = query.trim();
     
     if (existingWindow) {
+      const updatedWindows = useDesktopStore.getState().windows.map(w => 
+        w.id === existingWindow.id ? {
+          ...w,
+          props: {
+            query: questionToAsk,
+            triggerAsk: Date.now()
+          }
+        } : w
+      );
+      useDesktopStore.setState({ windows: updatedWindows });
       useDesktopStore.getState().setActiveWindow(existingWindow.id);
       if (existingWindow.isMinimized) {
         useDesktopStore.getState().toggleMinimize(existingWindow.id);
       }
-      const updatedWindows = useDesktopStore.getState().windows.map(w => 
-        w.id === existingWindow.id ? { ...w, props: { initialQuery: query.trim() }} : w
-      );
-      useDesktopStore.setState({ windows: updatedWindows });
     } else {
       const windowId = nanoid();
       addWindow({
@@ -50,8 +56,8 @@ export function Spotlight() {
           height: 400,
         },
         props: {
-          initialQuery: query.trim(),
-          timestamp: Date.now()
+          query: questionToAsk,
+          triggerAsk: Date.now()
         },
         isMinimized: false,
         isMaximized: false,

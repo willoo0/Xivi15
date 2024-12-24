@@ -9,39 +9,33 @@ interface Message {
 }
 
 interface XiviAgentProps {
-  initialQuery?: string;
-  timestamp?: number;
+  query?: string;
+  triggerAsk?: number;
 }
 
-export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps = {}) {
-  const [query, setQuery] = useState('');
+export function XiviAgent({ query, triggerAsk }: XiviAgentProps = {}) {
+  const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: 'Hello! I\'m Xivi, your virtual assistant. How can I help you today?'
   }]);
 
   useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
-  }, []);
-
-  useEffect(() => {
-    if (initialQuery?.trim()) {
-      setQuery(initialQuery);
-      setTimeout(() => handleQuery(initialQuery), 100);
+    if (query && triggerAsk) {
+      handleQuery(query);
     }
-  }, [initialQuery]);
+  }, [query, triggerAsk]);
 
-  const handleQuery = async (inputQuery?: string) => {
-    const queryToSend = inputQuery || query;
+  const handleQuery = async (questionToAsk?: string) => {
+    const queryToSend = questionToAsk || inputQuery;
     if (!queryToSend.trim()) return;
+
+    setInputQuery('');
+    setIsLoading(true);
 
     const userMessage = { role: 'user' as const, content: queryToSend };
     setMessages(prev => [...prev, userMessage]);
-    if (!inputQuery) setQuery('');
-    setIsLoading(true);
 
     try {
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -106,8 +100,8 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps = {}) {
         <div className="flex gap-2">
           <input
             type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={inputQuery}
+            onChange={(e) => setInputQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleQuery()}
             placeholder="Type your message..."
             className="flex-1 bg-muted p-2 rounded-md"
