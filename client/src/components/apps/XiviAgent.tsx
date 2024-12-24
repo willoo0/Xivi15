@@ -8,13 +8,24 @@ interface Message {
   content: string;
 }
 
-export function XiviAgent() {
+interface XiviAgentProps {
+  initialQuery?: string;
+}
+
+export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: 'Hello! I\'m Xivi, your virtual assistant. How can I help you today?'
   }]);
+
+  useEffect(() => {
+    if (initialQuery) {
+      setQuery(initialQuery);
+      handleQuery();
+    }
+  }, []);
 
   const handleQuery = async () => {
     if (!query.trim()) return;

@@ -4,6 +4,7 @@ import { TopBar } from './desktop/TopBar'
 import { useDesktopStore } from '@/store/desktop'
 import { Window } from './desktop/Window'
 import { Taskbar } from './desktop/Taskbar'
+import { Spotlight } from './desktop/Spotlight'
 import { TextEditor } from './apps/TextEditor'
 import { Calculator } from './apps/Calculator'
 import { FileExplorer } from './apps/FileExplorer'
@@ -125,6 +126,7 @@ export function Desktop() {
       })}
       <TopBar />
       <Taskbar />
+      <Spotlight />
       <SelectionBox 
         isSelecting={isSelecting}
         setIsSelecting={setIsSelecting}
