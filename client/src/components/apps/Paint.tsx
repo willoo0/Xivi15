@@ -10,7 +10,6 @@ import {
   Square, 
   Circle, 
   Minus, 
-  Image as ImageIcon,
   Pencil 
 } from 'lucide-react';
 
@@ -124,21 +123,6 @@ export function Paint() {
     link.click();
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (!canvas || !ctx) return;
-
-    const img = new Image();
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    };
-    img.src = URL.createObjectURL(file);
-  };
-
   return (
     <div className="h-full flex flex-col p-2">
       <div className="flex gap-2 mb-2 flex-wrap">
@@ -186,17 +170,6 @@ export function Paint() {
         >
           <Circle className="h-4 w-4" />
         </Button>
-        <label className="cursor-pointer">
-          <Button variant="ghost" onClick={() => {}}>
-            <ImageIcon className="h-4 w-4" />
-          </Button>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
-        </label>
         <Button variant="ghost" onClick={downloadCanvas}>
           <Download className="h-4 w-4" />
         </Button>
