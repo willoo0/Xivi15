@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import { Bot } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { nanoid } from 'nanoid';
-import { useDesktopStore } from '@/store/desktop';
+import { useState, useEffect, useRef } from "react";
+import { Bot } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { nanoid } from "nanoid";
+import { useDesktopStore } from "@/store/desktop";
 
 interface Message {
-  role: 'user' | 'assistant';
+  role: "user" | "friendly assistant. Use emojis.";
   content: string;
 }
 
@@ -15,13 +15,16 @@ interface XiviAgentProps {
 }
 
 export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
-  const [inputQuery, setInputQuery] = useState('');
+  const [inputQuery, setInputQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([{
-    role: 'assistant',
-    content: 'Hello! I\'m Xivi, your virtual assistant. How can I help you today?'
-  }]);
-  
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "friendly assistant. Use emojis.",
+      content:
+        "Hello! I'm Xivi, your virtual assistant. How can I help you today? 😊",
+    },
+  ]);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -40,17 +43,17 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
 
   useEffect(() => {
     const setupEventBus = async () => {
-      const { eventBus } = await import('@/lib/eventBus');
+      const { eventBus } = await import("@/lib/eventBus");
       const handler = (question: string) => {
         handleQuery(question);
       };
-      eventBus.on('newQuestion', handler);
-      return () => eventBus.off('newQuestion', handler);
+      eventBus.on("newQuestion", handler);
+      return () => eventBus.off("newQuestion", handler);
     };
-    
+
     const cleanupPromise = setupEventBus();
     return () => {
-      cleanupPromise.then(cleanup => cleanup());
+      cleanupPromise.then((cleanup) => cleanup());
     };
   }, []);
 
@@ -58,17 +61,21 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     const queryToSend = questionToAsk || inputQuery;
     if (!queryToSend.trim()) return;
 
-    setInputQuery('');
+    setInputQuery("");
     setIsLoading(true);
 
-    const userMessage = { role: 'user' as const, content: queryToSend };
-    setMessages(prev => [...prev, userMessage]);
+    const userMessage = { role: "user" as const, content: queryToSend };
+    setMessages((prev) => [...prev, userMessage]);
 
     // Check for app opening commands
     const query = queryToSend.toLowerCase();
-    if (query.includes('open') || query.includes('launch') || query.includes('start')) {
+    if (
+      query.includes("open") ||
+      query.includes("launch") ||
+      query.includes("start")
+    ) {
       const store = useDesktopStore.getState();
-      const { apps } = await import('@/lib/apps');
+      const { apps } = await import("@/lib/apps");
 
       for (const [key, app] of Object.entries(apps)) {
         if (query.includes(key)) {
@@ -85,11 +92,14 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
             isMinimized: false,
             isMaximized: false,
           });
-          
-          setMessages(prev => [...prev, {
-            role: 'assistant',
-            content: `I've opened ${app.title} for you.`
-          }]);
+
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: `I've opened the ${app.title} app for you! 😊`,
+            },
+          ]);
           setIsLoading(false);
           return;
         }
@@ -97,31 +107,41 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     }
 
     try {
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer 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'
+      const res = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer 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",
+          },
+          body: JSON.stringify({
+            model: "llama3-8b-8192",
+            messages: [...messages, userMessage].map((m) => ({
+              role: m.role,
+              content: m.content,
+            })),
+          }),
         },
-        body: JSON.stringify({
-          model: 'llama3-8b-8192',
-          messages: [...messages, userMessage].map(m => ({
-            role: m.role,
-            content: m.content
-          }))
-        })
-      });
-      
+      );
+
       const data = await res.json();
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: data.choices[0].message.content
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: data.choices[0].message.content,
+        },
+      ]);
     } catch (error) {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'Sorry, I encountered an error.'
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Sorry, I encountered an error.",
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -131,12 +151,17 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-auto p-4 space-y-4">
         {messages.map((message, i) => (
-          <div key={i} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[80%] p-3 rounded-lg ${
-              message.role === 'user' 
-                ? 'bg-primary text-primary-foreground ml-4' 
-                : 'bg-muted mr-4'
-            }`}>
+          <div
+            key={i}
+            className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`max-w-[80%] p-3 rounded-lg ${
+                message.role === "user"
+                  ? "bg-primary text-primary-foreground ml-4"
+                  : "bg-muted mr-4"
+              }`}
+            >
               <p className="whitespace-pre-wrap">{message.content}</p>
             </div>
           </div>
@@ -161,11 +186,13 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
             type="text"
             value={inputQuery}
             onChange={(e) => setInputQuery(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleQuery()}
+            onKeyDown={(e) => e.key === "Enter" && handleQuery()}
             placeholder="Type your message..."
             className="flex-1 bg-muted p-2 rounded-md"
           />
-          <Button onClick={() => handleQuery()} disabled={isLoading}>Send</Button>
+          <Button onClick={() => handleQuery()} disabled={isLoading}>
+            Send
+          </Button>
         </div>
       </div>
     </div>
