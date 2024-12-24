@@ -166,7 +166,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
             },
             isMinimized: false,
             isMaximized: false,
-            initialTimer: { hours, minutes, seconds }
+            props: { initialTimer: { hours, minutes, seconds } }
           });
 
           setMessages(prev => [...prev, {
