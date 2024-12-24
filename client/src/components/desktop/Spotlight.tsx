@@ -32,16 +32,9 @@ export function Spotlight() {
       if (existingWindow.isMinimized) {
         store.toggleMinimize(existingWindow.id);
       }
-      const updatedWindows = store.windows.map(w => 
-        w.id === existingWindow.id ? {
-          ...w,
-          props: {
-            initialQuery: questionToAsk,
-            timestamp: Date.now()
-          }
-        } : w
-      );
-      useDesktopStore.setState({ windows: updatedWindows });
+      import('@/lib/eventBus').then(({ eventBus }) => {
+        eventBus.emit('newQuestion', questionToAsk);
+      });
     } else {
       const windowId = nanoid();
       store.addWindow({

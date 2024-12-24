@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,6 +24,11 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     if (initialQuery?.trim()) {
       handleQuery(initialQuery);
     }
+    import('@/lib/eventBus').then(({ eventBus }) => {
+      eventBus.on('newQuestion', (question: string) => {
+        handleQuery(question);
+      });
+    });
   }, [initialQuery, timestamp]);
 
   const handleQuery = async (questionToAsk?: string) => {
