@@ -68,17 +68,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     const query = queryToSend.toLowerCase();
     if (query.includes('open') || query.includes('launch') || query.includes('start')) {
       const store = useDesktopStore.getState();
-      const apps = {
-        'browser': { title: 'Web Browser', component: 'Browser' },
-        'notepad': { title: 'Text Editor', component: 'TextEditor' },
-        'calculator': { title: 'Calculator', component: 'Calculator' },
-        'settings': { title: 'Settings', component: 'Settings' },
-        'music': { title: 'Music Player', component: 'MusicPlayer' },
-        'paint': { title: 'Paint', component: 'Paint' },
-        'games': { title: 'Games', component: 'Games' },
-        'terminal': { title: 'Terminal', component: 'Terminal' },
-        'weather': { title: 'Weather', component: 'Weather' },
-      };
+      const { apps } = await import('@/lib/apps');
 
       for (const [key, app] of Object.entries(apps)) {
         if (query.includes(key)) {
