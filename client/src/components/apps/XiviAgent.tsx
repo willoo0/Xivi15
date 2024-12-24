@@ -80,7 +80,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     if (query.includes("troubleshoot") || query.includes("fix") || (query.includes("not") && query.includes("working"))) {
       setMessages(prev => [...prev, {
         role: "assistant",
-        content: "I can help you troubleshoot by clearing cookies and reloading the page. Would you like me to do this? Please respond with 'yes' to confirm."
+        content: "I can help you troubleshoot by clearing cookies and reloading the page. Would you like me to do this? Please respond with 'yes' to confirm. This will clear all data. 🧹"
       }]);
       setIsLoading(false);
       return;
@@ -266,7 +266,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
                 {
                   role: "system",
                   content:
-                    "You are a friendly and helpful assistant. Use emojis in your responses to make them more engaging and fun. Be concise but warm in your communication.",
+                    "You are a friendly and helpful assistant that does tasks for the user and can manage the system. Use emojis in your responses to make them more engaging and fun. Be concise but warm in your communication. You can do anything that the user can and can control the system. You're name is Xivi Agent",
                 },
                 ...messages,
                 userMessage,
