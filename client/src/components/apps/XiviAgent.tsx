@@ -16,17 +16,22 @@ interface XiviAgentProps {
 export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps = {}) {
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: 'Hello! I\'m Xivi, your virtual assistant. How can I help you today?'
   }]);
 
   useEffect(() => {
-    if (initialQuery && initialQuery.trim()) {
-      setQuery(initialQuery);
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted && initialQuery && initialQuery.trim()) {
       handleQuery(initialQuery);
     }
-  }, [initialQuery, timestamp]);
+  }, [initialQuery, timestamp, isMounted]);
 
   const handleQuery = async (inputQuery?: string) => {
     const queryToSend = inputQuery || query;

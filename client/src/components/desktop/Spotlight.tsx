@@ -39,8 +39,9 @@ export function Spotlight() {
       );
       useDesktopStore.setState({ windows: updatedWindows });
     } else {
+      const windowId = nanoid();
       addWindow({
-        id: nanoid(),
+        id: windowId,
         title: 'Xivi Agent',
         component: 'XiviAgent',
         position: {
@@ -50,11 +51,13 @@ export function Spotlight() {
           height: 400,
         },
         props: {
-          initialQuery: query.trim()
+          initialQuery: query.trim(),
+          timestamp: Date.now()
         },
         isMinimized: false,
         isMaximized: false,
       });
+      useDesktopStore.getState().setActiveWindow(windowId);
     }
     
     setQuery('');
