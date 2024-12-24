@@ -9,7 +9,7 @@ import {
   Download, 
   Square, 
   Circle, 
-  Line, 
+  Minus, 
   Image as ImageIcon,
   Pencil 
 } from 'lucide-react';
@@ -172,7 +172,7 @@ export function Paint() {
           variant={shape === 'line' ? "secondary" : "ghost"}
           onClick={() => setShape('line')}
         >
-          <Line className="h-4 w-4" />
+          <Minus className="h-4 w-4" />
         </Button>
         <Button
           variant={shape === 'rectangle' ? "secondary" : "ghost"}
