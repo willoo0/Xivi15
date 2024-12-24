@@ -26,22 +26,36 @@ export function Spotlight() {
     e.preventDefault();
     if (!query.trim()) return;
 
-    addWindow({
-      id: nanoid(),
-      title: 'Xivi Agent',
-      component: 'XiviAgent',
-      position: {
-        x: window.innerWidth / 2 - 300,
-        y: window.innerHeight / 2 - 200,
-        width: 600,
-        height: 400,
-      },
-      props: {
-        initialQuery: query.trim()
-      },
-      isMinimized: false,
-      isMaximized: false,
-    });
+    const existingWindow = useDesktopStore.getState().windows.find(w => w.component === 'XiviAgent');
+    
+    if (existingWindow) {
+      useDesktopStore.getState().setActiveWindow(existingWindow.id);
+      if (existingWindow.isMinimized) {
+        useDesktopStore.getState().toggleMinimize(existingWindow.id);
+      }
+      // Update the window's props to include the new query
+      const updatedWindows = useDesktopStore.getState().windows.map(w => 
+        w.id === existingWindow.id ? { ...w, props: { initialQuery: query.trim() }} : w
+      );
+      useDesktopStore.setState({ windows: updatedWindows });
+    } else {
+      addWindow({
+        id: nanoid(),
+        title: 'Xivi Agent',
+        component: 'XiviAgent',
+        position: {
+          x: window.innerWidth / 2 - 300,
+          y: window.innerHeight / 2 - 200,
+          width: 600,
+          height: 400,
+        },
+        props: {
+          initialQuery: query.trim()
+        },
+        isMinimized: false,
+        isMaximized: false,
+      });
+    }
     
     setQuery('');
     setOpen(false);

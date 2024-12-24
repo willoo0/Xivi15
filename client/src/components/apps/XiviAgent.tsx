@@ -22,6 +22,7 @@ export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
 
   useEffect(() => {
     if (initialQuery && initialQuery.trim()) {
+      setQuery(initialQuery);
       handleQuery(initialQuery);
     }
   }, [initialQuery]);
