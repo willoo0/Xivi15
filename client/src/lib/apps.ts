@@ -33,7 +33,7 @@ export const apps = {
     id: "xivimath",
     title: "XiviMath",
     component: "XiviMath",
-    icon: Function,
+    icon: Calculator,
     category: "Education",
   },
   photoviewer: {
