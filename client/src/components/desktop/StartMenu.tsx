@@ -19,8 +19,12 @@ const categories = [
   "Productivity",
   "Media",
   "System",
-  "Accessories",
-  "Applications",
+  "Utilities",
+  "Games",
+  "Entertainment",
+  "Development",
+  "Communication",
+  "Office",
 ];
 
 export function StartMenu({ onClose }: StartMenuProps) {

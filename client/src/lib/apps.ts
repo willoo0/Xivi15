@@ -27,14 +27,14 @@ export const apps = {
     title: 'Xivi Agent',
     component: 'XiviAgent',
     icon: Bot,
-    category: 'System'
+    category: 'Communication'
   },
   'photoviewer': {
     id: 'photoviewer',
     title: 'Photo Viewer',
     component: 'PhotoViewer',
     icon: ImageIcon,
-    category: 'Media'
+    category: 'Entertainment'
   },
   'pdfviewer': {
     id: 'pdfviewer',
