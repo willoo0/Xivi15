@@ -34,52 +34,6 @@ export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
     setMessages(prev => [...prev, userMessage]);
     if (!inputQuery) setQuery('');
     setIsLoading(true);
-        const userMessage = { role: 'user' as const, content: initialQuery };
-        setMessages(prev => [...prev, userMessage]);
-        setIsLoading(true);
-
-        try {
-          const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer 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'
-            },
-            body: JSON.stringify({
-              model: 'llama3-8b-8192',
-              messages: [...messages, userMessage].map(m => ({
-                role: m.role,
-                content: m.content
-              }))
-            })
-          });
-          
-          const data = await res.json();
-          const assistantMessage = {
-            role: 'assistant' as const,
-            content: data.choices[0].message.content
-          };
-          setMessages(prev => [...prev, assistantMessage]);
-        } catch (error) {
-          setMessages(prev => [...prev, {
-            role: 'assistant',
-            content: 'Sorry, I encountered an error.'
-          }]);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      submitQuery();
-    }
-  }, [initialQuery, messages]);
-
-  const handleQuery = async () => {
-    if (!query.trim()) return;
-    
-    const userMessage = { role: 'user' as const, content: query };
-    setMessages(prev => [...prev, userMessage]);
-    setQuery('');
-    setIsLoading(true);
 
     try {
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -150,7 +104,7 @@ export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
             placeholder="Type your message..."
             className="flex-1 bg-muted p-2 rounded-md"
           />
-          <Button onClick={handleQuery} disabled={isLoading}>Send</Button>
+          <Button onClick={() => handleQuery()} disabled={isLoading}>Send</Button>
         </div>
       </div>
     </div>
