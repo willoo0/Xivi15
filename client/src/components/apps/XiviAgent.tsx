@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { nanoid } from 'nanoid';
+import { useDesktopStore } from '@/store/desktop';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -61,6 +63,48 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
 
     const userMessage = { role: 'user' as const, content: queryToSend };
     setMessages(prev => [...prev, userMessage]);
+
+    // Check for app opening commands
+    const query = queryToSend.toLowerCase();
+    if (query.includes('open') || query.includes('launch') || query.includes('start')) {
+      const store = useDesktopStore.getState();
+      const apps = {
+        'browser': { title: 'Web Browser', component: 'Browser' },
+        'notepad': { title: 'Text Editor', component: 'TextEditor' },
+        'calculator': { title: 'Calculator', component: 'Calculator' },
+        'settings': { title: 'Settings', component: 'Settings' },
+        'music': { title: 'Music Player', component: 'MusicPlayer' },
+        'paint': { title: 'Paint', component: 'Paint' },
+        'games': { title: 'Games', component: 'Games' },
+        'terminal': { title: 'Terminal', component: 'Terminal' },
+        'weather': { title: 'Weather', component: 'Weather' },
+      };
+
+      for (const [key, app] of Object.entries(apps)) {
+        if (query.includes(key)) {
+          store.addWindow({
+            id: nanoid(),
+            title: app.title,
+            component: app.component,
+            position: {
+              x: 50 + Math.random() * 100,
+              y: 50 + Math.random() * 100,
+              width: 600,
+              height: 400,
+            },
+            isMinimized: false,
+            isMaximized: false,
+          });
+          
+          setMessages(prev => [...prev, {
+            role: 'assistant',
+            content: `I've opened ${app.title} for you.`
+          }]);
+          setIsLoading(false);
+          return;
+        }
+      }
+    }
 
     try {
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
