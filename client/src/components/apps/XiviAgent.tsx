@@ -126,6 +126,11 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
         },
       );
 
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(`API Error: ${res.status} - ${errorData.error?.message || 'Unknown error'}`);
+      }
+
       const data = await res.json();
       if (data?.choices?.[0]?.message?.content) {
         setMessages((prev) => [
@@ -140,16 +145,17 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
           ...prev,
           {
             role: "assistant",
-            content: "Sorry, I encountered an error processing your request. Please try again.",
+            content: "⚠️ The API response was invalid. This might be due to rate limiting or server issues. Please try again in a moment.",
           },
         ]);
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: "Sorry, I encountered an error.",
+          content: `❌ Error: ${errorMessage}. Please try again or contact support if the issue persists.`,
         },
       ]);
     } finally {
