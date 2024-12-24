@@ -77,35 +77,22 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     const store = useDesktopStore.getState();
 
     // Handle troubleshooting and problem-related queries
-    const troubleshootingKeywords = [
-      'problem', 'problems', 'issue', 'issues', 'error', 'errors',
-      'trouble', 'troubles', 'troubleshoot', 'fix', 'help',
-      'not working', 'doesnt work', "doesn't work", 'broken',
-      'stuck', 'freeze', 'frozen', 'crash', 'bug', 'glitch',
-      'wrong', 'fail', 'failed', 'reset', 'restart'
+    const troubleshootingPhrases = [
+      'not working properly',
+      'having issues with',
+      'need to troubleshoot',
+      'system is broken',
+      'help fix',
+      'need to reset',
+      'clear my cache',
+      'clear cookies'
     ];
     
-    const hasTroubleshootingKeyword = troubleshootingKeywords.some(keyword => {
-      // Check for exact match
-      if (query.includes(keyword)) return true;
-      
-      // Check for similar words (basic fuzzy matching)
-      const distance = (str1: string, str2: string) => {
-        if (Math.abs(str1.length - str2.length) > 3) return 4; // Quick length check
-        let cost = 0;
-        for (let i = 0; i < Math.min(str1.length, str2.length); i++) {
-          if (str1[i] !== str2[i]) cost++;
-        }
-        return cost + Math.abs(str1.length - str2.length);
-      };
-      
-      // Split query into words and check each
-      return query.split(/\s+/).some(word => {
-        return distance(word.toLowerCase(), keyword) <= 2; // Allow 2 character differences
-      });
-    });
+    const hasTroubleshootingRequest = troubleshootingPhrases.some(phrase => 
+      query.toLowerCase().includes(phrase.toLowerCase())
+    );
 
-    if (hasTroubleshootingKeyword) {
+    if (hasTroubleshootingRequest) {
       setMessages(prev => [...prev, {
         role: "assistant",
         content: "I can help you troubleshoot by clearing cookies and reloading the page. Would you like me to do this? Please respond with 'yes' to confirm."
