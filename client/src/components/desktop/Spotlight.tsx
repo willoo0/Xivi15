@@ -26,33 +26,34 @@ export function Spotlight() {
     const store = useDesktopStore.getState();
     const existingWindow = store.windows.find(w => w.component === 'XiviAgent');
     const questionToAsk = query.trim();
-    const windowId = existingWindow?.id || nanoid();
     
     if (existingWindow) {
       store.setActiveWindow(existingWindow.id);
       if (existingWindow.isMinimized) {
         store.toggleMinimize(existingWindow.id);
       }
-    }
-    
-    store.addWindow({
-      id: windowId,
-      title: 'Xivi Agent',
-      component: 'XiviAgent',
-      position: {
-        x: window.innerWidth / 2 - 300,
-        y: window.innerHeight / 2 - 200,
-        width: 600,
-        height: 400,
-      },
-      props: {
+      import('@/lib/eventBus').then(({ eventBus }) => {
+        eventBus.emit('newQuestion', questionToAsk);
+      });
+    } else {
+      const windowId = nanoid();
+      store.addWindow({
+        id: windowId,
+        title: 'Xivi Agent',
+        component: 'XiviAgent',
+        position: {
+          x: window.innerWidth / 2 - 300,
+          y: window.innerHeight / 2 - 200,
+          width: 600,
+          height: 400,
+        },
         initialQuery: questionToAsk,
-        timestamp: Date.now()
-      },
-      isMinimized: false,
-      isMaximized: false,
-    });
-    store.setActiveWindow(windowId);
+        timestamp: Date.now(),
+        isMinimized: false,
+        isMaximized: false,
+      });
+      store.setActiveWindow(windowId);
+    }
     
     setQuery('');
     setOpen(false);
