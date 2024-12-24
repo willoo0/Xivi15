@@ -76,6 +76,42 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     const query = queryToSend.toLowerCase();
     const store = useDesktopStore.getState();
 
+    // Handle troubleshooting and problem-related queries
+    if (query.includes("problem") || query.includes("issue") || query.includes("troubleshoot") || query.includes("not working")) {
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: "I can help you troubleshoot by clearing cookies and reloading the page. Would you like me to do this? Please respond with 'yes' to confirm."
+      }]);
+      setIsLoading(false);
+      return;
+    }
+
+    // Handle confirmation for troubleshooting
+    if (query.toLowerCase() === "yes" && messages[messages.length - 1].content.includes("Would you like me to do this?")) {
+      localStorage.clear();
+      sessionStorage.clear();
+      const cookies = document.cookie.split(";");
+      
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+      }
+
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: "I've cleared all cookies and local storage. The page will reload in 3 seconds... 🔄"
+      }]);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+      
+      setIsLoading(false);
+      return;
+    }
+
     // Handle theme changes
     if (query.includes("theme")) {
       if (query.includes("dark")) {
