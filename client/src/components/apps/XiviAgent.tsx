@@ -73,6 +73,77 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
 
     // Check for app opening commands
     const query = queryToSend.toLowerCase();
+    const store = useDesktopStore.getState();
+
+    // Handle theme changes
+    if (query.includes("theme")) {
+      if (query.includes("dark")) {
+        store.updateSettings({ theme: "dark" });
+        setMessages(prev => [...prev, {
+          role: "assistant",
+          content: "I've switched to dark theme! 🌙"
+        }]);
+        setIsLoading(false);
+        return;
+      } else if (query.includes("light")) {
+        store.updateSettings({ theme: "light" });
+        setMessages(prev => [...prev, {
+          role: "assistant",
+          content: "I've switched to light theme! ☀️"
+        }]);
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // Handle taskbar layout changes
+    if (query.includes("taskbar")) {
+      if (query.includes("normal") || query.includes("default")) {
+        store.updateSettings({ taskbarMode: "normal" });
+        setMessages(prev => [...prev, {
+          role: "assistant",
+          content: "Taskbar set to normal mode! 🎯"
+        }]);
+        setIsLoading(false);
+        return;
+      } else if (query.includes("chrome")) {
+        store.updateSettings({ taskbarMode: "chrome" });
+        setMessages(prev => [...prev, {
+          role: "assistant",
+          content: "Taskbar set to Chrome OS style! 🌐"
+        }]);
+        setIsLoading(false);
+        return;
+      } else if (query.includes("windows") || query.includes("win11")) {
+        store.updateSettings({ taskbarMode: "windows11" });
+        setMessages(prev => [...prev, {
+          role: "assistant",
+          content: "Taskbar set to Windows 11 style! 💻"
+        }]);
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // Handle closing apps
+    if (query.includes("close")) {
+      const windowToClose = store.windows.find(w => 
+        query.toLowerCase().includes(w.title.toLowerCase()) ||
+        query.toLowerCase().includes(w.component.toLowerCase())
+      );
+      
+      if (windowToClose) {
+        store.removeWindow(windowToClose.id);
+        setMessages(prev => [...prev, {
+          role: "assistant",
+          content: `I've closed ${windowToClose.title} for you! 🚪`
+        }]);
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // Handle opening apps
     if (
       query.includes("open") ||
       query.includes("launch") ||
