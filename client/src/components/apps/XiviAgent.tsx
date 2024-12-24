@@ -19,7 +19,8 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
   const [isLoading, setIsLoading] = useState(false);
   const initialMessage = {
     role: "assistant" as const,
-    content: "Hello! I'm Xivi, your virtual assistant. How can I help you today? 😊",
+    content:
+      "Hello! I'm Xivi, your virtual assistant. How can I help you today? 😊",
   };
   const [messages, setMessages] = useState<Message[]>([initialMessage]);
 
@@ -111,7 +112,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
 
     const maxRetries = 3;
     let attempt = 0;
-    
+
     while (attempt < maxRetries) {
       try {
         const res = await fetch(
@@ -123,65 +124,70 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
               Authorization:
                 "Bearer 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",
             },
-          body: JSON.stringify({
-            model: "llama3-8b-8192",
-            messages: [
-              {
-                role: "system",
-                content: "You are a friendly and helpful assistant. Use emojis in your responses to make them more engaging and fun. Be concise but warm in your communication."
-              },
-              ...messages, 
-              userMessage
-            ].map((m) => ({
-              role: m.role,
-              content: m.content,
-            })),
-          }),
-        },
-      );
+            body: JSON.stringify({
+              model: "llama3-8b-8192",
+              messages: [
+                {
+                  role: "system",
+                  content:
+                    "You are a friendly and helpful assistant. Use emojis in your responses to make them more engaging and fun. Be concise but warm in your communication.",
+                },
+                ...messages,
+                userMessage,
+              ].map((m) => ({
+                role: m.role,
+                content: m.content,
+              })),
+            }),
+          },
+        );
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(`API Error: ${res.status} - ${errorData.error?.message || 'Unknown error'}`);
-      }
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(
+            `API Error: ${res.status} - ${errorData.error?.message || "Unknown error"}`,
+          );
+        }
 
-      const data = await res.json();
-      if (data?.choices?.[0]?.message?.content) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: data.choices[0].message.content,
-          },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: "⚠️ The API response was invalid. This might be due to rate limiting or server issues. Please try again in a moment.",
-          },
-        ]);
+        const data = await res.json();
+        if (data?.choices?.[0]?.message?.content) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: data.choices[0].message.content,
+            },
+          ]);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content:
+                "⚠️ The API response was invalid. This might be due to rate limiting or server issues. Please try again in a moment.",
+            },
+          ]);
+        }
+      } catch (error) {
+        attempt++;
+        if (attempt === maxRetries) {
+          const errorMessage =
+            error instanceof Error ? error.message : "Unknown error occurred";
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: `❌ Connection Error: Unable to reach AI service after ${maxRetries} attempts. This might be a temporary issue. Please wait a moment and try again. Do not open a ticket as Xivi has no control over this. Error details: ${errorMessage}`,
+            },
+          ]);
+          setIsLoading(false);
+          return;
+        }
+        // Wait for 1 second before retrying
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        continue;
       }
-    } catch (error) {
-      attempt++;
-      if (attempt === maxRetries) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: `❌ Connection Error: Unable to reach AI service after ${maxRetries} attempts. This might be a temporary issue. Please wait a moment and try again. Error details: ${errorMessage}`,
-          },
-        ]);
-        setIsLoading(false);
-        return;
-      }
-      // Wait for 1 second before retrying
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      continue;
-    }
-    break;
+      break;
     }
     setIsLoading(false);
   };
