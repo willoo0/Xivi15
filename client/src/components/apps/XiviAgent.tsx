@@ -28,10 +28,11 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps = {}) {
   }, []);
 
   useEffect(() => {
-    if (isMounted && initialQuery && initialQuery.trim()) {
-      handleQuery(initialQuery);
+    if (initialQuery?.trim()) {
+      setQuery(initialQuery);
+      setTimeout(() => handleQuery(initialQuery), 100);
     }
-  }, [initialQuery, timestamp, isMounted]);
+  }, [initialQuery]);
 
   const handleQuery = async (inputQuery?: string) => {
     const queryToSend = inputQuery || query;
