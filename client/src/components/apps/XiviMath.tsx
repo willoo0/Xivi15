@@ -14,8 +14,19 @@ export function XiviMath() {
     setLoading(true);
     try {
       // Try Wolfram Alpha first
-      const wolframUrl = `https://api.wolframalpha.com/v2/query?input=${encodeURIComponent(equation)}&appid=W4Q895-8WHH4Y43XU&podstate=Step-by-step solution&format=plaintext&output=json`;
-      const wolframRes = await fetch(wolframUrl);
+      const formattedEquation = equation.replace(/\s+/g, ' ').trim();
+      const wolframUrl = `https://api.wolframalpha.com/v2/query?input=${encodeURIComponent(formattedEquation)}&appid=W4Q895-8WHH4Y43XU&podstate=Step-by-step%20solution&format=plaintext&output=json`;
+      
+      const wolframRes = await fetch(wolframUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (!wolframRes.ok) {
+        throw new Error(`Wolfram Alpha API error: ${wolframRes.status}`);
+      }
       const wolframData = await wolframRes.json();
       
       if (wolframData.queryresult?.success) {
@@ -90,7 +101,12 @@ export function XiviMath() {
           {loading ? 'Solving...' : 'Solve'}
         </Button>
       </div>
-      {solution && (
+      {loading && (
+        <div className="flex justify-center p-4">
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+        </div>
+      )}
+      {solution && !loading && (
         <div className="flex-1 overflow-auto bg-muted p-4 rounded-lg whitespace-pre-wrap">
           {solution}
         </div>
