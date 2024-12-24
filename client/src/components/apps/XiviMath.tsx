@@ -12,17 +12,27 @@ export function XiviMath() {
     if (!equation.trim()) return;
     
     setLoading(true);
-    try {
-      // Try Wolfram Alpha first
-      const formattedEquation = equation.replace(/\s+/g, ' ').trim();
-      const wolframUrl = `https://api.wolframalpha.com/v2/query?input=${encodeURIComponent(formattedEquation)}&appid=W4Q895-8WHH4Y43XU&podstate=Step-by-step%20solution&format=plaintext&output=json`;
-      
-      const wolframRes = await fetch(wolframUrl, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json'
+    const maxRetries = 3;
+    let retryCount = 0;
+
+    while (retryCount < maxRetries) {
+      try {
+        // Try Wolfram Alpha first
+        const formattedEquation = equation.replace(/\s+/g, ' ').trim();
+        const wolframUrl = `https://api.wolframalpha.com/v2/query?input=${encodeURIComponent(formattedEquation)}&appid=W4Q895-8WHH4Y43XU&podstate=Step-by-step%20solution&format=plaintext&output=json`;
+        
+        const wolframRes = await fetch(wolframUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache'
+          },
+          cache: 'no-cache'
+        });
+
+        if (!wolframRes.ok) {
+          throw new Error(`Wolfram Alpha API error: ${wolframRes.status}`);
         }
-      });
       
       if (!wolframRes.ok) {
         throw new Error(`Wolfram Alpha API error: ${wolframRes.status}`);
@@ -66,11 +76,13 @@ export function XiviMath() {
       const aiData = await aiRes.json();
       setSolution(aiData.choices[0].message.content);
     } catch (error) {
-      let errorMessage = "An error occurred while solving the equation:\n\n";
-      
-      if (error instanceof Error) {
-        if (error.message.includes('Failed to fetch')) {
-          errorMessage += "- Network error: Unable to reach Wolfram Alpha or AI service\n";
+      retryCount++;
+      if (retryCount === maxRetries) {
+        let errorMessage = "An error occurred while solving the equation:\n\n";
+        
+        if (error instanceof Error) {
+          if (error.message.includes('Failed to fetch')) {
+            errorMessage += "- Network error: Please check your internet connection and try again\n";
         } else if (error.message.includes('api.wolframalpha.com')) {
           errorMessage += "- Wolfram Alpha API error: Check if the equation format is valid\n";
         } else if (error.message.includes('groq.com')) {
