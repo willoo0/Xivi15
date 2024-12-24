@@ -64,7 +64,7 @@ export function Spotlight() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="relative w-full max-w-[600px]" onClick={(e) => e.stopPropagation()}>
         <form onSubmit={handleSubmit}>
           <div className="flex items-center rounded-lg border bg-background shadow-xl">

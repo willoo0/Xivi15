@@ -19,6 +19,16 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
     role: 'assistant',
     content: 'Hello! I\'m Xivi, your virtual assistant. How can I help you today?'
   }]);
+  
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     if (initialQuery?.trim()) {
@@ -108,6 +118,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
             </div>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="p-4 border-t">
