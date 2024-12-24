@@ -48,49 +48,56 @@ export const apps = {
     title: 'Balloons & Bullets',
     component: 'BalloonsBullets',
     icon: Gamepad2,
-    category: 'Games'
+    category: 'Games',
+    hideFromStartMenu: true
   },
   'dodgebrawl': {
     id: 'dodgebrawl',
     title: 'Dodge Brawl',
     component: 'DodgeBrawl',
     icon: Gamepad2,
-    category: 'Games'
+    category: 'Games',
+    hideFromStartMenu: true
   },
   'dungeonfish': {
     id: 'dungeonfish',
     title: 'Dungeon Fish',
     component: 'DungeonFish',
     icon: Gamepad2,
-    category: 'Games'
+    category: 'Games',
+    hideFromStartMenu: true
   },
   'folkware': {
     id: 'folkware',
     title: 'Folkware',
     component: 'Folkware',
     icon: Gamepad2,
-    category: 'Games'
+    category: 'Games',
+    hideFromStartMenu: true
   },
   'silentheist': {
     id: 'silentheist',
     title: 'Silent Heist',
     component: 'SilentHeist',
     icon: Gamepad2,
-    category: 'Games'
+    category: 'Games',
+    hideFromStartMenu: true
   },
   'snow': {
     id: 'snow',
     title: 'Snow',
     component: 'Snow',
     icon: Gamepad2,
-    category: 'Games'
+    category: 'Games',
+    hideFromStartMenu: true
   },
   'worstcasescenario': {
     id: 'worstcasescenario',
     title: 'Worst Case Scenario',
     component: 'WorstCaseScenario',
     icon: Gamepad2,
-    category: 'Games'
+    category: 'Games',
+    hideFromStartMenu: true
   },
   'browser': {
     id: 'browser',

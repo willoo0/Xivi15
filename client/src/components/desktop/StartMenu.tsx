@@ -39,8 +39,10 @@ export function StartMenu({ onClose }: StartMenuProps) {
   } | null>(null);
 
   const filteredApps = appsList.filter(app => 
-    app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.category.toLowerCase().includes(searchQuery.toLowerCase())
+    !app.hideFromStartMenu && (
+      app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.category.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
   const handleAppClick = (app: (typeof appsList)[0]) => {
