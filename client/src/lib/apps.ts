@@ -2,7 +2,6 @@ import {
   Bot,
   FileText,
   Calculator,
-  Function,
   Folder,
   Terminal,
   Gamepad2,
@@ -28,13 +27,6 @@ export const apps = {
     component: "XiviAgent",
     icon: Bot,
     category: "Communication",
-  },
-  xivimath: {
-    id: "xivimath",
-    title: "Xivi Math",
-    component: "XiviMath",
-    icon: Calculator,
-    category: "Productivity",
   },
   photoviewer: {
     id: "photoviewer",
