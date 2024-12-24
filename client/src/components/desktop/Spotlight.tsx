@@ -10,7 +10,7 @@ export function Spotlight() {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === ' ' && (e.metaKey || e.ctrlKey)) {
+      if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !(e.target as HTMLElement).matches('input, textarea')) {
         e.preventDefault();
         setOpen((open) => !open);
       }
