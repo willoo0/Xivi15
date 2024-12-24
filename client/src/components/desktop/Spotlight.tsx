@@ -32,12 +32,26 @@ export function Spotlight() {
       if (existingWindow.isMinimized) {
         store.toggleMinimize(existingWindow.id);
       }
-      import('@/lib/eventBus').then(({ eventBus }) => {
-        eventBus.emit('newQuestion', questionToAsk);
-      });
-    } else {
-      const windowId = nanoid();
-      store.addWindow({
+    }
+    
+    // Whether window existed or not, we create/update it with the new question
+    const windowId = existingWindow?.id || nanoid();
+    store.addWindow({
+      id: windowId,
+      title: 'Xivi Agent',
+      component: 'XiviAgent',
+      position: {
+        x: window.innerWidth / 2 - 300,
+        y: window.innerHeight / 2 - 200,
+        width: 600,
+        height: 400,
+      },
+      initialQuery: questionToAsk,
+      timestamp: Date.now(),
+      isMinimized: false,
+      isMaximized: false,
+    });
+    store.setActiveWindow(windowId);
         id: windowId,
         title: 'Xivi Agent',
         component: 'XiviAgent',
