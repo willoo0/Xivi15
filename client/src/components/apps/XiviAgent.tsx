@@ -10,9 +10,10 @@ interface Message {
 
 interface XiviAgentProps {
   initialQuery?: string;
+  timestamp?: number;
 }
 
-export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
+export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps = {}) {
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
@@ -25,7 +26,7 @@ export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
       setQuery(initialQuery);
       handleQuery(initialQuery);
     }
-  }, [initialQuery]);
+  }, [initialQuery, timestamp]);
 
   const handleQuery = async (inputQuery?: string) => {
     const queryToSend = inputQuery || query;

@@ -33,9 +33,9 @@ export function Spotlight() {
       if (existingWindow.isMinimized) {
         useDesktopStore.getState().toggleMinimize(existingWindow.id);
       }
-      // Update the window's props to include the new query
+      // Force XiviAgent to handle the new query by updating props with unique timestamp
       const updatedWindows = useDesktopStore.getState().windows.map(w => 
-        w.id === existingWindow.id ? { ...w, props: { initialQuery: query.trim() }} : w
+        w.id === existingWindow.id ? { ...w, props: { initialQuery: query.trim(), timestamp: Date.now() }} : w
       );
       useDesktopStore.setState({ windows: updatedWindows });
     } else {
