@@ -37,7 +37,7 @@ export function Spotlight() {
         height: 400,
       },
       props: {
-        initialQuery: query
+        initialQuery: query.trim()
       },
       isMinimized: false,
       isMaximized: false,

@@ -24,7 +24,7 @@ export function XiviAgent({ initialQuery }: XiviAgentProps = {}) {
     if (initialQuery && initialQuery.trim()) {
       handleQuery(initialQuery);
     }
-  }, []);
+  }, [initialQuery]);
 
   const handleQuery = async (inputQuery?: string) => {
     const queryToSend = inputQuery || query;
