@@ -132,55 +132,8 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
       const { apps } = await import("@/lib/apps");
       const app = apps.timerclock;
       
-      const windowId = nanoid();
-      
-      // Parse time values for timer
-      if (query.includes("timer")) {
-        const timeMatch = query.match(/(\d+)\s*(hour|hr|h|minute|min|m|second|sec|s)/g);
-        if (timeMatch) {
-          let hours = 0, minutes = 0, seconds = 0;
-          timeMatch.forEach(match => {
-            const [value, unit] = match.split(/(?<=\d)\s+/);
-            if (unit.startsWith('h')) hours = parseInt(value);
-            else if (unit.startsWith('m')) minutes = parseInt(value);
-            else if (unit.startsWith('s')) seconds = parseInt(value);
-          });
-
-          // Emit timer command event
-          eventBus.emit('timerCommand', { 
-            type: 'timer',
-            hours,
-            minutes,
-            seconds
-          });
-
-          store.addWindow({
-            id: windowId,
-            title: app.title,
-            component: app.component,
-            position: {
-              x: 50 + Math.random() * 100,
-              y: 50 + Math.random() * 100,
-              width: 400,
-              height: 500,
-            },
-            isMinimized: false,
-            isMaximized: false,
-            props: { initialTimer: { hours, minutes, seconds } }
-          });
-
-          setMessages(prev => [...prev, {
-            role: "assistant",
-            content: `I've set a timer for ${hours ? hours + ' hours ' : ''}${minutes ? minutes + ' minutes ' : ''}${seconds ? seconds + ' seconds' : ''} ⏱️`
-          }]);
-          setIsLoading(false);
-          return;
-        }
-      }
-
-      // Handle stopwatch
       store.addWindow({
-        id: windowId,
+        id: nanoid(),
         title: app.title,
         component: app.component,
         position: {
@@ -190,13 +143,12 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
           height: 500,
         },
         isMinimized: false,
-        isMaximized: false,
-        startStopwatch: query.includes("stopwatch")
+        isMaximized: false
       });
 
       setMessages(prev => [...prev, {
         role: "assistant",
-        content: `I've opened the ${app.title} app for you! ${query.includes("timer") ? "You can set your timer there" : "I've started the stopwatch"} ⏱️`
+        content: `I've opened the Timer & Clock app for you! ⏱️`
       }]);
       setIsLoading(false);
       return;
