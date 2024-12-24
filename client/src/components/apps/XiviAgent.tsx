@@ -20,12 +20,14 @@ export function XiviAgent({ query, triggerAsk }: XiviAgentProps = {}) {
     role: 'assistant',
     content: 'Hello! I\'m Xivi, your virtual assistant. How can I help you today?'
   }]);
+  const lastQuery = useRef('');
 
   useEffect(() => {
-    if (query) {
+    if (query && query !== lastQuery.current) {
+      lastQuery.current = query;
       handleQuery(query);
     }
-  }, [query]);
+  }, [query, triggerAsk]);
 
   const handleQuery = async (questionToAsk?: string) => {
     const queryToSend = questionToAsk || inputQuery;
