@@ -133,6 +133,9 @@ export function registerRoutes(app: Express): Server {
 
         if (!response.ok) {
           const error = await response.text();
+          if (error.includes("invalid_api_key")) {
+            console.log("Used API key:", process.env.GROQ_API_KEY);
+          }
           throw new Error(`Groq API Error: ${response.status} - ${error}`);
         }
 
