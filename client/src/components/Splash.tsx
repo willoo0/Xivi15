@@ -138,14 +138,14 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
 
   useEffect(() => {
     if (!showPin) {
-      const timer = setTimeout(() => setIsSystemReady(true), 1000);
+      const timer = setTimeout(() => setIsSystemReady(true), 3000);
       return () => clearTimeout(timer);
     }
   }, [showPin]);
 
   return (
     <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={!showPin ? handleClick : undefined}>
-      <canvas ref={canvasRef} className="absolute inset-0" />
+      <canvas ref={canvasRef} className="absolute inset-0 backdrop-blur-sm" />
       {showPin ? (
         <div className="relative z-10 flex h-full items-center justify-center">
           <div className="w-[300px] space-y-4 p-6 rounded-lg bg-black/80 backdrop-blur-sm">
