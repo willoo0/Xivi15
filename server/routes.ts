@@ -123,7 +123,7 @@ export function registerRoutes(app: Express): Server {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer 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`
+            "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
           },
           body: JSON.stringify({
             model: "llama3-8b-8192",
