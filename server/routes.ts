@@ -115,43 +115,47 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  app.get('/api/music/search', async (req, res) => {
-    try {
-
   app.post('/api/chat', async (req, res) => {
     try {
       const messages = req.body.messages;
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer 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`,
-        },
-        body: JSON.stringify({
-          model: "llama3-8b-8192",
-          messages
-        }),
-      });
-
-      const responseText = await response.text();
-      let data;
       try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error('Invalid JSON response:', responseText);
-        throw new Error('Invalid response from Groq API');
-      }
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer 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`
+          },
+          body: JSON.stringify({
+            model: "llama3-8b-8192",
+            messages: messages
+          })
+        });
 
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status} - ${data.error?.message || 'Unknown error'}`);
-      }
+        if (!response.ok) {
+          const error = await response.text();
+          throw new Error(`Groq API Error: ${response.status} - ${error}`);
+        }
 
-      res.json(data);
-    } catch (error) {
-      console.error('Chat API error:', error);
-      res.status(500).json({ error: error.message || 'Internal server error' });
+        const data = await response.json();
+        res.json(data);
+      } catch (error) {
+        console.error('Chat API error:', error);
+        res.status(500).json({ 
+          error: error.message || 'Internal server error',
+          details: error.stack
+        });
+      }
+    } catch (outerError) {
+      console.error('Route handler error:', outerError);
+      res.status(500).json({ 
+        error: 'Internal server error',
+        details: outerError.message 
+      });
     }
   });
+
+  app.get('/api/music/search', async (req, res) => {
+    try {
 
       const query = req.query.q as string;
       if (!query) {
