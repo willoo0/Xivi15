@@ -1,4 +1,7 @@
+
 import React, { useEffect, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function Splash({ onFinish }: { onFinish: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -7,6 +10,30 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   const speed = useRef(0.5);
   const [isSystemReady, setIsSystemReady] = useState(false);
   const [loadingText, setLoadingText] = useState("Initializing System");
+  const [showPin, setShowPin] = useState(true);
+  const [pin, setPin] = useState("");
+  const [pinError, setPinError] = useState(false);
+
+  const verifyPin = async () => {
+    try {
+      const response = await fetch('/api/verify-pin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ pin })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setShowPin(false);
+        setPinError(false);
+      } else {
+        setPinError(true);
+      }
+    } catch (error) {
+      setPinError(true);
+    }
+  };
 
   // Star class definition
   class Star {
@@ -55,6 +82,8 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   }
 
   useEffect(() => {
+    if (showPin) return;
+    
     const texts = [
       "Initializing",
       "Curating the styles",
@@ -70,9 +99,11 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [showPin]);
 
   useEffect(() => {
+    if (showPin) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -97,8 +128,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.current = e.clientX;
       mouseY.current = e.clientY;
-      speed.current =
-        0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
+      speed.current = 0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -121,18 +151,41 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
       window.removeEventListener("resize", resizeCanvas);
       document.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [showPin]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsSystemReady(true), 9000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!showPin) {
+      const timer = setTimeout(() => setIsSystemReady(true), 9000);
+      return () => clearTimeout(timer);
+    }
+  }, [showPin]);
 
   const handleClick = () => {
     if (!isSystemReady) return;
     document.documentElement.requestFullscreen().catch(console.warn);
     setTimeout(onFinish, 500);
   };
+
+  if (showPin) {
+    return (
+      <div className="fixed inset-0 z-[99999] bg-zinc-950 flex items-center justify-center">
+        <div className="w-[300px] space-y-4 p-6 rounded-lg bg-black/80 backdrop-blur-sm">
+          <h2 className="text-xl text-white/80 text-center">Enter PIN</h2>
+          <Input 
+            type="password" 
+            value={pin} 
+            onChange={(e) => setPin(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && verifyPin()}
+            className={pinError ? "border-red-500" : ""}
+          />
+          {pinError && <p className="text-red-500 text-sm">Invalid PIN</p>}
+          <Button onClick={verifyPin} className="w-full">
+            Verify
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -147,12 +200,10 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
               Xivi Spaces 15.1 (Pre)
             </h1>
           </div>
-          <div className="text-center text-white/80 text-lg mb-4">
+          <div className="text-center text-white/80 text-lg mb-4 font-['Arial']">
             {loadingText}
           </div>
-          <br></br>
           <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
-          <br></br>
           {isSystemReady && (
             <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
               Click anywhere to start 😊

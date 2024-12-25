@@ -3,7 +3,18 @@ import { createServer, type Server } from "http";
 import fetch from "node-fetch";
 
 export function registerRoutes(app: Express): Server {
-  app.get('/api/proxy', async (req: Request, res) => {
+  const PIN = "1234"; // You can change this to your desired PIN
+
+app.post('/api/verify-pin', async (req: Request, res) => {
+  const { pin } = req.body;
+  if (pin === PIN) {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false });
+  }
+});
+
+app.get('/api/proxy', async (req: Request, res) => {
     try {
       const url = req.query.url as string;
       if (!url) {
