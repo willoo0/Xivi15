@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 
 export function Splash({ onFinish }: { onFinish: () => void }) {
@@ -57,11 +56,11 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
 
   useEffect(() => {
     const texts = [
-      "Initializing System",
-      "Starting Services",
-      "Loading Components",
+      "Initializing",
+      "Curating the styles",
+      "Oiling the gears",
       "Almost Ready",
-      "Preparing Environment"
+      "Cooking up something great",
     ];
     let index = 0;
 
@@ -98,7 +97,8 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.current = e.clientX;
       mouseY.current = e.clientY;
-      speed.current = 0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
+      speed.current =
+        0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -150,7 +150,9 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
           <div className="text-center text-white/80 text-lg mb-4">
             {loadingText}
           </div>
+          <br></br>
           <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
+          <br></br>
           {isSystemReady && (
             <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
               Click anywhere to start 😊
