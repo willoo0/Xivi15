@@ -251,32 +251,26 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
 
     while (attempt < maxRetries) {
       try {
-        const res = await fetch(
-          "https://api.groq.com/openai/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization:
-                `Bearer ${import.meta.env.VITE_GROQ_API_KEY || ''}`,
-            },
-            body: JSON.stringify({
-              model: "llama3-8b-8192",
-              messages: [
-                {
-                  role: "system",
-                  content:
-                    "You are a friendly and helpful assistant that does tasks for the user and can manage the system. Use emojis in your responses to make them more engaging and fun. Be concise but warm in your communication. You can do anything that the user can and can control the system. You're name is Xivi Agent",
-                },
-                ...messages,
-                userMessage,
-              ].map((m) => ({
-                role: m.role,
-                content: m.content,
-              })),
-            }),
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are a friendly and helpful assistant that does tasks for the user and can manage the system. Use emojis in your responses to make them more engaging and fun. Be concise but warm in your communication. You can do anything that the user can and can control the system. You're name is Xivi Agent",
+              },
+              ...messages,
+              userMessage,
+            ].map((m) => ({
+              role: m.role,
+              content: m.content,
+            })),
+          }),
+        });
 
         if (!res.ok) {
           const errorData = await res.json();

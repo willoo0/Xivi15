@@ -117,6 +117,33 @@ export function registerRoutes(app: Express): Server {
 
   app.get('/api/music/search', async (req, res) => {
     try {
+
+  app.post('/api/chat', async (req, res) => {
+    try {
+      const messages = req.body.messages;
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer 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`,
+        },
+        body: JSON.stringify({
+          model: "llama3-8b-8192",
+          messages
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
       const query = req.query.q as string;
       if (!query) {
         return res.status(400).json({ error: 'Query parameter is required' });
