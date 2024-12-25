@@ -258,7 +258,7 @@ export function XiviAgent({ initialQuery, timestamp }: XiviAgentProps) {
             headers: {
               "Content-Type": "application/json",
               Authorization:
-                "Bearer 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",
+                `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
             },
             body: JSON.stringify({
               model: "llama3-8b-8192",
