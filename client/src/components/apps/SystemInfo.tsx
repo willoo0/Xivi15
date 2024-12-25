@@ -25,9 +25,6 @@ export function SystemInfo() {
         <div>
           <span className="font-semibold">Memory:</span> 16GB DDR5 RAM
         </div>
-        <div>
-          <span className="font-semibold">Public IP:</span> {publicIP}
-        </div>
       </Card>
     </div>
   );
