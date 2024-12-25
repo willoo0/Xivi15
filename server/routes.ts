@@ -133,14 +133,23 @@ export function registerRoutes(app: Express): Server {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
+      const responseText = await response.text();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        console.error('Invalid JSON response:', responseText);
+        throw new Error('Invalid response from Groq API');
       }
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status} - ${data.error?.message || 'Unknown error'}`);
+      }
+
       res.json(data);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error('Chat API error:', error);
+      res.status(500).json({ error: error.message || 'Internal server error' });
     }
   });
 
