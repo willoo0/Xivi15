@@ -1,80 +1,5 @@
+
 import React, { useEffect, useRef, useState } from "react";
-import { Bot } from "lucide-react";
-
-function ConsoleText({
-  text,
-  delay,
-  color = "white",
-}: {
-  text: string;
-  delay: number;
-  color?: string;
-}) {
-  const [visible, setVisible] = useState(false);
-  const [currentText, setCurrentText] = useState("");
-  const [dots, setDots] = useState("");
-  const intervalRef = useRef<NodeJS.Timeout>();
-  const dotsIntervalRef = useRef<NodeJS.Timeout>();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(true);
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [delay]);
-
-  useEffect(() => {
-    if (!visible) return;
-
-    let index = 0;
-    intervalRef.current = setInterval(() => {
-      if (index <= text.length) {
-        setCurrentText(text.slice(0, index));
-        index++;
-      } else if (text.includes("Waiting for environment")) {
-        const startTime = Date.now();
-        dotsIntervalRef.current = setInterval(() => {
-          const elapsed = Date.now() - startTime;
-          if (elapsed > 3000) {
-            if (dotsIntervalRef.current) {
-              clearInterval(dotsIntervalRef.current);
-            }
-            return;
-          }
-          setDots((prev) => (prev === "..." ? "" : prev + "."));
-        }, 800);
-      } else {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-        }
-      }
-    }, 50);
-
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (dotsIntervalRef.current) clearInterval(dotsIntervalRef.current);
-    };
-  }, [visible, text]);
-
-  if (!visible) return null;
-
-  return (
-    <div className="flex items-center gap-2 font-mono">
-      <span className="text-green-500">$</span>
-      <span
-        style={{ color: color === "green-500" ? "#22c55e" : "white" }}
-        className="opacity-80"
-      >
-        {currentText}
-        {dots}
-      </span>
-      {currentText.length < text.length && !dots && (
-        <span className="animate-pulse">_</span>
-      )}
-    </div>
-  );
-}
 
 export function Splash({ onFinish }: { onFinish: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -82,7 +7,9 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   const mouseY = useRef(0);
   const speed = useRef(0.5);
   const [isSystemReady, setIsSystemReady] = useState(false);
+  const [loadingText, setLoadingText] = useState("Initializing System");
 
+  // Star class definition
   class Star {
     x: number;
     y: number;
@@ -129,6 +56,24 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   }
 
   useEffect(() => {
+    const texts = [
+      "Initializing System",
+      "Starting Services",
+      "Loading Components",
+      "Almost Ready",
+      "Preparing Environment"
+    ];
+    let index = 0;
+
+    const interval = setInterval(() => {
+      setLoadingText(texts[index]);
+      index = (index + 1) % texts.length;
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -153,8 +98,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.current = e.clientX;
       mouseY.current = e.clientY;
-      speed.current =
-        0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
+      speed.current = 0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -200,24 +144,18 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
         <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px] transition-all duration-500 ease-in-out">
           <div className="flex justify-center">
             <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans flex items-center justify-center gap-2">
-              {" "}
               Xivi Spaces 15.1 (Pre)
             </h1>
           </div>
-          <ConsoleText text="Initializing Xivi Linux 15.1 Allium" delay={500} />
-          <ConsoleText text="Loading kernel modules..." delay={1000} />
-          <ConsoleText text="Starting system services..." delay={1500} />
-          <ConsoleText text="Mounting virtual filesystem..." delay={2000} />
-          <ConsoleText text="Starting window manager..." delay={2500} />
-          <ConsoleText text="Configuring network interfaces..." delay={3000} />
-          <ConsoleText text="System ready!" delay={3500} color="green-500" />
-          <ConsoleText text="Waiting for environment..." delay={4000} />
+          <div className="text-center text-white/80 text-lg mb-4">
+            {loadingText}
+          </div>
+          <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
           {isSystemReady && (
             <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
               Click anywhere to start 😊
             </p>
           )}
-          <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
         </div>
       </div>
     </div>
