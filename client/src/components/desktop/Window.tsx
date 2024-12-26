@@ -39,7 +39,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     let animationFrameId: number;
     
     const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging && !isMaximized && windowRef.current) {
+      if ((isDragging || isResizing) && !isMaximized && windowRef.current) {
         cancelAnimationFrame(animationFrameId);
         
         animationFrameId = requestAnimationFrame(() => {
