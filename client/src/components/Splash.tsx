@@ -147,7 +147,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={!showPin ? handleClick : undefined}>
       <canvas ref={canvasRef} className="absolute inset-0 backdrop-blur-sm" />
       {showPin ? (
-        <div className="relative z-10 flex h-full items-center justify-center">
+        <div className="relative z-10 flex h-full items-center justify-center backdrop-blur-sm">
           <div className="w-[300px] space-y-4 p-6 rounded-lg bg-black/80 backdrop-blur-sm">
             <h2 className="text-xl text-white/80 text-center font-['Arial']">Enter PIN</h2>
             <Input 
