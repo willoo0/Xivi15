@@ -211,3 +211,30 @@ body {
   border-radius: 0.25rem;
   color: rgb(239 68 68);
 }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: hsl(var(--muted));
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: hsl(var(--primary));
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.dark input[type="range"]::-webkit-slider-thumb {
+  background: hsl(var(--primary));
+}

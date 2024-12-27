@@ -119,9 +119,11 @@ export function Settings() {
                 max="64"
                 defaultValue="40"
                 className="w-full"
+                value={topbarHeight}
                 onChange={(e) => {
-                  document.documentElement.style.setProperty('--topbar-height', `${e.target.value}px`);
-                  updateSettings({ topbarHeight: Number(e.target.value) });
+                  const value = e.target.value;
+                  document.documentElement.style.setProperty('--topbar-height', `${value}px`);
+                  updateSettings({ topbarHeight: Number(value) });
                 }}
               />
               <span className="text-sm text-muted-foreground w-12 text-right">px</span>
