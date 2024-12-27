@@ -109,6 +109,24 @@ export function Settings() {
               onCheckedChange={(checked) => updateSettings({ blurEffects: checked })}
             />
           </div>
+
+          <div className="space-y-2">
+            <Label>Window Topbar Size</Label>
+            <div className="flex items-center gap-4">
+              <input
+                type="range"
+                min="32"
+                max="64"
+                defaultValue="40"
+                className="w-full"
+                onChange={(e) => {
+                  document.documentElement.style.setProperty('--topbar-height', `${e.target.value}px`);
+                  updateSettings({ topbarHeight: Number(e.target.value) });
+                }}
+              />
+              <span className="text-sm text-muted-foreground w-12 text-right">px</span>
+            </div>
+          </div>
         </div>
       </div>
       

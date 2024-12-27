@@ -33,6 +33,7 @@ interface DesktopState {
   blurEffects: boolean
   animations: boolean
   notifications: boolean
+  topbarHeight: number
   addWindow: (window: Omit<AppWindow, 'zIndex'>) => void
   removeWindow: (id: string) => void
   setActiveWindow: (id: string) => void
@@ -58,6 +59,7 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
   blurEffects: true,
   animations: true,
   notifications: true,
+  topbarHeight: 40,
 }
 
 export const useDesktopStore = create<DesktopState>()(
