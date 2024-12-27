@@ -135,11 +135,11 @@ export const useDesktopStore = create<DesktopState>(
         ...state,
         ...settings
       }))
-    }),
+    },
     {
       name: 'desktop-store',
       version: 1,
       storage: createJSONStorage(() => localStorage)
     }
   )
-)
+);
