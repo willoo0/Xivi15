@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useEffect } from 'react'
 
 export function Settings() {
-  const { theme, blurEffects, animations, notifications, taskbarMode, updateSettings } = useDesktopStore();
+  const { theme, blurEffects, animations, notifications, taskbarMode, topbarHeight, updateSettings } = useDesktopStore();
   const { toast } = useToast();
 
   useEffect(() => {
