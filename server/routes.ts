@@ -3,27 +3,27 @@ import { createServer, type Server } from "http";
 import fetch from "node-fetch";
 
 export function registerRoutes(app: Express): Server {
-  const PIN = "1234"; // You can change this to your desired PIN
+  const PIN = "ea23492"; // You can change this to your desired PIN
 
-app.post('/api/verify-pin', async (req: Request, res) => {
-  const { pin } = req.body;
-  if (pin === PIN) {
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ success: false });
-  }
-});
+  app.post("/api/verify-pin", async (req: Request, res) => {
+    const { pin } = req.body;
+    if (pin === PIN) {
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ success: false });
+    }
+  });
 
-app.get('/api/proxy', async (req: Request, res) => {
+  app.get("/api/proxy", async (req: Request, res) => {
     try {
       const url = req.query.url as string;
       if (!url) {
-        return res.status(400).send('URL parameter is required');
+        return res.status(400).send("URL parameter is required");
       }
 
       // Prevent proxy loops
       const refererUrl = req.headers.referer;
-      if (refererUrl && new URL(refererUrl).pathname === '/api/proxy') {
+      if (refererUrl && new URL(refererUrl).pathname === "/api/proxy") {
         return res.redirect(url);
       }
 
@@ -31,12 +31,12 @@ app.get('/api/proxy', async (req: Request, res) => {
       let targetUrl: string;
       try {
         const parsed = new URL(url);
-        if (!parsed.protocol.startsWith('http')) {
-          parsed.protocol = 'https:';
+        if (!parsed.protocol.startsWith("http")) {
+          parsed.protocol = "https:";
         }
         // Prevent accessing our own server
         if (parsed.hostname === req.hostname) {
-          return res.status(400).send('Cannot proxy requests to this server');
+          return res.status(400).send("Cannot proxy requests to this server");
         }
         targetUrl = parsed.toString();
       } catch (e) {
@@ -45,31 +45,32 @@ app.get('/api/proxy', async (req: Request, res) => {
 
       const response = await fetch(targetUrl, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        },
       });
 
-      const contentType = response.headers.get('content-type') || '';
+      const contentType = response.headers.get("content-type") || "";
 
       // Set response headers
       res.set({
-        'Content-Type': contentType,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'X-Frame-Options': 'SAMEORIGIN',
-        'X-Content-Type-Options': 'nosniff',
-        'Referrer-Policy': 'no-referrer',
-        'X-Final-URL': response.url
+        "Content-Type": contentType,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "X-Frame-Options": "SAMEORIGIN",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "X-Final-URL": response.url,
       });
 
       // Handle HTML content
-      if (contentType.includes('text/html')) {
+      if (contentType.includes("text/html")) {
         let html = await response.text();
-        
+
         // Add base tag to handle relative URLs
         const baseTag = `<base href="${new URL(response.url).origin}/">`;
         html = html.replace(/<head>/, `<head>${baseTag}`);
-        
+
         // Add navigation handler script
         const script = `
           <script>
@@ -113,34 +114,37 @@ app.get('/api/proxy', async (req: Request, res) => {
             })();
           </script>
         `;
-        html = html.replace('</body>', `${script}</body>`);
-        
+        html = html.replace("</body>", `${script}</body>`);
+
         return res.send(html);
       }
 
       // Stream other content types
       response.body.pipe(res);
     } catch (error) {
-      console.error('Proxy error:', error);
-      res.status(500).send('Error fetching URL');
+      console.error("Proxy error:", error);
+      res.status(500).send("Error fetching URL");
     }
   });
 
-  app.post('/api/chat', async (req, res) => {
+  app.post("/api/chat", async (req, res) => {
     try {
       const messages = req.body.messages;
       try {
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
+        const response = await fetch(
+          "https://api.groq.com/openai/v1/chat/completions",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+            },
+            body: JSON.stringify({
+              model: "llama3-8b-8192",
+              messages: messages,
+            }),
           },
-          body: JSON.stringify({
-            model: "llama3-8b-8192",
-            messages: messages
-          })
-        });
+        );
 
         if (!response.ok) {
           const error = await response.text();
@@ -153,53 +157,56 @@ app.get('/api/proxy', async (req: Request, res) => {
         const data = await response.json();
         res.json(data);
       } catch (error) {
-        console.error('Chat API error:', error);
-        res.status(500).json({ 
-          error: error.message || 'Internal server error',
-          details: error.stack
+        console.error("Chat API error:", error);
+        res.status(500).json({
+          error: error.message || "Internal server error",
+          details: error.stack,
         });
       }
     } catch (outerError) {
-      console.error('Route handler error:', outerError);
-      res.status(500).json({ 
-        error: 'Internal server error',
-        details: outerError.message 
+      console.error("Route handler error:", outerError);
+      res.status(500).json({
+        error: "Internal server error",
+        details: outerError.message,
       });
     }
   });
 
-  app.get('/api/music/search', async (req, res) => {
+  app.get("/api/music/search", async (req, res) => {
     try {
-
       const query = req.query.q as string;
       if (!query) {
-        return res.status(400).json({ error: 'Query parameter is required' });
+        return res.status(400).json({ error: "Query parameter is required" });
       }
-      
-      const response = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=10`);
+
+      const response = await fetch(
+        `https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=10`,
+      );
       const data = await response.json();
-      
-      res.json(data.data.map((track: any) => ({
-        videoId: track.id,
-        title: track.title,
-        artist: track.artist.name,
-        url: track.preview
-      })));
+
+      res.json(
+        data.data.map((track: any) => ({
+          videoId: track.id,
+          title: track.title,
+          artist: track.artist.name,
+          url: track.preview,
+        })),
+      );
     } catch (error) {
-      console.error('Search error:', error);
-      res.status(500).json({ error: 'Failed to search songs' });
+      console.error("Search error:", error);
+      res.status(500).json({ error: "Failed to search songs" });
     }
   });
 
-  app.get('/api/music/stream', async (req, res) => {
+  app.get("/api/music/stream", async (req, res) => {
     try {
       const videoId = req.query.videoId as string;
       const response = await fetch(`https://api.deezer.com/track/${videoId}`);
       const data = await response.json();
       res.json({ url: data.preview });
     } catch (error) {
-      console.error('Stream error:', error);
-      res.status(500).json({ error: 'Failed to get song URL' });
+      console.error("Stream error:", error);
+      res.status(500).json({ error: "Failed to get song URL" });
     }
   });
 
