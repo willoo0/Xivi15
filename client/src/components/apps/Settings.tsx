@@ -117,7 +117,8 @@ export function Settings() {
                 type="range"
                 min="32"
                 max="64"
-                defaultValue="40"
+                min="32"
+                max="64"
                 className="w-full"
                 value={topbarHeight}
                 onChange={(e) => {

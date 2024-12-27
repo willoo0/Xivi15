@@ -64,7 +64,13 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
 
 export const useDesktopStore = create<DesktopState>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      // Initialize topbar height CSS variable
+      if (typeof document !== 'undefined') {
+        document.documentElement.style.setProperty('--topbar-height', `${initialState.topbarHeight}px`);
+      }
+      
+      return ({
       ...initialState,
       
       addWindow: (window) => set((state) => {
