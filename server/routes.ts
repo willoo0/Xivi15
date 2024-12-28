@@ -1,8 +1,52 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
+import { RammerheadProxy } from '@rammerhead/node';
+
+const rammerhead = new RammerheadProxy({
+  hostname: '0.0.0.0',
+  port: 5001,
+  proxyToPort: 5002
+});
 
 export function registerRoutes(app: Express): Server {
+  // Rammerhead route
+  app.use('/ric', (req, res, next) => {
+    if (req.url === '/') {
+      res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Proxy</title>
+          <style>
+            body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f0f0; }
+            .container { text-align: center; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            input { padding: 8px; width: 300px; margin-right: 8px; border: 1px solid #ddd; border-radius: 4px; }
+            button { padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+            button:hover { background: #0056b3; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <form id="form">
+              <input type="text" id="url" placeholder="Enter URL" required>
+              <button type="submit">Go</button>
+            </form>
+          </div>
+          <script>
+            document.getElementById('form').onsubmit = (e) => {
+              e.preventDefault();
+              const url = document.getElementById('url').value;
+              window.location.href = '/ric/proxy/' + encodeURIComponent(url);
+            };
+          </script>
+        </body>
+        </html>
+      `);
+    } else {
+      rammerhead.proxy(req, res, next);
+    }
+  });
   const PIN = "ea23492"; // You can change this to your desired PIN
 
   app.post("/api/verify-pin", async (req: Request, res) => {
