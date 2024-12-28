@@ -1,28 +1,29 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 export function registerRoutes(app: Express): Server {
-  app.use('/ric', async (req, res, next) => {
-    if (req.url === '/') {
+  app.use("/ric", async (req, res, next) => {
+    if (req.url === "/") {
       res.send(`
         <!DOCTYPE html>
         <html>
         <head>
-          <title>Xivi Proxy</title>
+          <title>Xivi Surf</title>
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
           <link rel="stylesheet" href="/proxy-styles.css">
         </head>
         <body>
           <div class="stars"></div>
           <div class="container">
-            <h1>Xivi Proxy</h1>
+            <h1>Xivi Surf</h1>
             <form id="form">
               <input type="text" id="url" placeholder="Enter URL or search with DuckDuckGo" required>
               <button type="submit">Go</button>
             </form>
             <p>Seamless, secure browsing.</p>
+            <p>Powered by a custum version of XiviProx</p>
           </div>
           <script>
             document.getElementById('form').onsubmit = (e) => {
@@ -38,40 +39,44 @@ export function registerRoutes(app: Express): Server {
       `);
     } else {
       const path = req.url;
-      if (!path || path === '/') return;
+      if (!path || path === "/") return;
 
       try {
         // Extract and process the URL
         const urlMatch = path.match(/^\/proxy\/(.+)$/);
         if (!urlMatch) {
-          throw new Error('Invalid URL format');
+          throw new Error("Invalid URL format");
         }
 
         let url = decodeURIComponent(urlMatch[1]);
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          url = 'https://' + url;
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+          url = "https://" + url;
         }
 
         const response = await fetch(url, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-          }
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+          },
         });
 
-        const contentType = response.headers.get('content-type') || '';
-        res.set('Content-Type', contentType);
+        const contentType = response.headers.get("content-type") || "";
+        res.set("Content-Type", contentType);
 
         // Handle images and binary content
-        if (contentType.startsWith('image/') || contentType.includes('application/octet-stream')) {
+        if (
+          contentType.startsWith("image/") ||
+          contentType.includes("application/octet-stream")
+        ) {
           return response.body.pipe(res);
         }
 
-        if (contentType.includes('text/html')) {
+        if (contentType.includes("text/html")) {
           let content = await response.text();
-          
+
           // Rewrite URLs in HTML
           content = content.replace(/href="([^"]*)"/g, (match, p1) => {
-            if (p1.startsWith('http')) {
+            if (p1.startsWith("http")) {
               return `href="/ric/proxy/${encodeURIComponent(p1)}"`;
             }
             const baseUrl = new URL(url).origin;
@@ -80,7 +85,7 @@ export function registerRoutes(app: Express): Server {
           });
 
           content = content.replace(/action="([^"]*)"/g, (match, p1) => {
-            if (p1.startsWith('http')) {
+            if (p1.startsWith("http")) {
               return `action="/ric/proxy/${encodeURIComponent(p1)}"`;
             }
             const baseUrl = new URL(url).origin;
@@ -89,7 +94,7 @@ export function registerRoutes(app: Express): Server {
           });
 
           content = content.replace(/src="([^"]*)"/g, (match, p1) => {
-            if (p1.startsWith('http')) {
+            if (p1.startsWith("http")) {
               return `src="/ric/proxy/${encodeURIComponent(p1)}"`;
             }
             const baseUrl = new URL(url).origin;
