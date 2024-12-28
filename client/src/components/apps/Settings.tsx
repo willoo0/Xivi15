@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
@@ -118,8 +117,6 @@ export function Settings() {
             <div className="flex items-center gap-4">
               <input
                 type="range"
-                min="32"
-                max="64"
                 min="32"
                 max="64"
                 className="w-full"
