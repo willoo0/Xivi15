@@ -28,6 +28,16 @@ const categories = [
 ];
 
 export function StartMenu({ onClose }: StartMenuProps) {
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.start-menu') && !target.closest('.start-btn')) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
   const { addWindow } = useDesktopStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [contextMenu, setContextMenu] = useState<{

@@ -127,15 +127,17 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       >
         <div className="font-medium">{title}</div>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" onClick={handleMinimize}>
-            <Minus className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
-            <Maximize2 className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={handleClose}>
-            <X className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="icon" onClick={handleMinimize} title="Minimize">
+              <Minus className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)} title="Maximize">
+              <Maximize2 className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleClose} title="Close">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
       <div 

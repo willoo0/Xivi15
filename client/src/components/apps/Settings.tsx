@@ -106,7 +106,10 @@ export function Settings() {
             </div>
             <Switch 
               checked={blurEffects}
-              onCheckedChange={(checked) => updateSettings({ blurEffects: checked })}
+              onCheckedChange={(checked) => {
+                updateSettings({ blurEffects: checked });
+                document.documentElement.style.setProperty('--blur-amount', checked ? '8px' : '0px');
+              }}
             />
           </div>
 

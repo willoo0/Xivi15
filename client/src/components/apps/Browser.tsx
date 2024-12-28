@@ -73,7 +73,36 @@ export function Browser() {
 
   return (
     <div className="flex flex-col h-full bg-background">
-      <div className="flex items-center gap-2 p-2 border-b">
+      <Tabs value={activeTab} className="flex-1 flex flex-col" onValueChange={setActiveTab}>
+        <div className="flex items-center border-b">
+          <TabsList className="flex-1 justify-start h-10 bg-transparent">
+            {tabs.map(tab => (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className={cn(
+                  "flex items-center gap-2 px-4 data-[state=active]:bg-background",
+                  tab.id === activeTab ? "border-b-2 border-primary" : ""
+                )}
+              >
+                <Globe className="h-4 w-4" />
+                <span className="max-w-[100px] truncate">{tab.title}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-4 w-4 ml-2 hover:bg-destructive/20"
+                  onClick={(e) => removeTab(tab.id, e)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <Button variant="ghost" size="icon" className="h-10 w-10" onClick={addTab}>
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="flex items-center gap-2 p-2 border-b">
         <Button variant="ghost" size="icon" onClick={() => navigate(currentTab?.url || '')}>
           <RotateCw className="h-4 w-4" />
         </Button>
