@@ -131,23 +131,6 @@ export function Browser() {
               src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
               sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
-              onLoad={(e) => {
-                const iframe = e.target as HTMLIFrameElement;
-                if (!iframe.contentWindow) return;
-                
-                // Store cookies from response
-                const setCookies = iframe.contentDocument?.querySelector('meta[name="x-set-cookies"]')?.getAttribute('content');
-                if (setCookies) {
-                  const domain = new URL(currentTab.url).hostname;
-                  const storedCookies = JSON.parse(localStorage.getItem(`proxy_cookies_${domain}`) || '[]');
-                  const newCookies = JSON.parse(setCookies);
-                  localStorage.setItem(`proxy_cookies_${domain}`, JSON.stringify([...storedCookies, ...newCookies]));
-                }
-
-                setTabs(tabs => tabs.map(tab =>
-                  tab.id === activeTab ? { ...tab, loading: false } : tab
-                ));
-              }}
               onLoad={() => {
                 setTabs(tabs => tabs.map(tab =>
                   tab.id === activeTab ? { ...tab, loading: false } : tab

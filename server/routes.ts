@@ -52,21 +52,11 @@ export function registerRoutes(app: Express): Server {
           url = 'https://' + url;
         }
 
-        // Get stored cookies for this URL
-        const cookies = req.headers['x-stored-cookies'] || '';
-
         const response = await fetch(url, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Cookie': cookies
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
           }
         });
-
-        // Get cookies from response
-        const setCookies = response.headers.raw()['set-cookie'] || [];
-        if (setCookies.length > 0) {
-          res.setHeader('x-set-cookies', JSON.stringify(setCookies));
-        }
 
         const contentType = response.headers.get('content-type') || '';
         res.set('Content-Type', contentType);
