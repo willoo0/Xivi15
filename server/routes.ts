@@ -10,26 +10,129 @@ export function registerRoutes(app: Express): Server {
         <!DOCTYPE html>
         <html>
         <head>
-          <title>Proxy</title>
+          <title>Xivi Proxy</title>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
           <style>
-            body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f0f0; }
-            .container { text-align: center; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-            input { padding: 8px; width: 300px; margin-right: 8px; border: 1px solid #ddd; border-radius: 4px; }
-            button { padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-            button:hover { background: #0056b3; }
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              font-family: 'Inter', sans-serif;
+            }
+            
+            @keyframes moveStars {
+              from { transform: translateY(0); }
+              to { transform: translateY(-100vh); }
+            }
+            
+            .stars {
+              position: fixed;
+              width: 100%;
+              height: 200vh;
+              background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='%23FFF' fill-opacity='0.4'%3E%3Ccircle r='0.7' cx='50' cy='50'/%3E%3Ccircle r='0.5' cx='150' cy='150'/%3E%3Ccircle r='0.8' cx='250' cy='250'/%3E%3Ccircle r='0.6' cx='200' cy='100'/%3E%3Ccircle r='0.4' cx='100' cy='200'/%3E%3C/g%3E%3C/svg%3E");
+              animation: moveStars 60s linear infinite;
+              opacity: 0.5;
+              z-index: -1;
+            }
+            
+            body {
+              min-height: 100vh;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+              color: white;
+            }
+            
+            .container {
+              text-align: center;
+              padding: 2.5rem;
+              background: rgba(255, 255, 255, 0.1);
+              backdrop-filter: blur(10px);
+              border-radius: 1rem;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+              animation: fadeIn 0.5s ease-out;
+            }
+            
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(20px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            
+            h1 {
+              font-size: 2.5rem;
+              margin-bottom: 1.5rem;
+              font-weight: 600;
+              background: linear-gradient(to right, #fff, #a5b4fc);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            }
+            
+            form {
+              display: flex;
+              gap: 0.5rem;
+            }
+            
+            input {
+              width: 400px;
+              padding: 0.75rem 1rem;
+              border: none;
+              border-radius: 0.5rem;
+              background: rgba(255, 255, 255, 0.1);
+              color: white;
+              font-size: 1rem;
+              transition: all 0.3s ease;
+            }
+            
+            input::placeholder {
+              color: rgba(255, 255, 255, 0.5);
+            }
+            
+            input:focus {
+              outline: none;
+              background: rgba(255, 255, 255, 0.15);
+              box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+            }
+            
+            button {
+              padding: 0.75rem 1.5rem;
+              border: none;
+              border-radius: 0.5rem;
+              background: rgba(255, 255, 255, 0.2);
+              color: white;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.3s ease;
+            }
+            
+            button:hover {
+              background: rgba(255, 255, 255, 0.3);
+              transform: translateY(-2px);
+            }
+            
+            p {
+              margin-top: 1rem;
+              color: rgba(255, 255, 255, 0.6);
+            }
           </style>
         </head>
         <body>
+          <div class="stars"></div>
           <div class="container">
+            <h1>Xivi Proxy</h1>
             <form id="form">
-              <input type="text" id="url" placeholder="Enter URL" required>
+              <input type="text" id="url" placeholder="Enter URL or search with DuckDuckGo" required>
               <button type="submit">Go</button>
             </form>
+            <p>Seamless, secure browsing.</p>
           </div>
           <script>
             document.getElementById('form').onsubmit = (e) => {
               e.preventDefault();
-              const url = document.getElementById('url').value;
+              const input = document.getElementById('url').value;
+              const isUrl = input.includes('.') && !input.includes(' ');
+              const url = isUrl ? input : 'https://duckduckgo.com/?q=' + encodeURIComponent(input);
               window.location.href = '/ric/proxy/' + encodeURIComponent(url);
             };
           </script>
