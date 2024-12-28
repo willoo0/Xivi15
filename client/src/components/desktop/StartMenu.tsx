@@ -68,6 +68,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
       },
       isMinimized: false,
       isMaximized: false,
+      zIndex: 0
     });
     onClose();
   };
