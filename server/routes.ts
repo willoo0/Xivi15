@@ -73,35 +73,57 @@ export function registerRoutes(app: Express): Server {
 
         if (contentType.includes("text/html")) {
           let content = await response.text();
+          const baseUrl = new URL(url).origin;
+
+          // Function to convert URLs to proxied versions
+          const proxyUrl = (originalUrl: string) => {
+            try {
+              if (!originalUrl || originalUrl.startsWith('javascript:') || originalUrl.startsWith('#')) {
+                return originalUrl;
+              }
+              const fullUrl = originalUrl.startsWith('http') ? originalUrl : new URL(originalUrl, baseUrl).toString();
+              return `/ric/proxy/${encodeURIComponent(fullUrl)}`;
+            } catch {
+              return originalUrl;
+            }
+          };
 
           // Rewrite URLs in HTML
-          content = content.replace(/href="([^"]*)"/g, (match, p1) => {
-            if (p1.startsWith("http")) {
-              return `href="/ric/proxy/${encodeURIComponent(p1)}"`;
-            }
-            const baseUrl = new URL(url).origin;
-            const fullUrl = new URL(p1, baseUrl).toString();
-            return `href="/ric/proxy/${encodeURIComponent(fullUrl)}"`;
+          content = content.replace(/(?:href|src|action)="([^"]*)"/g, (match, url) => {
+            return match.replace(url, proxyUrl(url));
           });
 
-          content = content.replace(/action="([^"]*)"/g, (match, p1) => {
-            if (p1.startsWith("http")) {
-              return `action="/ric/proxy/${encodeURIComponent(p1)}"`;
-            }
-            const baseUrl = new URL(url).origin;
-            const fullUrl = new URL(p1, baseUrl).toString();
-            return `action="/ric/proxy/${encodeURIComponent(fullUrl)}"`;
-          });
+          // Add click interception script
+          const script = `
+            <script>
+              (function() {
+                document.addEventListener('click', function(e) {
+                  const link = e.target.closest('a');
+                  if (link && link.href) {
+                    e.preventDefault();
+                    const url = link.href;
+                    if (!url.startsWith('javascript:') && !url.startsWith('#')) {
+                      window.location.href = '/ric/proxy/' + encodeURIComponent(url);
+                    }
+                  }
+                });
 
-          content = content.replace(/src="([^"]*)"/g, (match, p1) => {
-            if (p1.startsWith("http")) {
-              return `src="/ric/proxy/${encodeURIComponent(p1)}"`;
-            }
-            const baseUrl = new URL(url).origin;
-            const fullUrl = new URL(p1, baseUrl).toString();
-            return `src="/ric/proxy/${encodeURIComponent(fullUrl)}"`;
-          });
+                // Handle form submissions
+                document.addEventListener('submit', function(e) {
+                  const form = e.target;
+                  if (form.method.toLowerCase() === 'get') {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    const queryString = new URLSearchParams(formData).toString();
+                    const url = form.action + (form.action.includes('?') ? '&' : '?') + queryString;
+                    window.location.href = '/ric/proxy/' + encodeURIComponent(url);
+                  }
+                });
+              })();
+            </script>
+          `;
 
+          content = content.replace('</body>', script + '</body>');
           res.send(content);
         } else {
           response.body.pipe(res);
