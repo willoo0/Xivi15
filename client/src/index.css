@@ -1,18 +1,3 @@
-
-@keyframes rainbow {
-  0% { background-color: #ff0000; }
-  17% { background-color: #ff8800; }
-  33% { background-color: #ffff00; }
-  50% { background-color: #00ff00; }
-  67% { background-color: #0000ff; }
-  84% { background-color: #4b0082; }
-  100% { background-color: #9400d3; }
-}
-
-.animate-rainbow {
-  animation: rainbow 4s linear infinite;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

@@ -1,7 +1,66 @@
 
 import React, { useEffect, useRef, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+
+function ConsoleText({ text, delay, color = 'white' }: { text: string; delay: number; color?: string }) {
+  const [visible, setVisible] = useState(false);
+  const [currentText, setCurrentText] = useState('');
+  const [dots, setDots] = useState('');
+  const intervalRef = useRef<NodeJS.Timeout>();
+  const dotsIntervalRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(true);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!visible) return;
+
+    let index = 0;
+    intervalRef.current = setInterval(() => {
+      if (index <= text.length) {
+        setCurrentText(text.slice(0, index));
+        index++;
+      } else if (text.includes("Waiting for environment")) {
+        const startTime = Date.now();
+        dotsIntervalRef.current = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          if (elapsed > 3000) {
+            if (dotsIntervalRef.current) {
+              clearInterval(dotsIntervalRef.current);
+            }
+            return;
+          }
+          setDots(prev => prev === '...' ? '' : prev + '.');
+        }, 800);
+      } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      }
+    }, 50);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (dotsIntervalRef.current) clearInterval(dotsIntervalRef.current);
+    };
+  }, [visible, text]);
+
+  if (!visible) return null;
+
+  return (
+    <div className="flex items-center gap-2 font-mono">
+      <span className="text-green-500">$</span>
+      <span style={{ color: color === 'green-500' ? '#22c55e' : 'white' }} className="opacity-80">
+        {currentText}{dots}
+      </span>
+      {currentText.length < text.length && !dots && <span className="animate-pulse">_</span>}
+    </div>
+  );
+}
 
 export function Splash({ onFinish }: { onFinish: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,87 +68,6 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   const mouseY = useRef(0);
   const speed = useRef(0.5);
   const [isSystemReady, setIsSystemReady] = useState(false);
-  const [loadingText, setLoadingText] = useState("Welcome to Xivi");
-  const [showPin, setShowPin] = useState(true);
-  const [pin, setPin] = useState("");
-  const [pinError, setPinError] = useState(false);
-
-  const verifyPin = async () => {
-    try {
-      const response = await fetch('/api/verify-pin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pin })
-      });
-      const data = await response.json();
-      if (data.success) {
-        setShowPin(false);
-        setPinError(false);
-      } else {
-        setPinError(true);
-      }
-    } catch (error) {
-      setPinError(true);
-    }
-  };
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const stars: Star[] = [];
-    const numStars = 200;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    for (let i = 0; i < numStars; i++) {
-      stars.push(new Star(canvas.width, canvas.height));
-    }
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.current = e.clientX;
-      mouseY.current = e.clientY;
-      speed.current = 0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-
-    const animate = () => {
-      ctx.fillStyle = "rgba(10, 10, 10, 0.9)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      stars.forEach((star) => {
-        star.move(canvas.width, canvas.height);
-        star.show(ctx, canvas.width, canvas.height);
-      });
-
-      requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      document.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
-  const handleClick = () => {
-    if (!isSystemReady) return;
-    document.documentElement.requestFullscreen().catch(console.warn);
-    setTimeout(onFinish, 500);
-  };
 
   class Star {
     x: number;
@@ -118,16 +96,16 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
     }
 
     show(ctx: CanvasRenderingContext2D, width: number, height: number) {
-      let x = (this.x - width / 2) * (width / this.z);
-      x = x + width / 2;
-
-      let y = (this.y - height / 2) * (width / this.z);
-      y = y + height / 2;
-
-      const s = this.size * (width / this.z);
-
-      x += (mouseX.current - width / 2) * this.speed * 0.1;
-      y += (mouseY.current - height / 2) * this.speed * 0.1;
+      let x = (this.x - width/2) * (width/this.z);
+      x = x + width/2;
+      
+      let y = (this.y - height/2) * (width/this.z);
+      y = y + height/2;
+      
+      const s = this.size * (width/this.z);
+      
+      x += (mouseX.current - width/2) * this.speed * 0.1;
+      y += (mouseY.current - height/2) * this.speed * 0.1;
 
       ctx.beginPath();
       ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
@@ -137,48 +115,90 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   }
 
   useEffect(() => {
-    if (!showPin) {
-      const timer = setTimeout(() => setIsSystemReady(true), 3000);
-      return () => clearTimeout(timer);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const stars: Star[] = [];
+    const numStars = 200;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    for(let i = 0; i < numStars; i++) {
+      stars.push(new Star(canvas.width, canvas.height));
     }
-  }, [showPin]);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.current = e.clientX;
+      mouseY.current = e.clientY;
+      speed.current = 0.5 + (Math.abs(e.movementX) + Math.abs(e.movementY)) * 0.01;
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+
+    const animate = () => {
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.9)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      stars.forEach(star => {
+        star.move(canvas.width, canvas.height);
+        star.show(ctx, canvas.width, canvas.height);
+      });
+      
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsSystemReady(true), 9000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleClick = () => {
+    if (!isSystemReady) return;
+    document.documentElement.requestFullscreen().catch(console.warn);
+    setTimeout(onFinish, 500);
+  };
 
   return (
-    <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={!showPin ? handleClick : undefined}>
-      <canvas ref={canvasRef} className="absolute inset-0 backdrop-blur-sm" />
-      {showPin ? (
-        <div className="relative z-10 flex h-full items-center justify-center">
-          <div className="w-[300px] space-y-4 p-6 rounded-lg bg-black/80 backdrop-blur-sm">
-            <h2 className="text-xl text-white/80 text-center font-['Arial']">Enter PIN</h2>
-            <Input 
-              type="password" 
-              value={pin} 
-              onChange={(e) => setPin(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && verifyPin()}
-              className={pinError ? "border-red-500" : ""}
-            />
-            {pinError && <p className="text-red-500 text-sm">Invalid PIN</p>}
-            <Button onClick={verifyPin} className="w-full">
-              Verify
-            </Button>
+    <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={handleClick}>
+      <canvas ref={canvasRef} className="absolute inset-0" />
+      <div className="relative z-10 flex h-full items-center justify-center backdrop-blur-sm">
+        <div className="text-left space-y-2 backdrop-blur-sm bg-black/80 p-8 rounded-xl font-mono w-[600px] transition-all duration-500 ease-in-out">
+          <div className="flex justify-center">
+            <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-sans">Xivi 15 Alpha</h1>
           </div>
+          <ConsoleText text="Initializing system components..." delay={500} />
+          <ConsoleText text="Loading kernel modules..." delay={1000} />
+          <ConsoleText text="Starting system services..." delay={1500} />
+          <ConsoleText text="Mounting virtual filesystem..." delay={2000} />
+          <ConsoleText text="Starting window manager..." delay={2500} />
+          <ConsoleText text="Configuring network interfaces..." delay={3000} />
+          <ConsoleText text="System ready!" delay={3500} color="green-500" />
+          <ConsoleText text="Waiting for environment..." delay={4000} />
+          {isSystemReady && (
+            <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
+              Click anywhere to continue
+            </p>
+          )}
+          <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
         </div>
-      ) : (
-        <div className="relative z-10 flex h-full items-center justify-center">
-          <div className="text-center space-y-4 backdrop-blur-sm bg-black/80 p-8 rounded-xl w-[600px] transition-all duration-500 ease-in-out">
-            <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-['Arial']">
-              Xivi Spaces 15.1
-            </h1>
-            <div className="text-white/80 text-lg font-['Arial']">{loadingText}</div>
-            <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
-            {isSystemReady && (
-              <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
-                Click anywhere to start
-              </p>
-            )}
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
