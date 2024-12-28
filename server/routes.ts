@@ -37,11 +37,35 @@ export function registerRoutes(app: Express): Server {
         </html>
       `);
     } else {
-      const url = req.url.slice(7); // Remove '/proxy/' from the URL
-      fetch(url)
-        .then(proxyRes => proxyRes.text())
-        .then(body => res.send(body))
-        .catch(error => res.status(500).send('Proxy Error: ' + error.message));
+      const path = req.url;
+      if (!path || path === '/') return;
+
+      try {
+        // Extract and process the URL
+        const urlMatch = path.match(/^\/proxy\/(.+)$/);
+        if (!urlMatch) {
+          throw new Error('Invalid URL format');
+        }
+
+        let url = decodeURIComponent(urlMatch[1]);
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url;
+        }
+
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+          }
+        });
+
+        const contentType = response.headers.get('content-type');
+        res.set('Content-Type', contentType || 'text/html');
+        
+        const content = await response.text();
+        res.send(content);
+      } catch (error) {
+        res.status(500).send(`Proxy Error: ${error.message}`);
+      }
     }
   });
   const PIN = "ea23492"; // You can change this to your desired PIN
