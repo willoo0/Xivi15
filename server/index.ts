@@ -4,7 +4,9 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
-app.use(express.json());
+import csrf from 'csurf'
+app.use(express.json())
+app.use(csrf({ cookie: true }));
 app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {

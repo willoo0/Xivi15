@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
-import { Maximize2, Minus, X } from 'lucide-react'
+import { Maximize, Minus, X } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 import { useDesktopStore, type WindowPosition } from '@/store/desktop'
 import { cn } from '@/lib/utils'
@@ -105,7 +106,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     <Card
       ref={windowRef}
       className={cn(
-        'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in window-transition',
+        'absolute flex flex-col rounded-lg overflow-hidden bg-background/[var(--window-opacity,0.8)] backdrop-blur-md border shadow-lg fade-in window-transition',
         isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
@@ -124,15 +125,30 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       >
         <div className="font-medium">{title}</div>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" onClick={handleMinimize}>
-            <Minus className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
-            <Maximize2 className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={handleClose}>
-            <X className="h-4 w-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" onClick={handleMinimize}>
+                <Minus className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Minimize</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
+                <Maximize className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Maximize</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" onClick={handleClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Close</TooltipContent>
+          </Tooltip>
         </div>
       </div>
       <div 

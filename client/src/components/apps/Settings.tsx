@@ -97,17 +97,31 @@ export function Settings() {
             </RadioGroup>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Blur Effects</Label>
-              <div className="text-sm text-muted-foreground">
-                Enable window blur effects
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Blur Effects</Label>
+                <div className="text-sm text-muted-foreground">
+                  Enable window blur effects
+                </div>
               </div>
+              <Switch 
+                checked={blurEffects}
+                onCheckedChange={(checked) => updateSettings({ blurEffects: checked })}
+              />
             </div>
-            <Switch 
-              checked={blurEffects}
-              onCheckedChange={(checked) => updateSettings({ blurEffects: checked })}
-            />
+            <div className="space-y-2">
+              <Label>Window Opacity</Label>
+              <Slider
+                defaultValue={[80]}
+                max={100}
+                step={5}
+                onValueChange={(value) => {
+                  document.documentElement.style.setProperty('--window-opacity', `${value[0]}%`);
+                  updateSettings({ windowOpacity: value[0] });
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -98,6 +98,16 @@
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@media (max-width: 768px) {
+  .taskbar-button span {
+    display: none;
+  }
+  
+  .window-controls {
+    transform: scale(0.8);
+  }
+}
+
 .taskbar-button {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center;
