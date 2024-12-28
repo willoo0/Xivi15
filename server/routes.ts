@@ -58,11 +58,49 @@ export function registerRoutes(app: Express): Server {
           }
         });
 
-        const contentType = response.headers.get('content-type');
-        res.set('Content-Type', contentType || 'text/html');
-        
-        const content = await response.text();
-        res.send(content);
+        const contentType = response.headers.get('content-type') || '';
+        res.set('Content-Type', contentType);
+
+        // Handle images and binary content
+        if (contentType.startsWith('image/') || contentType.includes('application/octet-stream')) {
+          return response.body.pipe(res);
+        }
+
+        if (contentType.includes('text/html')) {
+          let content = await response.text();
+          
+          // Rewrite URLs in HTML
+          content = content.replace(/href="([^"]*)"/g, (match, p1) => {
+            if (p1.startsWith('http')) {
+              return `href="/ric/proxy/${encodeURIComponent(p1)}"`;
+            }
+            const baseUrl = new URL(url).origin;
+            const fullUrl = new URL(p1, baseUrl).toString();
+            return `href="/ric/proxy/${encodeURIComponent(fullUrl)}"`;
+          });
+
+          content = content.replace(/action="([^"]*)"/g, (match, p1) => {
+            if (p1.startsWith('http')) {
+              return `action="/ric/proxy/${encodeURIComponent(p1)}"`;
+            }
+            const baseUrl = new URL(url).origin;
+            const fullUrl = new URL(p1, baseUrl).toString();
+            return `action="/ric/proxy/${encodeURIComponent(fullUrl)}"`;
+          });
+
+          content = content.replace(/src="([^"]*)"/g, (match, p1) => {
+            if (p1.startsWith('http')) {
+              return `src="/ric/proxy/${encodeURIComponent(p1)}"`;
+            }
+            const baseUrl = new URL(url).origin;
+            const fullUrl = new URL(p1, baseUrl).toString();
+            return `src="/ric/proxy/${encodeURIComponent(fullUrl)}"`;
+          });
+
+          res.send(content);
+        } else {
+          response.body.pipe(res);
+        }
       } catch (error) {
         res.status(500).send(`Proxy Error: ${error.message}`);
       }
