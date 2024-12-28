@@ -53,6 +53,12 @@ export function registerRoutes(app: Express): Server {
           url = "https://" + url;
         }
 
+        // Prevent proxying our own domain
+        const targetUrl = new URL(url);
+        if (targetUrl.hostname === req.hostname) {
+          return res.redirect(targetUrl.pathname + targetUrl.search);
+        }
+
         const response = await fetch(url, {
           headers: {
             "User-Agent":
