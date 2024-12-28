@@ -42,7 +42,6 @@ export function registerRoutes(app: Express): Server {
       if (!path || path === "/") return;
 
       try {
-        // Extract and process the URL
         const urlMatch = path.match(/^\/proxy\/(.+)$/);
         if (!urlMatch) {
           throw new Error("Invalid URL format");
@@ -53,7 +52,6 @@ export function registerRoutes(app: Express): Server {
           url = "https://" + url;
         }
 
-        // Prevent proxying our own domain
         const targetUrl = new URL(url);
         if (targetUrl.hostname === req.hostname) {
           return res.redirect(targetUrl.pathname + targetUrl.search);
@@ -69,7 +67,6 @@ export function registerRoutes(app: Express): Server {
         const contentType = response.headers.get("content-type") || "";
         res.set("Content-Type", contentType);
 
-        // Handle images and binary content
         if (
           contentType.startsWith("image/") ||
           contentType.includes("application/octet-stream")
