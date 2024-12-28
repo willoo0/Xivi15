@@ -1,16 +1,9 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
-import { RammerheadProxy } from '@rammerhead/node';
-
-const rammerhead = new RammerheadProxy({
-  hostname: '0.0.0.0',
-  port: 5001,
-  proxyToPort: 5002
-});
+import fetch from 'node-fetch';
 
 export function registerRoutes(app: Express): Server {
-  // Rammerhead route
   app.use('/ric', (req, res, next) => {
     if (req.url === '/') {
       res.send(`
@@ -44,7 +37,11 @@ export function registerRoutes(app: Express): Server {
         </html>
       `);
     } else {
-      rammerhead.proxy(req, res, next);
+      const url = req.url.slice(7); // Remove '/proxy/' from the URL
+      fetch(url)
+        .then(proxyRes => proxyRes.text())
+        .then(body => res.send(body))
+        .catch(error => res.status(500).send('Proxy Error: ' + error.message));
     }
   });
   const PIN = "ea23492"; // You can change this to your desired PIN
