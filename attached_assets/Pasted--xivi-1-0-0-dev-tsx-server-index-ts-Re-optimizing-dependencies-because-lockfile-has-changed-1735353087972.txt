@@ -1,0 +1,88 @@
+
+> xivi@1.0.0 dev
+> tsx server/index.ts
+
+Re-optimizing dependencies because lockfile has changed
+2:31:05 AM [express] Server running on port 5000
+Proxy error: Error: misconfigured csrf
+    at csrf (/home/runner/Xivi-Spaces-15/node_modules/csurf/index.js:71:19)
+    at Layer.handle [as handle_request] (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:328:13)
+    at /home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:280:10)
+    at jsonParser (/home/runner/Xivi-Spaces-15/node_modules/body-parser/lib/types/json.js:113:7)
+    at Layer.handle [as handle_request] (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:328:13)
+    at /home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:286:9
+Proxy error: Error: misconfigured csrf
+    at csrf (/home/runner/Xivi-Spaces-15/node_modules/csurf/index.js:71:19)
+    at Layer.handle [as handle_request] (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:328:13)
+    at /home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:280:10)
+    at jsonParser (/home/runner/Xivi-Spaces-15/node_modules/body-parser/lib/types/json.js:113:7)
+    at Layer.handle [as handle_request] (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:328:13)
+    at /home/runner/Xivi-Spaces-15/node_modules/express/lib/router/index.js:286:9
+Error:   Failed to scan for dependencies from entries:
+  /home/runner/Xivi-Spaces-15/client/index.html
+/home/runner/Xivi-Spaces-15/client/public/balloonsnbullets.html
+/home/runner/Xivi-Spaces-15/client/public/dodgebrawl.html
+/home/runner/Xivi-Spaces-15/client/public/dungeonfish.html
+/home/runner/Xivi-Spaces-15/client/public/folkware.html
+/home/runner/Xivi-Spaces-15/client/public/minecraft.html
+/home/runner/Xivi-Spaces-15/client/public/silentheist.html
+/home/runner/Xivi-Spaces-15/client/public/snow.html
+/home/runner/Xivi-Spaces-15/client/public/tetris.html
+/home/runner/Xivi-Spaces-15/client/public/worstcasescenario.html
+
+  ✘ [ERROR] Unexpected closing "div" tag does not match opening "Tabs" tag
+
+    client/src/components/apps/Browser.tsx:197:6:
+      197 │     </div>
+          │       ~~~
+          ╵       Tabs
+
+  The opening "Tabs" tag is here:
+
+    client/src/components/apps/Browser.tsx:86:7:
+      86 │       <Tabs value={activeTab} className="flex-1 flex flex-col" onV...
+         ╵        ~~~~
+
+
+✘ [ERROR] The character "}" is not valid inside a JSX element
+
+    client/src/components/apps/Browser.tsx:199:0:
+      199 │ }
+          │ ^
+          ╵ {'}'}
+
+  Did you mean to escape it as "{'}'}" instead?
+
+
+✘ [ERROR] Unexpected end of file before a closing "div" tag
+
+    client/src/components/apps/Browser.tsx:200:0:
+      200 │ 
+          │ ^
+          ╵ </div>
+
+  The opening "div" tag is here:
+
+    client/src/components/apps/Browser.tsx:85:5:
+      85 │     <div className="flex flex-col h-full bg-background">
+         ╵      ~~~
+
+
+    at failureErrorWithLog (/home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:945:25
+    at runOnEndCallbacks (/home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:1315:45)
+    at buildResponseToResult (/home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:943:7)
+    at /home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:955:9
+    at new Promise (<anonymous>)
+    at requestCallbacks.on-end (/home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:954:54)
+    at handleRequest (/home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:647:17)
+    at handleIncomingPacket (/home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:672:7)
+    at Socket.readFromStdout (/home/runner/Xivi-Spaces-15/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
