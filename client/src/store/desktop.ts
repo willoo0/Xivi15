@@ -68,7 +68,9 @@ export const useDesktopStore = create<DesktopState>(
     (set, get) => {
       // Initialize topbar height CSS variable
       if (typeof document !== 'undefined') {
-        document.documentElement.style.setProperty('--topbar-height', `${initialState.topbarHeight}px`);
+        const storedState = JSON.parse(localStorage.getItem('desktop-store') || '{}');
+        const topbarHeight = storedState.state?.topbarHeight || initialState.topbarHeight;
+        document.documentElement.style.setProperty('--topbar-height', `${topbarHeight}px`);
       }
       
       return {
