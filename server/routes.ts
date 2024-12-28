@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import fetch from 'node-fetch';
 
 export function registerRoutes(app: Express): Server {
-  app.use('/ric', (req, res, next) => {
+  app.use('/ric', async (req, res, next) => {
     if (req.url === '/') {
       res.send(`
         <!DOCTYPE html>
