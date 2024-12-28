@@ -1,0 +1,45 @@
+ Warning: validateDOMNesting(...): <button> cannot appear as a descendant of <button>.
+    at button
+    at _c (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.dev/src/components/ui/button.tsx:47:11)
+    at button
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…5-1/node_modules/@radix-ui/react-primitive/dist/index.mjs?v=137351c8:26:13
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ces-15-1/node_modules/@radix-ui/react-slot/dist/index.mjs?v=137351c8:25:11
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…aces-15-1/node_modules/@radix-ui/react-slot/dist/index.mjs?v=137351c8:6:11
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…5-1/node_modules/@radix-ui/react-primitive/dist/index.mjs?v=137351c8:26:13
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ces-15-1/node_modules/@radix-ui/react-slot/dist/index.mjs?v=137351c8:25:11
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…aces-15-1/node_modules/@radix-ui/react-slot/dist/index.mjs?v=137351c8:6:11
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…vi-Spaces-15-1/node_modules/.vite/deps/chunk-5DM3J4JV.js?v=137351c8:109:15
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ivi-Spaces-15-1/node_modules/.vite/deps/chunk-IREYJIBR.js?v=137351c8:213:7
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ces-15-1/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=137351c8:115:13
+    at _c3 (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.dev/src/components/ui/tabs.tsx:45:12)
+    at div
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…5-1/node_modules/@radix-ui/react-primitive/dist/index.mjs?v=137351c8:26:13
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ces-15-1/node_modules/@radix-ui/react-slot/dist/index.mjs?v=137351c8:25:11
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…aces-15-1/node_modules/@radix-ui/react-slot/dist/index.mjs?v=137351c8:6:11
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…5-1/node_modules/@radix-ui/react-primitive/dist/index.mjs?v=137351c8:26:13
+    at Provider (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ivi-Spaces-15-1/node_modules/.vite/deps/chunk-IREYJIBR.js?v=137351c8:51:15)
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ivi-Spaces-15-1/node_modules/.vite/deps/chunk-IREYJIBR.js?v=137351c8:122:5
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ces-15-1/node_modules/@radix-ui/react-slot/dist/index.mjs?v=137351c8:25:11
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…aces-15-1/node_modules/@radix-ui/react-slot/dist/index.mjs?v=137351c8:6:11
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ivi-Spaces-15-1/node_modules/.vite/deps/chunk-5DM3J4JV.js?v=137351c8:98:15
+    at Provider (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ivi-Spaces-15-1/node_modules/.vite/deps/chunk-5DM3J4JV.js?v=137351c8:27:15)
+    at CollectionProvider (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ivi-Spaces-15-1/node_modules/.vite/deps/chunk-5DM3J4JV.js?v=137351c8:89:13)
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…vi-Spaces-15-1/node_modules/.vite/deps/chunk-IREYJIBR.js?v=137351c8:116:77
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…aces-15-1/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=137351c8:87:13
+    at _c (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.dev/src/components/ui/tabs.tsx:22:11)
+    at div
+    at div
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…5-1/node_modules/@radix-ui/react-primitive/dist/index.mjs?v=137351c8:26:13
+    at Provider (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…ivi-Spaces-15-1/node_modules/.vite/deps/chunk-XFQE7Q77.js?v=137351c8:48:15)
+    at https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…paces-15-1/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=137351c8:45:7
+    at div
+    at Browser (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.dev/src/components/apps/Browser.tsx:27:27)
+    at div
+    at div
+    at _c (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.dev/src/components/ui/card.tsx:20:11)
+    at Window (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.dev/src/components/desktop/Window.tsx?t=1735410391656:24:26)
+    at div
+    at Desktop (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.dev/src/components/Desktop.tsx:89:46)
+    at QueryClientProvider (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…es-15-1/node_modules/.vite/deps/@tanstack_react-query.js?v=137351c8:2805:3)
+    at App (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.dev/src/App.tsx:28:39)
+    at QueryClientProvider (https://b94ad851-870c-4f8d-aecd-e2646f5aaf9a-00-3pe45brzvosgi.worf.replit.d…es-15-1/node_modules/.vite/deps/@tanstack_react-query.js?v=137351c8:2805:3)
