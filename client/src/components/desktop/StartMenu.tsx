@@ -56,19 +56,21 @@ export function StartMenu({ onClose }: StartMenuProps) {
   );
 
   const handleAppClick = (app: (typeof appsList)[0]) => {
+    const randomX = Math.max(50, Math.floor(Math.random() * (window.innerWidth - 600)));
+    const randomY = Math.max(50, Math.floor(Math.random() * (window.innerHeight - 400)));
+    
     addWindow({
       id: nanoid(),
       title: app.title,
       component: app.component,
       position: {
-        x: 50 + Math.random() * 100,
-        y: 50 + Math.random() * 100,
+        x: randomX,
+        y: randomY,
         width: 600,
         height: 400,
       },
       isMinimized: false,
       isMaximized: false,
-      zIndex: 0
     });
     onClose();
   };
