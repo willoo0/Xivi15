@@ -1,12 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDesktopStore } from "@/store/desktop";
 import { ContextMenu } from "./ContextMenu";
 import { nanoid } from "nanoid";
-import { AppWindow, Bot, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File, Music, Terminal } from "lucide-react";
 import { getAppIcon } from "@/lib/appIcons";
 import { apps } from '@/lib/apps';
+import { Tooltip } from "@/components/ui/tooltip";
 
 interface StartMenuProps {
   onClose: () => void;
@@ -30,6 +30,7 @@ const categories = [
 export function StartMenu({ onClose }: StartMenuProps) {
   const { addWindow } = useDesktopStore();
   const [searchQuery, setSearchQuery] = useState("");
+  const menuRef = useRef<HTMLDivElement>(null);
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -37,6 +38,17 @@ export function StartMenu({ onClose }: StartMenuProps) {
     appComponent: string;
     appTitle: string;
   } | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
 
   const filteredApps = appsList.filter(app => 
     !app.hideFromStartMenu && (
@@ -75,9 +87,12 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card className={`fixed bottom-12 w-[420px] h-[450px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
-        useDesktopStore().taskbarMode === 'windows11' ? 'left-1/2 -translate-x-1/2' : 'left-2'
-      }`}>
+      <Card 
+        ref={menuRef}
+        className={`fixed bottom-12 w-[420px] h-[450px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
+          useDesktopStore().taskbarMode === 'windows11' ? 'left-1/2 -translate-x-1/2' : 'left-2'
+        }`}
+      >
         <div className="mb-4">
           <input
             type="text"
@@ -103,17 +118,18 @@ export function StartMenu({ onClose }: StartMenuProps) {
                   {categoryApps.map((app) => {
                     const Icon = getAppIcon(app.component);
                     return (
-                      <Button
-                        key={app.id}
-                        variant="ghost"
-                        size="sm"
-                        className="justify-start h-8 px-2 hover:bg-accent"
-                        onClick={() => handleAppClick(app)}
-                        onContextMenu={(e) => handleRightClick(e, app)}
-                      >
-                        <Icon className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{app.title}</span>
-                      </Button>
+                      <Tooltip key={app.id} content={app.title}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="justify-start h-8 px-2 hover:bg-accent"
+                          onClick={() => handleAppClick(app)}
+                          onContextMenu={(e) => handleRightClick(e, app)}
+                        >
+                          <Icon className="h-4 w-4 mr-2" />
+                          <span className="text-sm">{app.title}</span>
+                        </Button>
+                      </Tooltip>
                     );
                   })}
                 </div>

@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useEffect } from 'react'
 
 export function Settings() {
-  const { theme, blurEffects, animations, notifications, taskbarMode, topbarHeight, updateSettings } = useDesktopStore();
+  const { theme, blurEffects, animations, notifications, taskbarMode, updateSettings } = useDesktopStore();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -108,27 +108,6 @@ export function Settings() {
               checked={blurEffects}
               onCheckedChange={(checked) => updateSettings({ blurEffects: checked })}
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Window Topbar Size</Label>
-            <div className="flex items-center gap-4">
-              <input
-                type="range"
-                min="32"
-                max="64"
-                min="32"
-                max="64"
-                className="w-full"
-                value={topbarHeight}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  document.documentElement.style.setProperty('--topbar-height', `${value}px`);
-                  updateSettings({ topbarHeight: Number(value) });
-                }}
-              />
-              <span className="text-sm text-muted-foreground w-12 text-right">px</span>
-            </div>
           </div>
         </div>
       </div>

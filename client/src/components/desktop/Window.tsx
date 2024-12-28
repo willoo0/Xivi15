@@ -118,12 +118,9 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       onClick={() => setActiveWindow(id)}
     >
       <div
-        className="flex items-center justify-between px-4 bg-primary/10 cursor-move"
+        className="flex items-center justify-between px-4 py-2 bg-primary/10 cursor-move"
         onMouseDown={handleMouseDown}
-        style={{ 
-          height: 'var(--topbar-height)',
-          userSelect: 'none'
-        }}
+        style={{ userSelect: 'none' }}
       >
         <div className="font-medium">{title}</div>
         <div className="flex items-center space-x-2">

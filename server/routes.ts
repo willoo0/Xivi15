@@ -1,12 +1,35 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
+import crypto from 'crypto';
+
+// Generate CSRF token
+const generateToken = () => crypto.randomBytes(32).toString('hex');
 
 export function registerRoutes(app: Express): Server {
   const PIN = "ea23492"; // You can change this to your desired PIN
+  const csrfTokens = new Set<string>();
+
+  // CSRF token endpoint
+  app.get("/api/csrf-token", (req, res) => {
+    const token = generateToken();
+    csrfTokens.add(token);
+    // Clean up old tokens periodically
+    setTimeout(() => csrfTokens.delete(token), 3600000); // 1 hour expiry
+    res.json({ token });
+  });
 
   app.post("/api/verify-pin", async (req: Request, res) => {
-    const { pin } = req.body;
+    const { pin, csrfToken } = req.body;
+
+    // Validate CSRF token
+    if (!csrfToken || !csrfTokens.has(csrfToken)) {
+      return res.status(403).json({ success: false, error: "Invalid CSRF token" });
+    }
+
+    // Remove used token
+    csrfTokens.delete(csrfToken);
+
     if (pin === PIN) {
       res.json({ success: true });
     } else {

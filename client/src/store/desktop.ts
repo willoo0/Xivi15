@@ -33,7 +33,6 @@ interface DesktopState {
   blurEffects: boolean
   animations: boolean
   notifications: boolean
-  topbarHeight: number
   addWindow: (window: Omit<AppWindow, 'zIndex'>) => void
   removeWindow: (id: string) => void
   setActiveWindow: (id: string) => void
@@ -59,18 +58,11 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
   blurEffects: true,
   animations: true,
   notifications: true,
-  topbarHeight: 40,
 }
 
-export const useDesktopStore = create<DesktopState>(
+export const useDesktopStore = create<DesktopState>()(
   persist(
-    (set, get) => {
-      // Initialize topbar height CSS variable
-      if (typeof document !== 'undefined') {
-        document.documentElement.style.setProperty('--topbar-height', `${initialState.topbarHeight}px`);
-      }
-      
-      return {
+    (set, get) => ({
       ...initialState,
       
       addWindow: (window) => set((state) => {
@@ -135,11 +127,11 @@ export const useDesktopStore = create<DesktopState>(
         ...state,
         ...settings
       }))
-    },
+    }),
     {
       name: 'desktop-store',
       version: 1,
       storage: createJSONStorage(() => localStorage)
     }
   )
-);
+)
