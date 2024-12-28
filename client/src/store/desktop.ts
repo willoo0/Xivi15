@@ -31,9 +31,9 @@ interface DesktopState {
   theme: 'light' | 'dark' | 'system'
   taskbarMode: 'normal' | 'chrome' | 'windows11'
   blurEffects: boolean
-  windowOpacity: number;
   animations: boolean
   notifications: boolean
+  topbarHeight: number
   addWindow: (window: Omit<AppWindow, 'zIndex'>) => void
   removeWindow: (id: string) => void
   setActiveWindow: (id: string) => void
@@ -41,7 +41,7 @@ interface DesktopState {
   toggleMinimize: (id: string) => void
   toggleMaximize: (id: string) => void
   togglePinApp: (app: PinnedApp) => void
-  updateSettings: (settings: Partial<Pick<DesktopState, 'theme' | 'blurEffects' | 'animations' | 'notifications' | 'windowOpacity'>>) => void
+  updateSettings: (settings: Partial<Pick<DesktopState, 'theme' | 'blurEffects' | 'animations' | 'notifications'>>) => void
 }
 
 const initialState: Omit<DesktopState, keyof DesktopState> = {
@@ -57,14 +57,20 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
   theme: 'dark',
   taskbarMode: 'normal',
   blurEffects: true,
-  windowOpacity: 1,
   animations: true,
   notifications: true,
+  topbarHeight: 40,
 }
 
-export const useDesktopStore = create<DesktopState>()(
+export const useDesktopStore = create<DesktopState>(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      // Initialize topbar height CSS variable
+      if (typeof document !== 'undefined') {
+        document.documentElement.style.setProperty('--topbar-height', `${initialState.topbarHeight}px`);
+      }
+      
+      return {
       ...initialState,
       
       addWindow: (window) => set((state) => {
@@ -129,11 +135,11 @@ export const useDesktopStore = create<DesktopState>()(
         ...state,
         ...settings
       }))
-    }),
+    },
     {
       name: 'desktop-store',
       version: 1,
       storage: createJSONStorage(() => localStorage)
     }
   )
-)
+);

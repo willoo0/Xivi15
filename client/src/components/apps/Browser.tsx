@@ -71,18 +71,29 @@ export function Browser() {
     navigate(urlInput)
   }
 
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'PROXY_NAVIGATE') {
-        navigate(event.data.url)
-      }
-    }
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
-  }, [navigate])
-
   return (
     <div className="flex flex-col h-full bg-background">
+      <div className="flex items-center gap-2 p-2 border-b">
+        <Button variant="ghost" size="icon" onClick={() => navigate(currentTab?.url || '')}>
+          <RotateCw className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" size="icon" disabled>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" size="icon" disabled>
+          <ArrowRight className="h-4 w-4" />
+        </Button>
+        
+        <form onSubmit={handleUrlSubmit} className="flex-1">
+          <Input
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            placeholder="Enter URL or search"
+            className="h-9"
+          />
+        </form>
+      </div>
+
       <Tabs value={activeTab} className="flex-1 flex flex-col" onValueChange={setActiveTab}>
         <div className="flex items-center border-b">
           <TabsList className="flex-1 justify-start h-10 bg-transparent">
@@ -108,35 +119,9 @@ export function Browser() {
               </TabsTrigger>
             ))}
           </TabsList>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8 rounded-full hover:bg-accent mr-2" 
-            onClick={addTab}
-          >
+          <Button variant="ghost" size="icon" className="h-10 w-10" onClick={addTab}>
             <Plus className="h-4 w-4" />
           </Button>
-        </div>
-
-        <div className="flex items-center gap-2 p-2 border-b">
-          <Button variant="ghost" size="icon" onClick={() => navigate(currentTab?.url || '')}>
-            <RotateCw className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" disabled>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" disabled>
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-          
-          <form onSubmit={handleUrlSubmit} className="flex-1">
-            <Input
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              placeholder="Enter URL or search"
-              className="h-9"
-            />
-          </form>
         </div>
 
         <div className="flex-1 relative">
@@ -145,13 +130,11 @@ export function Browser() {
               key={currentTab.url}
               src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
-              sandbox="allow-same-origin allow-scripts allow-forms"
-              onLoad={(e) => {
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
+              onLoad={() => {
                 setTabs(tabs => tabs.map(tab =>
                   tab.id === activeTab ? { ...tab, loading: false } : tab
                 ))
-                const iframe = e.target as HTMLIFrameElement;
-                iframe.contentWindow?.postMessage({ type: 'INIT_PROXY' }, '*');
               }}
             />
           ) : (

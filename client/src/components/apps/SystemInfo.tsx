@@ -17,15 +17,13 @@ export function SystemInfo() {
       <Card className="p-4 space-y-2">
         <div>
           <span className="font-semibold">Operating System:</span> Xivi Linux
+          14.9 Kylo
         </div>
         <div>
           <span className="font-semibold">CPU:</span> Intel® Core™ i9 14th gen
         </div>
         <div>
-          <span className="font-semibold">Memory:</span> 16GB RAM
-        </div>
-        <div>
-          <span className="font-semibold">Public IP:</span> {publicIP}
+          <span className="font-semibold">Memory:</span> 16GB DDR5 RAM
         </div>
       </Card>
     </div>

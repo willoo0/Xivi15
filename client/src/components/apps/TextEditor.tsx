@@ -9,13 +9,13 @@ interface TextEditorProps {
 }
 
 export function TextEditor({ path }: TextEditorProps) {
-  const [content, setContent] = useState('Welcome to Notepad!\nFile system is currently in demo mode.')
+  const [content, setContent] = useState('Welcome to Notepad!\nThe File system is currently disabled due to security reasons.')
   const { toast } = useToast()
 
   const handleSave = () => {
     toast({
-      title: "Demo Mode",
-      description: "File system is currently in demo mode. Changes won't be saved.",
+      title: "Feature Disabled",
+      description: "File system is disabled by your admin. Changes won't be saved.",
     });
   }
 
@@ -36,7 +36,7 @@ export function TextEditor({ path }: TextEditorProps) {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Start typing..."
-        className="flex-1 resize-none m-0 border-0 bg-background font-mono text-sm leading-relaxed focus:ring-0 focus-visible:ring-0"
+        className="flex-1 resize-none rounded-lg m-3 border border-input/30 bg-background font-mono text-sm leading-relaxed focus:ring-1 focus:ring-ring shadow-sm"
         style={{
           fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", monospace'
         }}

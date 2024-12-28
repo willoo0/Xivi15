@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xivi Spaces Lite</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #fff;
+            --fg: #000;
+            --accent: #2563eb;
+            --border: #e5e7eb;
+        }
+        :root.dark {
+            --bg: #09090b;
+            --fg: #fff;
+            --accent: #3b82f6;
+            --border: #27272a;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            height: 100vh;
+            overflow: hidden;
+        }
+        .desktop {
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, var(--bg), color-mix(in srgb, var(--bg) 85%, var(--accent)));
+        }
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: color-mix(in srgb, var(--bg) 60%, transparent);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-top: 1px solid var(--border);
+        }
+        .window {
+            position: absolute;
+            background: color-mix(in srgb, var(--bg) 95%, transparent);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-width: 300px;
+            min-height: 200px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        .window-header {
+            padding: 8px;
+            background: color-mix(in srgb, var(--bg) 98%, var(--accent));
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: move;
+        }
+        .window-content {
+            padding: 16px;
+            height: calc(100% - 35px);
+        }
+        .clock { margin-left: auto; }
+        .start-btn {
+            background: color-mix(in srgb, var(--accent) 15%, transparent);
+            border: none;
+            color: var(--fg);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .start-btn:hover { background: color-mix(in srgb, var(--accent) 25%, transparent); }
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--fg);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .close-btn:hover { background: #ff4444; color: white; }
+        .start-menu {
+            position: fixed;
+            bottom: 48px;
+            left: 8px;
+            width: 300px;
+            background: color-mix(in srgb, var(--bg) 95%, transparent);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            display: none;
+            animation: slideUp 0.2s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .start-menu.show { display: block; }
+        .menu-item {
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--fg);
+        }
+        .menu-item:hover { background: color-mix(in srgb, var(--accent) 15%, transparent); }
+    </style>
+</head>
+<body>
+    <div class="desktop" id="desktop">
+        <div class="taskbar">
+            <button class="start-btn">✨ Xivi</button>
+            <div class="clock" id="clock"></div>
+        </div>
+        <div class="start-menu" id="startMenu">
+            <div class="menu-item" onclick="toggleTheme()">🎨 Toggle Theme</div>
+            <div class="menu-item" onclick="createWindow('About', aboutContent)">ℹ️ About</div>
+            <div class="menu-item" onclick="createWindow('Settings', settingsContent)">⚙️ Settings</div>
+        </div>
+    </div>
+
+    <script>
+        const aboutContent = `
+            <h2>✨ Xivi Spaces Lite</h2>
+            <p style="margin-top: 16px">Version: 1.0.0</p>
+            <p style="margin-top: 8px">A minimalist desktop environment</p>
+        `;
+
+        const settingsContent = `
+            <h2>⚙️ Settings</h2>
+            <div style="margin-top: 16px">
+                <button onclick="toggleTheme()" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--fg);">
+                    Toggle Theme
+                </button>
+            </div>
+        `;
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        class Window {
+            constructor(title, content) {
+                this.element = document.createElement('div');
+                this.element.className = 'window';
+                this.element.style.left = '50px';
+                this.element.style.top = '50px';
+                
+                const header = document.createElement('div');
+                header.className = 'window-header';
+                header.innerHTML = `
+                    <span>${title}</span>
+                    <button class="close-btn">×</button>
+                `;
+                
+                const windowContent = document.createElement('div');
+                windowContent.className = 'window-content';
+                windowContent.innerHTML = content;
+                
+                this.element.appendChild(header);
+                this.element.appendChild(windowContent);
+                
+                this.setupDragging(header);
+                header.querySelector('.close-btn').onclick = () => this.element.remove();
+                
+                document.getElementById('desktop').appendChild(this.element);
+                bringToFront(this.element);
+            }
+            
+            setupDragging(header) {
+                let isDragging = false;
+                let initialX, initialY;
+                let originalX, originalY;
+
+                const onMouseDown = (e) => {
+                    isDragging = true;
+                    const rect = this.element.getBoundingClientRect();
+                    originalX = rect.left;
+                    originalY = rect.top;
+                    initialX = e.clientX - originalX;
+                    initialY = e.clientY - originalY;
+                    bringToFront(this.element);
+                };
+
+                const onMouseMove = (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    
+                    const x = e.clientX - initialX;
+                    const y = e.clientY - initialY;
+                    
+                    this.element.style.left = `${x}px`;
+                    this.element.style.top = `${y}px`;
+                };
+
+                const onMouseUp = () => {
+                    isDragging = false;
+                };
+
+                header.addEventListener('mousedown', onMouseDown);
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            }
+        }
+
+        function bringToFront(element) {
+            const windows = document.querySelectorAll('.window');
+            let maxZ = 0;
+            windows.forEach(w => {
+                const z = parseInt(w.style.zIndex || 0);
+                maxZ = Math.max(maxZ, z);
+                if (w !== element) w.style.zIndex = z;
+            });
+            element.style.zIndex = maxZ + 1;
+        }
+
+        function createWindow(title, content) {
+            return new Window(title, content);
+        }
+
+        // Clock
+        function updateClock() {
+            const clock = document.getElementById('clock');
+            clock.textContent = new Date().toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Start menu
+        const startBtn = document.querySelector('.start-btn');
+        const startMenu = document.getElementById('startMenu');
+        
+        startBtn.onclick = () => {
+            startMenu.classList.toggle('show');
+        };
+
+        document.addEventListener('click', (e) => {
+            if (!startBtn.contains(e.target) && !startMenu.contains(e.target)) {
+                startMenu.classList.remove('show');
+            }
+        });
+
+        // Welcome Window
+        createWindow('Welcome', `
+            <h2>👋 Welcome!</h2>
+            <p style="margin-top: 16px">This is a lightweight version of Xivi Spaces.</p>
+            <p style="margin-top: 8px">Features:</p>
+            <ul style="margin: 8px 0 0 20px">
+                <li>Draggable windows</li>
+                <li>Dark/Light theme</li>
+                <li>Start menu</li>
+                <li>Simple and fast</li>
+            </ul>
+        `);
+    </script>
+</body>
+</html>

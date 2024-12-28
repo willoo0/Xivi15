@@ -4,6 +4,7 @@ import { TopBar } from './desktop/TopBar'
 import { useDesktopStore } from '@/store/desktop'
 import { Window } from './desktop/Window'
 import { Taskbar } from './desktop/Taskbar'
+import { Spotlight } from './desktop/Spotlight'
 import { TextEditor } from './apps/TextEditor'
 import { Calculator } from './apps/Calculator'
 import { FileExplorer } from './apps/FileExplorer'
@@ -32,8 +33,11 @@ import { Snow } from './apps/Snow';
 import { WorstCaseScenario } from './apps/WorstCaseScenario';
 import { PhotoViewer } from './apps/PhotoViewer'
 import { MusicPlayer } from './apps/MusicPlayer'
+import { Terminal } from './apps/Terminal'
+import { XiviAgent } from './apps/XiviAgent'
 
 const components: { [key: string]: React.ComponentType } = {
+  XiviAgent,
   TextEditor,
   Calculator,
   FileExplorer,
@@ -60,7 +64,8 @@ const components: { [key: string]: React.ComponentType } = {
   WorstCaseScenario,
   PDFViewer,
   PhotoViewer,
-  MusicPlayer
+  MusicPlayer,
+  Terminal
 }
 
 // Use background images from public folder
@@ -121,6 +126,7 @@ export function Desktop() {
       })}
       <TopBar />
       <Taskbar />
+      <Spotlight />
       <SelectionBox 
         isSelecting={isSelecting}
         setIsSelecting={setIsSelecting}

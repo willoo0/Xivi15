@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
-import { Maximize, Minus, X } from 'lucide-react'
+import { Maximize2, Minus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useDesktopStore, type WindowPosition } from '@/store/desktop'
 import { cn } from '@/lib/utils'
 
@@ -106,8 +105,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
     <Card
       ref={windowRef}
       className={cn(
-        'absolute flex flex-col rounded-lg overflow-hidden border shadow-lg fade-in window-transition',
-        `bg-background/${Math.round(useDesktopStore().windowOpacity * 100 || 80)} backdrop-blur-md`,
+        'absolute flex flex-col rounded-lg overflow-hidden bg-background/80 backdrop-blur-md border shadow-lg fade-in window-transition',
         isMaximized && 'fixed !left-0 !right-0 !top-8 !bottom-12'
       )}
       style={{
@@ -120,42 +118,24 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       onClick={() => setActiveWindow(id)}
     >
       <div
-        className="flex items-center justify-between px-4 py-2 bg-primary/10 cursor-move"
+        className="flex items-center justify-between px-4 bg-primary/10 cursor-move"
         onMouseDown={handleMouseDown}
-        style={{ userSelect: 'none' }}
+        style={{ 
+          height: 'var(--topbar-height)',
+          userSelect: 'none'
+        }}
       >
         <div className="font-medium">{title}</div>
         <div className="flex items-center space-x-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={handleMinimize}>
-                  <Minus className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Minimize</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
-                  <Maximize className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Maximize</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={handleClose}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Close</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Button variant="ghost" size="icon" onClick={handleMinimize}>
+            <Minus className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={() => toggleMaximize(id)}>
+            <Maximize2 className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={handleClose}>
+            <X className="h-4 w-4" />
+          </Button>
         </div>
       </div>
       <div 

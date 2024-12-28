@@ -4,156 +4,31 @@ import { useState } from "react";
 import { useDesktopStore } from "@/store/desktop";
 import { ContextMenu } from "./ContextMenu";
 import { nanoid } from "nanoid";
-import { AppWindow, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File, Music } from "lucide-react";
+import { AppWindow, Bot, Cloud, Layout, Bomb, Scissors, Hammer, Calendar, Image as ImageIcon, Monitor, Timer, Globe, FileText, Calculator, Folder, Settings, Gamepad2, File, Music, Terminal } from "lucide-react";
 import { getAppIcon } from "@/lib/appIcons";
+import { apps } from '@/lib/apps';
 
 interface StartMenuProps {
   onClose: () => void;
 }
 
-const apps = [
-  {
-    id: "weather",
-    title: "Weather",
-    component: "Weather",
-    icon: Cloud,
-    category: "Internet",
-  },
-  {
-    id: "games",
-    title: "Games",
-    component: "Games",
-    icon: Gamepad2,
-    category: "Applications",
-  },
-  {
-    id: "todo",
-    title: "Todo List",
-    component: "Todo",
-    icon: Calendar,
-    category: "Productivity",
-  },
-  {
-    id: "paint",
-    title: "Paint",
-    component: "Paint",
-    icon: ImageIcon,
-    category: "Media",
-  },
-  {
-    id: "photoviewer",
-    title: "Photo Viewer",
-    component: "PhotoViewer",
-    icon: ImageIcon,
-    category: "Media",
-    props: {
-      position: {
-        x: 50 + Math.random() * 100,
-        y: 50 + Math.random() * 100,
-        width: 600,
-        height: 400,
-      },
-      isMinimized: false,
-      isMaximized: false,
-    }
-  },
-  {
-    id: "pdfviewer",
-    title: "PDF Viewer",
-    component: "PDFViewer",
-    icon: File,
-    category: "Media",
-    props: {
-      position: {
-        x: 50 + Math.random() * 100,
-        y: 50 + Math.random() * 100,
-        width: 600,
-        height: 400,
-      },
-      isMinimized: false,
-      isMaximized: false,
-    }
-  },
-  {
-    id: "systeminfo",
-    title: "System Info",
-    component: "SystemInfo",
-    icon: Monitor,
-    category: "System",
-  },
-  {
-    id: "musicplayer",
-    title: "Music Player",
-    component: "MusicPlayer",
-    icon: Music,
-    category: "Media",
-  },
-  {
-    id: "timerclock",
-    title: "Timer & Clock",
-    component: "TimerClock",
-    icon: Timer,
-    category: "Accessories",
-  },
-  {
-    id: "browser",
-    title: "Web Browser",
-    component: "Browser",
-    icon: Globe,
-    category: "Internet",
-  },
-  {
-    id: "text-editor",
-    title: "Text Editor",
-    component: "TextEditor",
-    icon: FileText,
-    category: "Productivity",
-  },
-  {
-    id: "calculator",
-    title: "Calculator",
-    component: "Calculator",
-    icon: Calculator,
-    category: "Accessories",
-  },
-  {
-    id: "file-explorer",
-    title: "Files",
-    component: "FileExplorer",
-    icon: Folder,
-    category: "System",
-  },
-  {
-    id: "settings",
-    title: "Settings",
-    component: "Settings",
-    icon: Settings,
-    category: "System",
-  },
-];
+const appsList = Object.values(apps);
 
 const categories = [
   "Internet",
   "Productivity",
   "Media",
   "System",
-  "Accessories",
-  "Applications",
+  "Utilities",
+  "Games",
+  "Entertainment",
+  "Development",
+  "Communication",
+  "Office",
 ];
 
 export function StartMenu({ onClose }: StartMenuProps) {
   const { addWindow } = useDesktopStore();
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onClose]);
   const [searchQuery, setSearchQuery] = useState("");
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -163,12 +38,14 @@ export function StartMenu({ onClose }: StartMenuProps) {
     appTitle: string;
   } | null>(null);
 
-  const filteredApps = apps.filter(app => 
-    app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.category.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredApps = appsList.filter(app => 
+    !app.hideFromStartMenu && (
+      app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.category.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
-  const handleAppClick = (app: (typeof apps)[0]) => {
+  const handleAppClick = (app: (typeof appsList)[0]) => {
     addWindow({
       id: nanoid(),
       title: app.title,
@@ -185,7 +62,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
     onClose();
   };
 
-  const handleRightClick = (e: React.MouseEvent, app: (typeof apps)[0]) => {
+  const handleRightClick = (e: React.MouseEvent, app: (typeof appsList)[0]) => {
     e.preventDefault();
     setContextMenu({
       x: e.clientX,
@@ -198,7 +75,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card ref={menuRef} className={`fixed bottom-12 w-[420px] h-[450px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
+      <Card className={`fixed bottom-12 w-[420px] h-[450px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
         useDesktopStore().taskbarMode === 'windows11' ? 'left-1/2 -translate-x-1/2' : 'left-2'
       }`}>
         <div className="mb-4">
