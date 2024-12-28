@@ -103,13 +103,15 @@ export function registerRoutes(app: Express): Server {
           const script = `
             <script>
               (function() {
+                // Intercept all clicks
                 document.addEventListener('click', function(e) {
                   const link = e.target.closest('a');
-                  if (link && link.href) {
+                  if (link) {
                     e.preventDefault();
                     const url = link.href;
                     if (!url.startsWith('javascript:') && !url.startsWith('#')) {
-                      window.location.href = '/ric/proxy/' + encodeURIComponent(url);
+                      const fullUrl = new URL(url, window.location.href).toString();
+                      window.location.href = '/ric/proxy/' + encodeURIComponent(fullUrl);
                     }
                   }
                 });
@@ -117,14 +119,23 @@ export function registerRoutes(app: Express): Server {
                 // Handle form submissions
                 document.addEventListener('submit', function(e) {
                   const form = e.target;
-                  if (form.method.toLowerCase() === 'get') {
-                    e.preventDefault();
-                    const formData = new FormData(form);
-                    const queryString = new URLSearchParams(formData).toString();
-                    const url = form.action + (form.action.includes('?') ? '&' : '?') + queryString;
-                    window.location.href = '/ric/proxy/' + encodeURIComponent(url);
-                  }
+                  e.preventDefault();
+                  const formData = new FormData(form);
+                  const queryString = new URLSearchParams(formData).toString();
+                  const baseUrl = new URL(form.action || window.location.href).toString();
+                  const fullUrl = baseUrl + (baseUrl.includes('?') ? '&' : '?') + queryString;
+                  window.location.href = '/ric/proxy/' + encodeURIComponent(fullUrl);
                 });
+
+                // Override window.location assignments
+                const _historyPush = history.pushState;
+                history.pushState = function(state, unused, url) {
+                  if (url && !url.startsWith('/ric/proxy/')) {
+                    const fullUrl = new URL(url, window.location.href).toString();
+                    url = '/ric/proxy/' + encodeURIComponent(fullUrl);
+                  }
+                  return _historyPush.call(this, state, unused, url);
+                };
               })();
             </script>
           `;
