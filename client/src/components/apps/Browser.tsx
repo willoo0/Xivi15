@@ -1,70 +1,55 @@
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Globe, Plus, X, ArrowLeft, ArrowRight, RotateCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { StartPage } from './browser/StartPage'
 
 type Tab = {
   id: string
   url: string
   title: string
-  loading: boolean
 }
 
 export function Browser() {
-  const [tabs, setTabs] = useState<Tab[]>([{ id: '1', url: '', title: 'New Tab', loading: false }])
+  const [tabs, setTabs] = useState<Tab[]>([{ id: '1', url: '/ric', title: 'New Tab' }])
   const [activeTab, setActiveTab] = useState('1')
-  const [urlInput, setUrlInput] = useState('')
+  const [urlInput, setUrlInput] = useState('/ric')
 
   const currentTab = tabs.find(tab => tab.id === activeTab)
 
   const addTab = () => {
     const newTab = {
       id: Math.random().toString(36).substr(2, 9),
-      url: '',
-      title: 'New Tab',
-      loading: false
+      url: '/ric',
+      title: 'New Tab'
     }
     setTabs([...tabs, newTab])
     setActiveTab(newTab.id)
-    setUrlInput('')
+    setUrlInput('/ric')
   }
 
   const removeTab = (tabId: string, e: React.MouseEvent) => {
     e.stopPropagation()
     const newTabs = tabs.filter(tab => tab.id !== tabId)
     if (newTabs.length === 0) {
-      const newTab = { id: Math.random().toString(36).substr(2, 9), url: '', title: 'New Tab', loading: false }
+      const newTab = { id: Math.random().toString(36).substr(2, 9), url: '/ric', title: 'New Tab' }
       setTabs([newTab])
       setActiveTab(newTab.id)
     } else if (activeTab === tabId) {
       setActiveTab(newTabs[newTabs.length - 1].id)
     }
-    setTabs(newTabs.length === 0 ? [{ id: '1', url: '', title: 'New Tab', loading: false }] : newTabs)
+    setTabs(newTabs.length === 0 ? [{ id: '1', url: '/ric', title: 'New Tab' }] : newTabs)
   }
 
-  const navigate = useCallback((url: string) => {
+  const navigate = (url: string) => {
     if (!url) return
-
-    let processedUrl = url
-    if (!url.match(/^https?:\/\//)) {
-      if (url.includes('.') && !url.includes(' ')) {
-        processedUrl = `https://${url}`
-      } else {
-        processedUrl = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`
-      }
-    }
-
     setTabs(tabs => tabs.map(tab =>
-      tab.id === activeTab
-        ? { ...tab, url: processedUrl, loading: true }
-        : tab
+      tab.id === activeTab ? { ...tab, url } : tab
     ))
-    setUrlInput(processedUrl)
-  }, [activeTab])
+    setUrlInput(url)
+  }
 
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -104,13 +89,13 @@ export function Browser() {
         </div>
 
         <div className="flex items-center gap-2 p-2 border-b">
-          <Button variant="ghost" size="icon" onClick={() => navigate(currentTab?.url || '')}>
+          <Button variant="ghost" size="icon" onClick={() => navigate(currentTab?.url || '/ric')}>
             <RotateCw className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" disabled>
+          <Button variant="ghost" size="icon" onClick={() => window.history.back()}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" disabled>
+          <Button variant="ghost" size="icon" onClick={() => window.history.forward()}>
             <ArrowRight className="h-4 w-4" />
           </Button>
           
@@ -118,28 +103,19 @@ export function Browser() {
             <Input
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
-              placeholder="Enter URL or search with DuckDuckGo"
+              placeholder="Enter URL"
               className="h-9"
             />
           </form>
         </div>
 
         <div className="flex-1 relative">
-          {currentTab?.url ? (
-            <iframe
-              key={currentTab.url}
-              src={`/ric/proxy/${encodeURIComponent(currentTab.url)}`}
-              className="absolute inset-0 w-full h-full"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
-              onLoad={() => {
-                setTabs(tabs => tabs.map(tab =>
-                  tab.id === activeTab ? { ...tab, loading: false } : tab
-                ))
-              }}
-            />
-          ) : (
-            <StartPage onNavigate={navigate} />
-          )}
+          <iframe
+            key={currentTab?.url}
+            src={currentTab?.url}
+            className="absolute inset-0 w-full h-full"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
+          />
         </div>
       </Tabs>
     </div>
