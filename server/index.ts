@@ -4,20 +4,8 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
-import csrf from 'csurf';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
-
-app.use(cookieParser());
-app.use(session({
-  secret: 'xivi-secret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(csrf({ cookie: true }));
 
 app.use((req, res, next) => {
   const start = Date.now();

@@ -83,40 +83,6 @@ export function Browser() {
 
   return (
     <div className="flex flex-col h-full bg-background">
-      <div className="flex items-center border-b">
-        <TabsList className="flex-1 justify-start h-10 bg-transparent">
-          {tabs.map(tab => (
-            <TabsTrigger
-              key={tab.id}
-              value={tab.id}
-              className={cn(
-                "flex items-center gap-2 px-4 data-[state=active]:bg-background",
-                tab.id === activeTab ? "border-b-2 border-primary" : ""
-              )}
-            >
-              <Globe className="h-4 w-4" />
-              <span className="max-w-[100px] truncate">{tab.title}</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-4 w-4 ml-2 hover:bg-destructive/20"
-                onClick={(e) => removeTab(tab.id, e)}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-8 w-8 rounded-full hover:bg-accent mr-2" 
-          onClick={addTab}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
-      </div>
-      
       <div className="flex items-center gap-2 p-2 border-b">
         <Button variant="ghost" size="icon" onClick={() => navigate(currentTab?.url || '')}>
           <RotateCw className="h-4 w-4" />
@@ -138,25 +104,61 @@ export function Browser() {
         </form>
       </div>
 
-      <div className="flex-1 relative">
-        {currentTab?.url ? (
-          <iframe
-            key={currentTab.url}
-            src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
-            className="absolute inset-0 w-full h-full"
-            sandbox="allow-same-origin allow-scripts allow-forms"
-            onLoad={(e) => {
-              setTabs(tabs => tabs.map(tab =>
-                tab.id === activeTab ? { ...tab, loading: false } : tab
-              ))
-              const iframe = e.target as HTMLIFrameElement;
-              iframe.contentWindow?.postMessage({ type: 'INIT_PROXY' }, '*');
-            }}
-          />
-        ) : (
-          <StartPage onNavigate={navigate} />
-        )}
-      </div>
+      <Tabs value={activeTab} className="flex-1 flex flex-col" onValueChange={setActiveTab}>
+        <div className="flex items-center border-b">
+          <TabsList className="flex-1 justify-start h-10 bg-transparent">
+            {tabs.map(tab => (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className={cn(
+                  "flex items-center gap-2 px-4 data-[state=active]:bg-background",
+                  tab.id === activeTab ? "border-b-2 border-primary" : ""
+                )}
+              >
+                <Globe className="h-4 w-4" />
+                <span className="max-w-[100px] truncate">{tab.title}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-4 w-4 ml-2 hover:bg-destructive/20"
+                  onClick={(e) => removeTab(tab.id, e)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8 rounded-full hover:bg-accent mr-2" 
+            onClick={addTab}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="flex-1 relative">
+          {currentTab?.url ? (
+            <iframe
+              key={currentTab.url}
+              src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
+              className="absolute inset-0 w-full h-full"
+              sandbox="allow-same-origin allow-scripts allow-forms"
+              onLoad={(e) => {
+                setTabs(tabs => tabs.map(tab =>
+                  tab.id === activeTab ? { ...tab, loading: false } : tab
+                ))
+                const iframe = e.target as HTMLIFrameElement;
+                iframe.contentWindow?.postMessage({ type: 'INIT_PROXY' }, '*');
+              }}
+            />
+          ) : (
+            <StartPage onNavigate={navigate} />
+          )}
+        </div>
+      </Tabs>
     </div>
   )
 }
