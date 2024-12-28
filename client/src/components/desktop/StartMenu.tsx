@@ -143,6 +143,17 @@ const categories = [
 
 export function StartMenu({ onClose }: StartMenuProps) {
   const { addWindow } = useDesktopStore();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
   const [searchQuery, setSearchQuery] = useState("");
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -187,7 +198,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
 
   return (
     <>
-      <Card className={`fixed bottom-12 w-[420px] h-[450px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
+      <Card ref={menuRef} className={`fixed bottom-12 w-[420px] h-[450px] p-4 bg-background/80 backdrop-blur-md z-[9000] menu-transition ${
         useDesktopStore().taskbarMode === 'windows11' ? 'left-1/2 -translate-x-1/2' : 'left-2'
       }`}>
         <div className="mb-4">

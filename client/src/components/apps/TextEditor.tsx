@@ -36,7 +36,7 @@ export function TextEditor({ path }: TextEditorProps) {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Start typing..."
-        className="flex-1 resize-none rounded-lg m-3 border border-input/30 bg-background font-mono text-sm leading-relaxed focus:ring-1 focus:ring-ring shadow-sm"
+        className="flex-1 resize-none m-0 border-0 bg-background font-mono text-sm leading-relaxed focus:ring-0 focus-visible:ring-0"
         style={{
           fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", monospace'
         }}

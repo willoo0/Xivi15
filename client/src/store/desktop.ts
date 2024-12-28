@@ -31,6 +31,7 @@ interface DesktopState {
   theme: 'light' | 'dark' | 'system'
   taskbarMode: 'normal' | 'chrome' | 'windows11'
   blurEffects: boolean
+  windowOpacity: number;
   animations: boolean
   notifications: boolean
   addWindow: (window: Omit<AppWindow, 'zIndex'>) => void
@@ -40,7 +41,7 @@ interface DesktopState {
   toggleMinimize: (id: string) => void
   toggleMaximize: (id: string) => void
   togglePinApp: (app: PinnedApp) => void
-  updateSettings: (settings: Partial<Pick<DesktopState, 'theme' | 'blurEffects' | 'animations' | 'notifications'>>) => void
+  updateSettings: (settings: Partial<Pick<DesktopState, 'theme' | 'blurEffects' | 'animations' | 'notifications' | 'windowOpacity'>>) => void
 }
 
 const initialState: Omit<DesktopState, keyof DesktopState> = {
@@ -56,6 +57,7 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
   theme: 'dark',
   taskbarMode: 'normal',
   blurEffects: true,
+  windowOpacity: 1,
   animations: true,
   notifications: true,
 }

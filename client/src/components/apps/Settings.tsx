@@ -97,17 +97,18 @@ export function Settings() {
             </RadioGroup>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Blur Effects</Label>
-              <div className="text-sm text-muted-foreground">
-                Enable window blur effects
-              </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Window Opacity</Label>
+              <input
+                type="range"
+                min="50"
+                max="100"
+                value={(windowOpacity || 80) * 100}
+                onChange={(e) => updateSettings({ windowOpacity: Number(e.target.value) / 100 })}
+                className="w-full"
+              />
             </div>
-            <Switch 
-              checked={blurEffects}
-              onCheckedChange={(checked) => updateSettings({ blurEffects: checked })}
-            />
           </div>
         </div>
       </div>
