@@ -109,9 +109,10 @@
   user-select: none;
 }
 
-/* Scale button outline with topbar height */
+/* Contain button outline */
 .window button {
-  outline-offset: calc(var(--topbar-height) * -0.25);
+  outline-offset: -2px;
+  outline-width: 1px;
 }
 
 .taskbar-content {
