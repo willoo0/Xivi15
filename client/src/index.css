@@ -272,3 +272,13 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .dark input[type="range"]::-webkit-slider-thumb {
   background: hsl(var(--primary));
 }
+
+/* Minimal button outline */
+.window button {
+  outline: none;
+  position: relative;
+}
+
+.window button:focus {
+  box-shadow: inset 0 0 0 0.5px hsl(var(--ring));
+}
