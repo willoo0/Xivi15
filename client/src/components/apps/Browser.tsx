@@ -54,7 +54,7 @@ export function Browser() {
       if (url.includes('.') && !url.includes(' ')) {
         processedUrl = `https://${url}`
       } else {
-        processedUrl = `https://www.google.com/search?q=${encodeURIComponent(url)}`
+        processedUrl = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`
       }
     }
 
@@ -118,7 +118,7 @@ export function Browser() {
             <Input
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
-              placeholder="Enter URL or search"
+              placeholder="Enter URL or search with DuckDuckGo"
               className="h-9"
             />
           </form>
@@ -128,7 +128,7 @@ export function Browser() {
           {currentTab?.url ? (
             <iframe
               key={currentTab.url}
-              src={`/api/proxy?url=${encodeURIComponent(currentTab.url)}`}
+              src={`/ric/proxy/${encodeURIComponent(currentTab.url)}`}
               className="absolute inset-0 w-full h-full"
               sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
               onLoad={() => {
