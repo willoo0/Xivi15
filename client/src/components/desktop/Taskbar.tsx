@@ -51,8 +51,8 @@ export function Taskbar() {
         position: {
           x: 50 + Math.random() * 100,
           y: 50 + Math.random() * 100,
-          width: app.component === 'Browser' ? 1200 : 600,
-          height: app.component === 'Browser' ? 800 : 400,
+          width: app.component === 'Browser' ? 800 : 600,
+          height: app.component === 'Browser' ? 600 : 400,
         },
         isMinimized: false,
         isMaximized: false,
