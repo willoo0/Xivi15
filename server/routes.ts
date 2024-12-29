@@ -96,11 +96,28 @@ export function registerRoutes(app: Express): Server {
             }
           };
 
+          // Handle quoted URLs
           content = content.replace(
-            /(?:href|src|action)="([^"]*)"/g,
+            /(?:href|src|action)=["']([^"']*)["']/g,
             (match, url) => {
               return match.replace(url, proxyUrl(url));
-            },
+            }
+          );
+
+          // Handle URLs in stylesheets
+          content = content.replace(
+            /url\(['"]?([^'")]+)['"]?\)/g,
+            (match, url) => {
+              return `url("${proxyUrl(url)}")`;
+            }
+          );
+
+          // Handle meta refreshes and other content URLs
+          content = content.replace(
+            /content=["'].*?url=([^"'\s>]+)/gi,
+            (match, url) => {
+              return match.replace(url, proxyUrl(url));
+            }
           );
 
           const script = `
