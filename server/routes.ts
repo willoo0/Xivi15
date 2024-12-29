@@ -42,7 +42,6 @@ export function registerRoutes(app: Express): Server {
       if (!path || path === "/") return;
 
       try {
-        // Extract and process the URL
         const urlMatch = path.match(/^\/proxy\/(.+)$/);
         if (!urlMatch) {
           throw new Error("Invalid URL format");
@@ -53,7 +52,6 @@ export function registerRoutes(app: Express): Server {
           url = "https://" + url;
         }
 
-        // Prevent proxying our own domain
         const targetUrl = new URL(url);
         if (targetUrl.hostname === req.hostname) {
           return res.redirect(targetUrl.pathname + targetUrl.search);
@@ -69,7 +67,6 @@ export function registerRoutes(app: Express): Server {
         const contentType = response.headers.get("content-type") || "";
         res.set("Content-Type", contentType);
 
-        // Handle images and binary content
         if (
           contentType.startsWith("image/") ||
           contentType.includes("application/octet-stream")
@@ -81,25 +78,31 @@ export function registerRoutes(app: Express): Server {
           let content = await response.text();
           const baseUrl = new URL(url).origin;
 
-          // Function to convert URLs to proxied versions
           const proxyUrl = (originalUrl: string) => {
             try {
-              if (!originalUrl || originalUrl.startsWith('javascript:') || originalUrl.startsWith('#')) {
+              if (
+                !originalUrl ||
+                originalUrl.startsWith("javascript:") ||
+                originalUrl.startsWith("#")
+              ) {
                 return originalUrl;
               }
-              const fullUrl = originalUrl.startsWith('http') ? originalUrl : new URL(originalUrl, baseUrl).toString();
+              const fullUrl = originalUrl.startsWith("http")
+                ? originalUrl
+                : new URL(originalUrl, baseUrl).toString();
               return `/ric/proxy/${encodeURIComponent(fullUrl)}`;
             } catch {
               return originalUrl;
             }
           };
 
-          // Rewrite URLs in HTML
-          content = content.replace(/(?:href|src|action)="([^"]*)"/g, (match, url) => {
-            return match.replace(url, proxyUrl(url));
-          });
+          content = content.replace(
+            /(?:href|src|action)="([^"]*)"/g,
+            (match, url) => {
+              return match.replace(url, proxyUrl(url));
+            },
+          );
 
-          // Add click interception script
           const script = `
             <script>
               (function() {
@@ -140,7 +143,7 @@ export function registerRoutes(app: Express): Server {
             </script>
           `;
 
-          content = content.replace('</body>', script + '</body>');
+          content = content.replace("</body>", script + "</body>");
           res.send(content);
         } else {
           response.body.pipe(res);
@@ -150,7 +153,7 @@ export function registerRoutes(app: Express): Server {
       }
     }
   });
-  const PIN = "ea23492"; // You can change this to your desired PIN
+  const PIN = "2"; // You can change this to your desired PIN
 
   app.post("/api/verify-pin", async (req: Request, res) => {
     const { pin } = req.body;
