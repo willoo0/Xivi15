@@ -48,6 +48,9 @@ export function registerRoutes(app: Express): Server {
         }
 
         let url = decodeURIComponent(urlMatch[1]);
+        if (url === "ric") {
+          return res.redirect("/ric");
+        }
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
           url = "https://" + url;
         }
