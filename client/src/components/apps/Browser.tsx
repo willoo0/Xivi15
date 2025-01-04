@@ -1,3 +1,4 @@
+
 import { useState, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -153,7 +154,7 @@ export function Browser() {
             >
               <iframe
                 ref={el => iframeRefs.current[tab.id] = el}
-                src={`/ric/proxy/${encodeURIComponent(tab.url)}`}
+                src={tab.url}
                 className="w-full h-full"
                 sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
                 onLoad={() => {

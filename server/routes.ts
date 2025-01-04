@@ -48,9 +48,6 @@ export function registerRoutes(app: Express): Server {
         }
 
         let url = decodeURIComponent(urlMatch[1]);
-        if (url === "ric") {
-          return res.redirect("/ric");
-        }
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
           url = "https://" + url;
         }
@@ -99,28 +96,11 @@ export function registerRoutes(app: Express): Server {
             }
           };
 
-          // Handle quoted URLs
           content = content.replace(
-            /(?:href|src|action)=["']([^"']*)["']/g,
+            /(?:href|src|action)="([^"]*)"/g,
             (match, url) => {
               return match.replace(url, proxyUrl(url));
-            }
-          );
-
-          // Handle URLs in stylesheets
-          content = content.replace(
-            /url\(['"]?([^'")]+)['"]?\)/g,
-            (match, url) => {
-              return `url("${proxyUrl(url)}")`;
-            }
-          );
-
-          // Handle meta refreshes and other content URLs
-          content = content.replace(
-            /content=["'].*?url=([^"'\s>]+)/gi,
-            (match, url) => {
-              return match.replace(url, proxyUrl(url));
-            }
+            },
           );
 
           const script = `
@@ -173,7 +153,7 @@ export function registerRoutes(app: Express): Server {
       }
     }
   });
-  const PIN = "2"; // You can change this to your desired PIN
+  const PIN = "41289473";
 
   app.post("/api/verify-pin", async (req: Request, res) => {
     const { pin } = req.body;
@@ -191,20 +171,17 @@ export function registerRoutes(app: Express): Server {
         return res.status(400).send("URL parameter is required");
       }
 
-      // Prevent proxy loops
       const refererUrl = req.headers.referer;
       if (refererUrl && new URL(refererUrl).pathname === "/api/proxy") {
         return res.redirect(url);
       }
 
-      // Clean and validate URL
       let targetUrl: string;
       try {
         const parsed = new URL(url);
         if (!parsed.protocol.startsWith("http")) {
           parsed.protocol = "https:";
         }
-        // Prevent accessing our own server
         if (parsed.hostname === req.hostname) {
           return res.status(400).send("Cannot proxy requests to this server");
         }
@@ -222,7 +199,6 @@ export function registerRoutes(app: Express): Server {
 
       const contentType = response.headers.get("content-type") || "";
 
-      // Set response headers
       res.set({
         "Content-Type": contentType,
         "Access-Control-Allow-Origin": "*",
@@ -233,15 +209,12 @@ export function registerRoutes(app: Express): Server {
         "X-Final-URL": response.url,
       });
 
-      // Handle HTML content
       if (contentType.includes("text/html")) {
         let html = await response.text();
 
-        // Add base tag to handle relative URLs
         const baseTag = `<base href="${new URL(response.url).origin}/">`;
         html = html.replace(/<head>/, `<head>${baseTag}`);
 
-        // Add navigation handler script
         const script = `
           <script>
             (function() {
@@ -289,7 +262,6 @@ export function registerRoutes(app: Express): Server {
         return res.send(html);
       }
 
-      // Stream other content types
       response.body.pipe(res);
     } catch (error) {
       console.error("Proxy error:", error);

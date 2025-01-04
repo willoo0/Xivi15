@@ -66,7 +66,6 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
 export const useDesktopStore = create<DesktopState>(
   persist(
     (set, get) => {
-      // Initialize topbar height CSS variable
       if (typeof document !== 'undefined') {
         const storedState = JSON.parse(localStorage.getItem('desktop-store') || '{}');
         const topbarHeight = storedState.state?.topbarHeight || initialState.topbarHeight;

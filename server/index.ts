@@ -48,16 +48,13 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
+
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
-  // Try to find an available port starting from 5000
   const findAvailablePort = (startPort: number, maxAttempts: number = 10): Promise<number> => {
     return new Promise((resolve, reject) => {
       const tryPort = (port: number, attempts: number) => {
