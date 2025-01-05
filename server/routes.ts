@@ -23,7 +23,7 @@ export function registerRoutes(app: Express): Server {
               <button type="submit">Go</button>
             </form>
             <p>Seamless, secure browsing.</p>
-            <p>Powered by a custum version of XiviProx</p>
+            <p>Powered by a custom version of XiviProx</p>
           </div>
           <script>
             document.getElementById('form').onsubmit = (e) => {
@@ -33,6 +33,16 @@ export function registerRoutes(app: Express): Server {
               const url = isUrl ? input : 'https://duckduckgo.com/?q=' + encodeURIComponent(input);
               window.location.href = '/ric/proxy/' + encodeURIComponent(url);
             };
+          </script>
+          <script>
+            alert('XiviProx has been disabled until further notice!');
+          </script>
+          <script>
+            const inputField = document.getElementById("url");
+            const submitButton = document.querySelector("#form button");
+
+            inputField.disabled = true;
+            submitButton.disabled = true;
           </script>
         </body>
         </html>
