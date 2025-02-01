@@ -17,13 +17,12 @@ export function registerRoutes(app: Express): Server {
         <body>
           <div class="stars"></div>
           <div class="container">
-            <h1>Xivi Surf</h1>
+            <h1>Xivi Surf 🏄</h1>
             <form id="form">
               <input type="text" id="url" placeholder="Enter URL or search with DuckDuckGo" required>
               <button type="submit">Go</button>
             </form>
             <p>Seamless, secure browsing.</p>
-            <p>Powered by a custom version of XiviProx</p>
           </div>
           <script>
             document.getElementById('form').onsubmit = (e) => {
@@ -35,7 +34,7 @@ export function registerRoutes(app: Express): Server {
             };
           </script>
           <script>
-            alert('XiviProx has been disabled until further notice!');
+            alert('Xivi Surf has been disabled until further notice!');
           </script>
           <script>
             const inputField = document.getElementById("url");
