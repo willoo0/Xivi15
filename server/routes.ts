@@ -34,7 +34,14 @@ export function registerRoutes(app: Express): Server {
             };
           </script>
           <script>
-            alert('Xivi Surf has been disabled until further notice!');
+            function showAlert() {
+            if (!localStorage.getItem('alertShown')) {
+                alert('Xivi Surf has been disabled until further notice!');
+                localStorage.setItem('alertShown', 'true');
+            }
+        }
+
+        showAlert();
           </script>
           <script>
             const inputField = document.getElementById("url");
