@@ -17,6 +17,9 @@ export type AppWindow = {
   isMinimized: boolean
   isMaximized: boolean
   zIndex: number
+  props?: Record<string, any>;
+  initialQuery?: string
+  timestamp?: number
 }
 
 export type PinnedApp = {
@@ -42,10 +45,10 @@ interface DesktopState {
   toggleMinimize: (id: string) => void
   toggleMaximize: (id: string) => void
   togglePinApp: (app: PinnedApp) => void
-  updateSettings: (settings: Partial<Pick<DesktopState, 'theme' | 'blurEffects' | 'animations' | 'notifications'>>) => void
+  updateSettings: (settings: Partial<Pick<DesktopState, 'theme' | 'blurEffects' | 'animations' | 'notifications' | 'taskbarMode' | 'topbarHeight'>>) => void
 }
 
-const initialState: Omit<DesktopState, keyof DesktopState> = {
+const initialState: Omit<DesktopState, 'addWindow' | 'removeWindow' | 'setActiveWindow' | 'updateWindowPosition' | 'toggleMinimize' | 'toggleMaximize' | 'togglePinApp' | 'updateSettings'> = {
   windows: [],
   activeWindowId: null,
   maxZIndex: 0,
@@ -63,7 +66,7 @@ const initialState: Omit<DesktopState, keyof DesktopState> = {
   topbarHeight: 40,
 }
 
-export const useDesktopStore = create<DesktopState>(
+export const useDesktopStore = create<DesktopState, [["zustand/persist", unknown]]>(
   persist(
     (set, get) => {
       if (typeof document !== 'undefined') {

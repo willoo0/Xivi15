@@ -18,7 +18,7 @@ const TETROMINOS = {
 
 export function Tetris() {
   const [board, setBoard] = useState(createEmptyBoard());
-  const [currentPiece, setCurrentPiece] = useState(null);
+  const [currentPiece, setCurrentPiece] = useState<{ shape: number[][]; color: string } | null>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
@@ -32,7 +32,8 @@ export function Tetris() {
 
   const spawnPiece = useCallback(() => {
     const pieces = Object.keys(TETROMINOS);
-    const newPiece = TETROMINOS[pieces[Math.floor(Math.random() * pieces.length)]];
+    const pieceKey = pieces[Math.floor(Math.random() * pieces.length)] as keyof typeof TETROMINOS;
+    const newPiece = TETROMINOS[pieceKey];
     setCurrentPiece(newPiece);
     setPosition({ x: Math.floor(BOARD_WIDTH / 2) - 1, y: 0 });
   }, []);
@@ -50,7 +51,17 @@ export function Tetris() {
     }
   }, [currentPiece, position, isPaused]);
 
-  function isValidMove(shape, newX, newY) {
+  interface Position {
+    x: number;
+    y: number;
+  }
+
+  interface Tetromino {
+    shape: number[][];
+    color: string;
+  }
+
+  function isValidMove(shape: number[][], newX: number, newY: number): boolean {
     for (let y = 0; y < shape.length; y++) {
       for (let x = 0; x < shape[y].length; x++) {
         if (shape[y][x]) {
@@ -113,7 +124,7 @@ export function Tetris() {
     return lines;
   }
 
-  function handleKeyDown(e) {
+  function handleKeyDown(e: KeyboardEvent) {
     if (!currentPiece || gameOver || isPaused) return;
     
     // Prevent scrolling with arrow keys
