@@ -83,7 +83,7 @@ app.use((req, res, next) => {
   };
 
   try {
-    const port = await findAvailablePort(3000);
+    const port = await findAvailablePort(5000);
     server.listen(port, "0.0.0.0", () => {
       log(`Server running on port ${port}`);
     });
