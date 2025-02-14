@@ -1,7 +1,6 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
-import fetch from "node-fetch";
 
 export function registerRoutes(app: Express): Server {
   app.use("/ric", async (req, res, next) => {
@@ -87,7 +86,11 @@ export function registerRoutes(app: Express): Server {
           contentType.startsWith("image/") ||
           contentType.includes("application/octet-stream")
         ) {
-          return response.body.pipe(res);
+          if (response.body) {
+            return response.body.pipe(res);
+          } else {
+            res.status(500).send("This shouldn't ever happen, but it did.");
+          }
         }
 
         if (contentType.includes("text/html")) {
@@ -162,21 +165,16 @@ export function registerRoutes(app: Express): Server {
           content = content.replace("</body>", script + "</body>");
           res.send(content);
         } else {
-          response.body.pipe(res);
+          if (response.body) {
+            response.body.pipe(res);
+          } else {
+            res.status(500).send("This shouldn't ever happen, but it did.");
+          }
         }
       } catch (error) {
-        res.status(500).send(`Proxy Error: ${error.message}`);
+        const errormsg = error instanceof Error ? error.message : "Unknown error";
+        res.status(500).send(`Proxy Error: ${errormsg}`);
       }
-    }
-  });
-  const PIN = "41289473";
-
-  app.post("/api/verify-pin", async (req: Request, res) => {
-    const { pin } = req.body;
-    if (pin === PIN) {
-      res.json({ success: true });
-    } else {
-      res.status(401).json({ success: false });
     }
   });
 
@@ -277,8 +275,11 @@ export function registerRoutes(app: Express): Server {
 
         return res.send(html);
       }
-
-      response.body.pipe(res);
+      if (response.body) {
+        response.body.pipe(res);
+      } else {
+        res.status(500).send("This shouldn't ever happen, but it did.");
+      }
     } catch (error) {
       console.error("Proxy error:", error);
       res.status(500).send("Error fetching URL");
@@ -317,15 +318,15 @@ export function registerRoutes(app: Express): Server {
       } catch (error) {
         console.error("Chat API error:", error);
         res.status(500).json({
-          error: error.message || "Internal server error",
-          details: error.stack,
+          error: (error instanceof Error ? error.message : "Internal server error"),
+          details: (error instanceof Error ? error.stack : "No stack available"),
         });
       }
     } catch (outerError) {
       console.error("Route handler error:", outerError);
       res.status(500).json({
         error: "Internal server error",
-        details: outerError.message,
+        details: outerError instanceof Error ? outerError.message : "Unknown error",
       });
     }
   });
@@ -343,7 +344,7 @@ export function registerRoutes(app: Express): Server {
       const data = await response.json();
 
       res.json(
-        data.data.map((track: any) => ({
+        (data as { data: any[] }).data.map((track: any) => ({
           videoId: track.id,
           title: track.title,
           artist: track.artist.name,
@@ -360,7 +361,7 @@ export function registerRoutes(app: Express): Server {
     try {
       const videoId = req.query.videoId as string;
       const response = await fetch(`https://api.deezer.com/track/${videoId}`);
-      const data = await response.json();
+      const data = await response.json() as { preview: string };
       res.json({ url: data.preview });
     } catch (error) {
       console.error("Stream error:", error);

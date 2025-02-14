@@ -139,7 +139,7 @@ export function Calculator() {
         6
       </Button>
       <Button
-        variant="primary"
+        variant="default"
         onClick={() => calculate()}
         className="row-span-3"
       >

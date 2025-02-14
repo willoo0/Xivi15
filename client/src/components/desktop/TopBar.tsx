@@ -75,7 +75,7 @@ export function TopBar() {
             <Power className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="menu-transition" onClose={handleMenuClose}> {/* Added class and onClose */}
+        <DropdownMenuContent className="menu-transition" onChange={(open) => !open && handleMenuClose()}>
           <DropdownMenuItem onClick={handleRestart}>
             Restart
           </DropdownMenuItem>

@@ -1,7 +1,5 @@
 
 import React, { useEffect, useRef, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 export function Splash({ onFinish }: { onFinish: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,31 +7,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   const mouseY = useRef(0);
   const speed = useRef(0.5);
   const [isSystemReady, setIsSystemReady] = useState(false);
-  const [loadingText, setLoadingText] = useState("Welcome to Xivi");
-  const [showPin, setShowPin] = useState(true);
-  const [pin, setPin] = useState("");
-  const [pinError, setPinError] = useState(false);
-
-  const verifyPin = async () => {
-    try {
-      const response = await fetch('/api/verify-pin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pin })
-      });
-      const data = await response.json();
-      if (data.success) {
-        setShowPin(false);
-        setPinError(false);
-      } else {
-        setPinError(true);
-      }
-    } catch (error) {
-      setPinError(true);
-    }
-  };
+  const [loadingText, setLoadingText] = useState("Loading Xivi Spaces 15.2");
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -137,40 +111,24 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
   }
 
   useEffect(() => {
-    if (!showPin) {
-      const timer = setTimeout(() => setIsSystemReady(true), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showPin]);
+    setLoadingText("Loading Xivi Spaces 15.2");
+    const timer = setTimeout(() => setIsSystemReady(true), 3000);
+    setLoadingText("Welcome to Xivi");
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={!showPin ? handleClick : undefined}>
+    <div className="fixed inset-0 z-[99999] cursor-pointer overflow-hidden bg-zinc-950" onClick={handleClick}>
       <canvas ref={canvasRef} className="absolute inset-0 backdrop-blur-sm" />
-      {showPin ? (
-        <div className="relative z-10 flex h-full items-center justify-center">
-          <div className="w-[300px] space-y-4 p-6 rounded-lg bg-black/80 backdrop-blur-sm">
-            <h2 className="text-xl text-white/80 text-center font-['Arial']">Enter PIN</h2>
-            <Input 
-              type="password" 
-              value={pin} 
-              onChange={(e) => setPin(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && verifyPin()}
-              className={pinError ? "border-red-500" : ""}
-            />
-            {pinError && <p className="text-red-500 text-sm">Invalid PIN</p>}
-            <Button onClick={verifyPin} className="w-full">
-              Verify
-            </Button>
-          </div>
-        </div>
-      ) : (
         <div className="relative z-10 flex h-full items-center justify-center">
           <div className="text-center space-y-4 backdrop-blur-sm bg-black/80 p-8 rounded-xl w-[600px] transition-all duration-500 ease-in-out">
             <h1 className="text-3xl font-extralight text-white/80 mb-6 text-center tracking-wide bg-white/5 py-2 px-6 rounded-3xl font-['Arial']">
-              Xivi Spaces 15.1
+              Xivi Spaces 15.2
             </h1>
             <div className="text-white/80 text-lg font-['Arial']">{loadingText}</div>
-            <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
+            {!isSystemReady && (
+              <div className="w-8 h-8 border-2 border-zinc-600 border-t-transparent rounded-full mx-auto animate-spin" />
+            )}
             {isSystemReady && (
               <p className="text-zinc-400 mt-6 text-center opacity-0 animate-fade-in">
                 Click anywhere to start
@@ -178,7 +136,6 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
             )}
           </div>
         </div>
-      )}
     </div>
   );
 }

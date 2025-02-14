@@ -49,10 +49,8 @@ export function StartMenu({ onClose }: StartMenuProps) {
   } | null>(null);
 
   const filteredApps = appsList.filter(app => 
-    !app.hideFromStartMenu && (
-      app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      app.category.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleAppClick = (app: (typeof appsList)[0]) => {
@@ -80,7 +78,7 @@ export function StartMenu({ onClose }: StartMenuProps) {
     setContextMenu({
       x: e.clientX,
       y: e.clientY,
-      appId: "",
+      appId: app.id,
       appComponent: app.component,
       appTitle: app.title,
     });
