@@ -177,16 +177,6 @@ export function registerRoutes(app: Express): Server {
       }
     }
   });
-  const PIN = "41289473";
-
-  app.post("/api/verify-pin", async (req: Request, res) => {
-    const { pin } = req.body;
-    if (pin === PIN) {
-      res.json({ success: true });
-    } else {
-      res.status(401).json({ success: false });
-    }
-  });
 
   app.get("/api/proxy", async (req: Request, res) => {
     try {
