@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "bun server/index.ts",
     "build": "mkdir -p ./dist/ && vite build && cp -r ./server/* ./dist/ && cp ./vite.config.ts ./dist/vite.config.ts",
-    "start": "bun dist/index.ts",
+    "start": "[ -f ./.env ] && source ./.env; bun dist/index.ts",
     "check": "bun tsc",
     "clean": "rm -rf dist",
     "corepack": "corepack enable",
+    "production": "./production.sh",
     "lint": "eslint .",
     "db:push": "drizzle-kit push"
   },
