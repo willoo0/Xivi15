@@ -112,8 +112,7 @@ export function Splash({ onFinish }: { onFinish: () => void }) {
 
   useEffect(() => {
     setLoadingText("Loading Xivi Spaces 15.2");
-    const timer = setTimeout(() => setIsSystemReady(true), 3000);
-    setLoadingText("Welcome to Xivi");
+    const timer = setTimeout(() => {setIsSystemReady(true); setLoadingText("Welcome to Xivi");}, 3000);
     return () => clearTimeout(timer);
   }, []);
 

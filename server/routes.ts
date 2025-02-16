@@ -1,6 +1,8 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
+import { promises as fs } from "fs";
+import { join } from "path";
 
 export function registerRoutes(app: Express): Server {
   app.use("/ric", async (req, res, next) => {
@@ -366,6 +368,26 @@ export function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error("Stream error:", error);
       res.status(500).json({ error: "Failed to get song URL" });
+    }
+  });
+
+  app.get("/api/sysinfo", async (req, res) => {
+    try {
+      const path = process.cwd();
+      const git = join(path, ".git");
+      const [githead, gitconfig] = await Promise.all([
+        fs.readFile(join(git, "HEAD"), "utf8"),
+        fs.readFile(join(git, "config"), "utf8"),
+      ]);
+      const ref = githead.split(" ")[1]?.trim() || githead.trim();
+      const commit = await fs.readFile(join(git, ref), "utf8");
+      const remote = gitconfig.split("url = ")[1]?.split("\n")[0].trim() || "Unknown";
+      const packagefile = await fs.readFile(join(path, "package.json"), "utf8");
+      const { version } = JSON.parse(packagefile);
+      res.json({ repository: remote, commit: commit.trim(), version });
+    } catch (error) {
+      console.error("Failed to get git info:", error);
+      res.status(500).json({ error: "Failed to get git info" });
     }
   });
 

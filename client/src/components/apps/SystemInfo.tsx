@@ -1,14 +1,26 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 
+interface SystemInfoType {
+  repository: string;
+  commit: string;
+  version: string;
+}
+
 export function SystemInfo() {
-  const [publicIP, setPublicIP] = useState<string>("Loading...");
+  const [systemInfo, setSystemInfo] = useState<SystemInfoType>({
+    repository: "",
+    commit: "",
+    version: "",
+  });
 
   useEffect(() => {
-    fetch("https://api.ipify.org?format=json")
-      .then((res) => res.json())
-      .then((data) => setPublicIP(data.ip))
-      .catch(() => setPublicIP("Failed to load"));
+    const fetchSystemInfo = async () => {
+      const response = await fetch("/api/sysinfo");
+      const data = await response.json();
+      setSystemInfo(data);
+    };
+    fetchSystemInfo();
   }, []);
 
   return (
@@ -16,14 +28,23 @@ export function SystemInfo() {
       <h2 className="text-2xl font-bold">System Information</h2>
       <Card className="p-4 space-y-2">
         <div>
-          <span className="font-semibold">Operating System:</span> Xivi Linux
-          14.9 Kylo
+            <span className="font-semibold">Repository:</span> {(() => {
+              let shortrepo = systemInfo.repository;
+              if (shortrepo.includes("github.com")) {
+                shortrepo = shortrepo.replace("https://github.com/", "").replace(".git", "").trim();
+              }
+              return shortrepo ? (
+                <a href={systemInfo.repository} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                  {shortrepo}
+                </a>
+              ) : "Loading...";
+            })()}
         </div>
         <div>
-          <span className="font-semibold">CPU:</span> Intel® Core™ i9 14th gen
+          <span className="font-semibold">Commit:</span> {systemInfo.commit.length > 8 ? systemInfo.commit.substring(0, 8) : systemInfo.commit || "Loading..."}
         </div>
         <div>
-          <span className="font-semibold">Memory:</span> 16GB DDR5 RAM
+          <span className="font-semibold">Xivi Version:</span> {systemInfo.version || "Loading..."}
         </div>
       </Card>
     </div>
