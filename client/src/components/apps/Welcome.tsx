@@ -22,7 +22,7 @@ export function Welcome() {
     <div className="flex flex-col items-center justify-center p-6 max-w-md mx-auto space-y-4 text-center">
       <h1 className="text-2xl font-bold animate-fade-in">👋 Welcome to Xivi 15</h1>
       <h2 className="animate-slide-up">We are so glad to have you using Xivi 15!</h2>
-      <h2 className="animate-slide-up">Released: Feb 1, 2025</h2>
+      <h2 className="animate-slide-up">Released: Feb 13, 2025</h2>
 
       <div className="space-y-2 text-muted-foreground">
         <p className="font-medium">Here's some cool stuff you can do:</p>
