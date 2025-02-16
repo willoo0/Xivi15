@@ -22,17 +22,16 @@
 > [!IMPORTANT]  
 > Due to how Xivi 15 is setup, Numerous hosters won't work properly.
 
+#### !!! You will need [Bun](https://bun.sh/) (not NodeJS) before setting up your own Xivi instance !!!
+#### !!! Xivi CANNOT run with Windows or macOS as the instance server, please use Linux to set up your instance instead !!!
+
+Setup commands:
 ```
 git clone https://github.com/willoo0/Xivi15.git
-```
-```
 cd Xivi15
-```
-```
-npm install
-```
-```
-NODE_ENV=production node dist/index.js
+bun install
+bun run cmd:production
+bun run pm2:start
 ```
 
 ## Join us
