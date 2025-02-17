@@ -391,6 +391,17 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  app.get("/.well-known/acme-challenge/:file", async (req, res) => {
+    try {
+      const filePath = join(process.cwd(), "webroot", ".well-known/acme-challenge", req.params.file);
+      const fileContent = await fs.readFile(filePath, "utf8");
+      res.send(fileContent);
+    } catch (error) {
+      console.error("Failed to serve ACME challenge file:", error);
+      res.status(404).send("File not found");
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
