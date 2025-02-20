@@ -27,7 +27,7 @@
 
 Setup commands:
 ```
-git clone https://github.com/willoo0/Xivi15.git
+git clone https://github.com/xiviorg/Xivi15.git
 cd Xivi15
 bun install
 bun run cmd:production
