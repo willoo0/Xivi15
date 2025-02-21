@@ -34,18 +34,18 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
 
   useEffect(() => {
     let animationFrameId: number;
-    
+
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && !isMaximized && windowRef.current) {
         cancelAnimationFrame(animationFrameId);
-        
+
         animationFrameId = requestAnimationFrame(() => {
           const rect = windowRef.current?.getBoundingClientRect();
           if (!rect) return;
-          
+
           const newX = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - rect.width));
           const newY = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - rect.height));
-          
+
           updateWindowPosition(id, {
             x: newX,
             y: newY
@@ -120,7 +120,7 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
       <div
         className="flex items-center justify-between px-4 bg-primary/10 cursor-move"
         onMouseDown={handleMouseDown}
-        style={{ 
+        style={{
           height: 'var(--topbar-height)',
           userSelect: 'none'
         }}
@@ -146,14 +146,15 @@ export function Window({ id, title, children, position, isMinimized, isMaximized
           </div>
         </div>
       </div>
-      <div 
-        className="flex-1 overflow-auto p-4" 
-        onWheel={(e) => {
+      <div
+        className="flex-1 overflow-auto p-4"
+        // Note to self: if commenting this broke something, then you need to make an implementation that works for custom apps too
+        /*</Card>onWheel={(e) => {
           // Stop propagation only for non-game windows
           if (!['Tetris', 'Minesweeper'].includes(title)) {
             e.stopPropagation();
           }
-        }}
+        }}*/
       >
         {children}
       </div>

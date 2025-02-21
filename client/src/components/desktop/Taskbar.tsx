@@ -88,10 +88,13 @@ export function Taskbar() {
             </Button>
           )}
           {/* Pinned Apps */}
-          {pinnedApps.map((app) => {
-            const Icon = getAppIcon(app.component)
-            return (
-              <Button
+            {pinnedApps.map((app) => {
+              const Icon = getAppIcon(app.component)
+              if (!Icon || !app.component || !app.title) {
+                return null
+              }
+              return (
+                <Button
                 key={app.component}
                 variant="ghost"
                 size="icon"
@@ -100,14 +103,12 @@ export function Taskbar() {
                 onContextMenu={(e) =>
                   handleRightClick(e, '', app.component, app.title)
                 }
-              >
+                >
                 <Icon className="h-4 w-4" />
-              </Button>
-            )
-          })}
-
+                </Button>
+              )
+            })}
           <div className="w-px h-6 bg-border mx-2" />
-
           {/* Open Windows */}
           {windows.map((window) => {
             const Icon = appIcons[window.component] || AppWindow
