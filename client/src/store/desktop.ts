@@ -1,4 +1,3 @@
-
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
@@ -20,6 +19,10 @@ export type AppWindow = {
   props?: Record<string, any>;
   initialQuery?: string
   timestamp?: number
+  menuitems?: {
+    label: string
+    onClick: () => void
+  }[]
 }
 
 export type PinnedApp = {
