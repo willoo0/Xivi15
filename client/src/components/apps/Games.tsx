@@ -6,67 +6,67 @@ import { Gamepad2, Layout, Bomb, Scissors, Hammer, Target, Swords, Fish, Castle,
 
 const games = [
   { 
-    title: "Tetris", 
+    title: "Tetris",
     component: "Tetris",
     icon: Layout,
     description: "Block Stacking"
   },
   { 
-    title: "Snake", 
+    title: "Snake",
     component: "Snake",
     icon: Scissors,
     description: "Growing Challenge"
   },
   { 
-    title: "Whack-a-Mole", 
+    title: "Whack-a-Mole",
     component: "WhackAMole",
     icon: Hammer,
     description: "Reflex Testing"
   },
   { 
-    title: "Minecraft", 
+    title: "Minecraft",
     component: "Minecraft",
     icon: Gamepad2,
     description: "Block Building"
   },
   { 
-    title: "Balloons & Bullets", 
+    title: "Balloons & Bullets",
     component: "BalloonsBullets",
     icon: Target,
     description: "Balloon Shooting"
   },
   { 
-    title: "Dodge Brawl", 
+    title: "Dodge Brawl",
     component: "DodgeBrawl",
     icon: Swords,
     description: "Combat Dodging"
   },
   { 
-    title: "Dungeon Fish", 
+    title: "Dungeon Fish",
     component: "DungeonFish",
     icon: Fish,
     description: "Underwater Adventure"
   },
   { 
-    title: "Folkware", 
+    title: "Folkware",
     component: "Folkware",
     icon: Castle,
     description: "Medieval Quest"
   },
   { 
-    title: "Silent Heist", 
+    title: "Silent Heist",
     component: "SilentHeist",
     icon: Footprints,
     description: "Stealth Mission"
   },
   { 
-    title: "Snow", 
+    title: "Snow",
     component: "Snow",
     icon: Snowflake,
     description: "Winter Adventure"
   },
   { 
-    title: "Worst Case Scenario", 
+    title: "Worst Case Scenario",
     component: "WorstCaseScenario",
     icon: Shield,
     description: "Survival Challenge"
